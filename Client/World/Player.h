@@ -14,12 +14,24 @@ public:
 	CPlayer(CPlayer&& src) noexcept;
 	virtual ~CPlayer();
 
+public:
+	virtual bool Init();
+	virtual void Update(float DeltaTime);
+	virtual void Destroy();
+	virtual float TakeDamage(float fDamage, const std::string& Instigator, const std::weak_ptr<CActor>& CauseActor);
+
+protected:
+	virtual CPlayer* Clone()
+	{
+		return new CPlayer(*this);
+	}
+
 protected:
 	std::weak_ptr<class CMeshComponent> mMeshComp;
 	std::weak_ptr<class CMeshComponent> mLegMeshComp;
 	std::weak_ptr<class CCameraComponent> mCamera;
 	std::weak_ptr<class CColliderBox2D> mBox;
-	std::weak_ptr<class CColliderSphere2D> mSphere;
+	std::weak_ptr<class CColliderSphere2D> mPickupRange;
 
 	std::weak_ptr<class CCharacterMovementComponent> mMoveComp;
 	std::weak_ptr<class CAnimation2DComponent> mAnimComp;
@@ -54,23 +66,11 @@ public:
 
 	virtual void SetHP(float HP);
 
-public:
-	virtual bool Init();
-	virtual void Update(float DeltaTime);
-	virtual void Destroy();
-	virtual float TakeDamage(float fDamage, const std::string& Instigator, const std::weak_ptr<CActor>& CauseActor);
-
 protected:
-	virtual CPlayer* Clone()
-	{
-		return new CPlayer(*this);
-	}
-
-protected:
-
 	float mDamage = 1.f;
 
 	void OnDeath();
+	void OnPickupRangeBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider);
 
 public:
 	void MoveForward();
@@ -92,7 +92,6 @@ public:
 	void SpawnWeapons();
 	void DestroyWeapons();
 	void SetWeaponSettings();
-
 
 	// Test
 public:

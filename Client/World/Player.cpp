@@ -22,6 +22,8 @@
 #include "Component/InventoryComponent.h"
 #include "Component/ArenaCameraComponent.h"
 
+#include "CollectableInterface.h"
+
 #include "LogManager.h"
 
 CPlayer::CPlayer()
@@ -105,7 +107,7 @@ bool CPlayer::Init()
 	mLegMeshComp = CreateComponent<CMeshComponent>("Leg");
 	mCamera = CreateComponent<CArenaCameraComponent>("Camera");
 	mBox = CreateComponent<CColliderBox2D>("Box");
-	mSphere = CreateComponent<CColliderSphere2D>("Sphere");
+	mPickupRange = CreateComponent<CColliderSphere2D>("PickupRange");
 
 	mMoveComp = CreateComponent<CCharacterMovementComponent>("MoveComp");
 	mInventoryComponent = CreateComponent<CInventoryComponent>("InventoryComp");
@@ -154,14 +156,15 @@ bool CPlayer::Init()
 		Box->SetCollisionProfile("Player");
 	}
 
-	auto Sphere = mSphere.lock();
+	auto PickupRange = mPickupRange.lock();
 
-	if (Sphere)
+	if (PickupRange)
 	{
-		Sphere->SetInheritScale(false);
-		Sphere->SetRadius(120.f);
-		Sphere->SetDebugDraw(true);
-		Sphere->SetCollisionProfile("DetectEnemy");
+		PickupRange->SetInheritScale(false);
+		PickupRange->SetRadius(120.f);
+		PickupRange->SetDebugDraw(true);
+		PickupRange->SetCollisionProfile("PickupRange");
+		PickupRange->SetBeginOverlapFunc(this, &CPlayer::OnPickupRangeBeginOverlap);
 	}
 
 	auto Input = mWorld.lock()->GetInput().lock();
@@ -321,6 +324,21 @@ void CPlayer::OnDeath()
 	}
 
 	mIsDead = true;
+}
+
+void CPlayer::OnPickupRangeBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider)
+{
+	auto ColliderComp = Collider.lock();
+	if (!ColliderComp) return;
+
+	auto ColliderOwner = ColliderComp->GetOwner().lock();
+	if (!ColliderOwner) return;
+
+	auto CollectableActor = std::dynamic_pointer_cast<ICollectableInterface>(ColliderOwner);
+	if (CollectableActor)
+	{
+		CollectableActor->Collect(GetThisPtr<CActor>());
+	}
 }
 
 void CPlayer::MoveForward()

@@ -32,6 +32,12 @@ void CGlobalCollision::SetGlobalCollision()
 		InfoManager->CreateChannel("DetectPlayer");
 		InfoManager->CreateProfile("DetectPlayer", "DetectPlayer", true, ECollisionInteraction::Ignore);
 
+		InfoManager->CreateChannel("Collectable");
+		InfoManager->CreateProfile("Collectable", "Collectable", true, ECollisionInteraction::Ignore);
+
+		InfoManager->CreateChannel("PickupRange");
+		InfoManager->CreateProfile("PickupRange", "PickupRange", true, ECollisionInteraction::Ignore);
+
 		InfoManager->SetProfileInteraction("Static", "BlockAll", ECollisionInteraction::Block);
 		InfoManager->SetProfileInteraction("Player", "BlockAll", ECollisionInteraction::Block);
 		InfoManager->SetProfileInteraction("Monster", "BlockAll", ECollisionInteraction::Block);
@@ -54,5 +60,9 @@ void CGlobalCollision::SetGlobalCollision()
 		InfoManager->SetProfileInteraction("DetectPlayer", "Player", ECollisionInteraction::Overlap);
 		InfoManager->SetProfileInteraction("Player", "DetectPlayer", ECollisionInteraction::Overlap);
 
+		InfoManager->SetProfileInteraction("PickupRange", "Collectable", ECollisionInteraction::Overlap);
+		InfoManager->SetProfileInteraction("Collectable", "PickupRange", ECollisionInteraction::Overlap);
+
+		InfoManager->SetProfileInteraction("Collectable", "Player", ECollisionInteraction::Overlap);
 	}
 }

@@ -153,9 +153,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="World\BuyButton.cpp" />
+    <ClCompile Include="World\CollectableInterface.cpp" />
     <ClCompile Include="World\ConvertString.cpp" />
     <ClCompile Include="World\InputPromptButton.cpp" />
     <ClCompile Include="World\ItemData.cpp" />
+    <ClCompile Include="World\MaterialItem.cpp" />
     <ClCompile Include="World\PlayerHUD.cpp" />
     <ClCompile Include="World\ShopData.cpp" />
     <ClCompile Include="World\ShopOfferCard.cpp" />
@@ -203,10 +205,12 @@
     <ClCompile Include="World\WeaponData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="World\CollectableInterface.h" />
     <ClInclude Include="World\ConvertString.h" />
     <ClInclude Include="World\BuyButton.h" />
     <ClInclude Include="World\InputPromptButton.h" />
     <ClInclude Include="World\ItemData.h" />
+    <ClInclude Include="World\MaterialItem.h" />
     <ClInclude Include="World\PlayerHUD.h" />
     <ClInclude Include="World\ShopData.h" />
     <ClInclude Include="World\ShopOfferCard.h" />

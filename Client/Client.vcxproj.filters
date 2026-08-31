@@ -58,6 +58,9 @@
     <Filter Include="소스 파일\Actor">
       <UniqueIdentifier>{24002c9c-6350-4f00-95e5-d5e1c7b17ea6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Interface">
+      <UniqueIdentifier>{66662eab-faa9-43a1-bdb6-3bae9339bdee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -205,7 +208,13 @@
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClCompile>
     <ClCompile Include="World\ShopData.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CollectableInterface.cpp">
+      <Filter>소스 파일\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="World\MaterialItem.cpp">
+      <Filter>소스 파일\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -360,7 +369,13 @@
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClInclude>
     <ClInclude Include="World\ShopData.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CollectableInterface.h">
+      <Filter>소스 파일\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="World\MaterialItem.h">
+      <Filter>소스 파일\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
