@@ -1,0 +1,11 @@
+ID,Name,PrimaryStat,SecondaryStat,BasePrice
+2000,Fertilizer,Harvesting:8|MeleeDamage:-1,,15
+2001,Coffee,AttackSpeed:10|Damage:-2,,22
+2002,Defective Steroids,MaxHP:2|MeleeDamage:2|AttackSpeed:-1,,20
+2003,Gummy Berserker,AttackSpeed:5|Range:25|Armor:-1,,25
+2004,Peaceful Bee,Dodge:4|Harvesting:4|MeleeDamage:-1|RangedDamage:-1,,18
+2005,Scar,Range:-8,XPGain:20,25
+2006,Alloy,MeleeDamage:3|RangedDamage:3|ElementalDamage:3|Engineering:3|CritChance:5|Dodge:-5,,80
+2007,Leather Vest,Armor:2|Dodge:6|MaxHP:-3,,45
+2008,Cyclops Worm,Damage:12|Range:-12,,45
+2009,Banner,Range:20|AttackSpeed:10,Knockback:-5,55

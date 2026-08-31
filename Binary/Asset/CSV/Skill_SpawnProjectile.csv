@@ -1,0 +1,5 @@
+SKILL_ID,Count,Interval,Spread
+SK_Spit,1,0,15
+SK_RandomProjectile,1,0,15
+SK_BURST,36,0,360
+SK_FollowOwner,12,0,360

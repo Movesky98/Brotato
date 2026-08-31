@@ -1,0 +1,6 @@
+SKILL_ID,ComponentType,TargetType,Cooldown
+SK_Dash,Dash,Target,1
+SK_Spit,SpawnProjectile,Target,1
+SK_RandomProjectile,SpawnProjectile,None,0
+SK_BURST,SpawnProjectile,None,1
+SK_FollowOwner,SpawnProjectile,Owner,1

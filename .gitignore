@@ -1,0 +1,55 @@
+# ─────────────────────────────────────────────
+# Visual Studio / MSBuild
+# ─────────────────────────────────────────────
+.vs/
+Obj/
+Client/x64/
+*.user
+*.aps
+*.ipch
+*.idb
+*.pdb
+*.ilk
+*.exp
+*.log
+*.tlog
+*.iobj
+*.ipdb
+
+# ─────────────────────────────────────────────
+# Engine/Include — GameEngine/Copy.bat 이 생성하는 사본
+# 원본은 GameEngine/ 아래에 있음
+# ─────────────────────────────────────────────
+Engine/Include/
+
+# ─────────────────────────────────────────────
+# 빌드 산출물 (엔진 정적 라이브러리 / 컴파일된 셰이더)
+# ─────────────────────────────────────────────
+Engine/Binary/GameEngine*.lib
+Engine/Binary/GameEngine*.pdb
+Engine/Binary/GameEngine*.idb
+Engine/Binary/*.cso
+
+# ─────────────────────────────────────────────
+# 실행 출력 폴더 (Binary/)
+# EngineAsset 은 Engine/Binary/EngineAsset 의 사본이라 제외
+# ─────────────────────────────────────────────
+Binary/*.exe
+Binary/*.pdb
+Binary/*.dll
+Binary/Log/
+Binary/EngineAsset/
+
+# ─────────────────────────────────────────────
+# 원작(Blobfish) 저작물 — 리포에 포함하지 않음
+# CSV 게임 데이터는 직접 작성한 것이라 포함
+# ─────────────────────────────────────────────
+Binary/Asset/Texture/
+Binary/Asset/Sound/
+*.bak
+
+# ─────────────────────────────────────────────
+# 기타
+# ─────────────────────────────────────────────
+Thumbs.db
+desktop.ini

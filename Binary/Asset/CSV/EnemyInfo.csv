@@ -1,0 +1,6 @@
+ID,Name,HP,Speed,Damage,MovementType
+1000,Baby_Alien,15,120,1,ChaseTarget
+1001,Spitter,10,80,1,FleeFromTarget|ChaseTarget
+1002,Bruiser,30,200,2,ChaseTarget|Random
+1003,Fly,30,150,1,Random
+1004,Chase,1,150,1,ChaseTarget

@@ -1,0 +1,7 @@
+ID,Path,SizeX,SizeY,IconPath,IconSizeX,IconSizeY
+3000,Custom/Weapon/pistol.png,40,40,Custom/Weapon/pistol_icon.png,0,0
+3001,Custom/Weapon/smg.png,40,40,Custom/Weapon/smg_icon.png,0,0
+3002,Custom/Weapon/minigun.png,75,37.5,Custom/Weapon/minigun_icon.png,0,0
+3003,Custom/Weapon/chopper.png,50,32,Custom/Weapon/chopper_icon.png,0,0
+3004,Custom/Weapon/vorpal_sword.png,64,32,Custom/Weapon/vorpal_sword_icon.png,0,0
+3005,Custom/Weapon/fist.png,50,25,Custom/Weapon/fist_icon.png,0,0

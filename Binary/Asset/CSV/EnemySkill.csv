@@ -1,0 +1,4 @@
+EnemyID,Trigger,SKILL_ID
+1001,InPerceptionRange,SK_Spit
+1002,InPerceptionRange,SK_Dash
+1003,OnHit,SK_RandomProjectile
