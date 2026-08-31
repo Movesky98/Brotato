@@ -174,6 +174,7 @@ void CWeapon::SetTexture(const std::string& Name, const std::wstring& TexturePat
 		MeshComp->AddTexture(0, "DissolveTexture", TEXT("dissolve_smoke.png"), "Texture", 1);
 		MeshComp->SetBlendState(0, "AlphaBlend");
 		MeshComp->SetRelativeScale(SizeX, SizeY);
+		SetWorldScale(SizeX, SizeY);
 	}
 }
 
