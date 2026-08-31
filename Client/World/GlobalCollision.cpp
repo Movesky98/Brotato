@@ -26,19 +26,17 @@ void CGlobalCollision::SetGlobalCollision()
 		InfoManager->CreateChannel("Enemy");
 		InfoManager->CreateProfile("Enemy", "Enemy", true, ECollisionInteraction::Ignore);
 
-		InfoManager->CreateChannel("PlayerTrigger");
-		InfoManager->CreateProfile("PlayerTrigger", "PlayerTrigger", true, ECollisionInteraction::Ignore);
+		InfoManager->CreateChannel("DetectEnemy");
+		InfoManager->CreateProfile("DetectEnemy", "DetectEnemy", true, ECollisionInteraction::Ignore);
 		
-		InfoManager->CreateChannel("EnemyTrigger");
-		InfoManager->CreateProfile("EnemyTrigger", "EnemyTrigger", true, ECollisionInteraction::Ignore);
-
-		InfoManager->CreateChannel("Wall");
-		InfoManager->CreateProfile("Wall", "Wall", true, ECollisionInteraction::Block);
+		InfoManager->CreateChannel("DetectPlayer");
+		InfoManager->CreateProfile("DetectPlayer", "DetectPlayer", true, ECollisionInteraction::Ignore);
 
 		InfoManager->SetProfileInteraction("Static", "BlockAll", ECollisionInteraction::Block);
 		InfoManager->SetProfileInteraction("Player", "BlockAll", ECollisionInteraction::Block);
 		InfoManager->SetProfileInteraction("Monster", "BlockAll", ECollisionInteraction::Block);
 
+		InfoManager->SetProfileInteraction("BlockAll", "BlockAll", ECollisionInteraction::Overlap);
 		InfoManager->SetProfileInteraction("Enemy", "Player", ECollisionInteraction::Overlap);
 		InfoManager->SetProfileInteraction("BlockAll", "Enemy", ECollisionInteraction::Block);
 		InfoManager->SetProfileInteraction("Enemy", "BlockAll", ECollisionInteraction::Block);
@@ -50,14 +48,11 @@ void CGlobalCollision::SetGlobalCollision()
 		InfoManager->SetProfileInteraction("EnemyProjectile", "Player", ECollisionInteraction::Overlap);
 		InfoManager->SetProfileInteraction("Player", "EnemyProjectile", ECollisionInteraction::Overlap);
 
-		InfoManager->SetProfileInteraction("PlayerTrigger", "Enemy", ECollisionInteraction::Overlap);
-		InfoManager->SetProfileInteraction("Enemy", "PlayerTrigger", ECollisionInteraction::Overlap);
+		InfoManager->SetProfileInteraction("DetectEnemy", "Enemy", ECollisionInteraction::Overlap);
+		InfoManager->SetProfileInteraction("Enemy", "DetectEnemy", ECollisionInteraction::Overlap);
 		
-		InfoManager->SetProfileInteraction("EnemyTrigger", "Player", ECollisionInteraction::Overlap);
-		InfoManager->SetProfileInteraction("Player", "EnemyTrigger", ECollisionInteraction::Overlap);
+		InfoManager->SetProfileInteraction("DetectPlayer", "Player", ECollisionInteraction::Overlap);
+		InfoManager->SetProfileInteraction("Player", "DetectPlayer", ECollisionInteraction::Overlap);
 
-		InfoManager->SetProfileInteraction("Wall", "Wall", ECollisionInteraction::Ignore);
-		InfoManager->SetProfileInteraction("Enemy", "Wall", ECollisionInteraction::Block);
-		InfoManager->SetProfileInteraction("Player", "Wall", ECollisionInteraction::Block);
 	}
 }

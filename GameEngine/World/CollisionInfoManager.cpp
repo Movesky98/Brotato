@@ -17,15 +17,10 @@ bool CCollisionInfoManager::Init()
 	//엔진의 기본적인 콜리전 프로파일을 만들어준다.
 	CreateChannel("Static");
 	CreateChannel("Player");
-	CreateChannel("Monster");
 
 	//채널을 만든뒤 프로파일을 생성한다.
 	CreateProfile("Static", "Static", true);
 	CreateProfile("Player", "Player", true);
-	CreateProfile("Monster", "Monster", true);
-
-	/*SetProfileInteraction("Player", "Monster", ECollisionInteraction::Block);
-	SetProfileInteraction("Monster", "Player", ECollisionInteraction::Block);*/
 
 	return true;
 }

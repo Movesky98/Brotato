@@ -33,29 +33,6 @@ bool CMeleeWeapon::Init()
     mMoveComp = CreateComponent<CMovementComponent>("MoveComp");
     mBoxCollision = CreateComponent<CColliderBox2D>("BoxCollision");
 
-    /*auto MeshComp = mMeshComp.lock();
-    if (MeshComp)
-    {
-        MeshComp->SetMesh("TexRect");
-        MeshComp->SetShader("Material");
-        MeshComp->AddTexture(0, "MeleeWeapon", TEXT("Custom/Chopper.png"));
-        MeshComp->AddTexture(0, "DissolveTexture", TEXT("dissolve_smoke.png"), "Texture", 1);
-        MeshComp->SetBlendState(0, "AlphaBlend");
-        MeshComp->SetRelativeScale(50.f, 32.f);
-    }*/
-
-    /*auto BoxCollision = mBoxCollision.lock();
-    if (BoxCollision)
-    {
-        FVector2 BoxSize = FVector2(MeshComp->GetRelativeScale().x, MeshComp->GetRelativeScale().y);
-
-        BoxCollision->SetBoxSize(BoxSize);
-        BoxCollision->SetCollisionProfile("PlayerTrigger");
-        BoxCollision->SetEnable(false);
-        BoxCollision->SetDebugDraw(true);
-        BoxCollision->SetBeginOverlapFunc(this, &CMeleeWeapon::OnHitCollisionBeginOverlap);
-    }*/
-
     auto MoveComp = mMoveComp.lock();
     if (MoveComp)
     {
@@ -273,7 +250,7 @@ void CMeleeWeapon::SetTexture(const std::string& Name, const std::wstring& Textu
         FVector2 BoxSize = FVector2(MeshComp->GetRelativeScale().x, MeshComp->GetRelativeScale().y);
 
         BoxCollision->SetBoxSize(BoxSize);
-        BoxCollision->SetCollisionProfile("PlayerTrigger");
+        BoxCollision->SetCollisionProfile("DetectEnemy");
         BoxCollision->SetEnable(false);
         BoxCollision->SetDebugDraw(true);
         BoxCollision->SetBeginOverlapFunc(this, &CMeleeWeapon::OnHitCollisionBeginOverlap);

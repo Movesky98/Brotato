@@ -237,7 +237,7 @@ void CEnemy::SetSkills(const std::unordered_multimap<ESkillTrigger, std::shared_
 			PerceptionRange->SetInheritScale(false);
 			PerceptionRange->SetRadius(200.f);
 			PerceptionRange->SetDebugDraw(true);
-			PerceptionRange->SetCollisionProfile("EnemyTrigger");
+			PerceptionRange->SetCollisionProfile("DetectPlayer");
 			PerceptionRange->SetBeginOverlapFunc(this, &CEnemy::OnPerceptionRangeBeginOverlap);
 			PerceptionRange->SetEndOverlapFunc(this, &CEnemy::OnPerceptionRangeEndOverlap);
 		}

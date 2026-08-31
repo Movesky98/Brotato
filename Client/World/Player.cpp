@@ -161,7 +161,7 @@ bool CPlayer::Init()
 		Sphere->SetInheritScale(false);
 		Sphere->SetRadius(120.f);
 		Sphere->SetDebugDraw(true);
-		Sphere->SetCollisionProfile("PlayerTrigger");
+		Sphere->SetCollisionProfile("DetectEnemy");
 	}
 
 	auto Input = mWorld.lock()->GetInput().lock();

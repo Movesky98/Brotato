@@ -39,7 +39,7 @@ bool CWeapon::Init()
 	if (SphereCollision)
 	{
 		SphereCollision->SetRadius(150.f);
-		SphereCollision->SetCollisionProfile("PlayerTrigger");
+		SphereCollision->SetCollisionProfile("DetectEnemy");
 		SphereCollision->SetDebugDraw(false);
 		SphereCollision->SetBeginOverlapFunc(this, &CWeapon::OnCollisionBeginOverlap);
 		SphereCollision->SetEndOverlapFunc(this, &CWeapon::OnCollisionEndOverlap);
