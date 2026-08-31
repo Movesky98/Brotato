@@ -113,7 +113,7 @@ void CEnemy::Update(float DeltaTime)
 
 void CEnemy::Destroy()
 {
-	auto World = GetWorld().lock();
+	/*auto World = GetWorld().lock();
 	if (World)
 	{
 		auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(World);
@@ -121,7 +121,7 @@ void CEnemy::Destroy()
 		{
 			MainWorld->NotifyEnemyDead();
 		}
-	}
+	}*/
 
 	CActor::Destroy();
 }
@@ -385,6 +385,8 @@ void CEnemy::OnPerceptionRangeEndOverlap(std::weak_ptr<class CCollider> Collider
 void CEnemy::OnDeath()
 {
 	UseSkill(ESkillTrigger::OnDeath);
+
+	mNotifyDeathFunc(GetWorldPos());
 
 	Destroy();
 }

@@ -3,6 +3,7 @@
 #include "Wall.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "MaterialItem.h"
 #include "DataManager.h"
 
 #include "PauseMenu.h"
@@ -350,10 +351,11 @@ void CMainWorld::InitializeInputSettings()
 	}
 }
 
-void CMainWorld::NotifyEnemyDead()
+void CMainWorld::OnEnemyDeath(const FVector3& DeathPos)
 {
 	if (mStage != EGameplayStage::Wave) return;
 
+	SpawnMaterial(DeathPos);
 	AliveEnemyCount--;
 
 	if (MaxAliveEnemy > AliveEnemyCount)
@@ -400,9 +402,21 @@ void CMainWorld::SpawnEnemy(const std::weak_ptr<class CPlayer>& wPlayer)
 		SpawnPos.y *= IsNegativeY ? -1.f : 1.f;
 
 		Enemy->SetWorldPos(SpawnPos);
+		Enemy->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
 
 		AliveEnemyCount++;
 	}
+}
+
+void CMainWorld::SpawnMaterial(const FVector3& SpawnPos)
+{
+	auto Material = CreateActor<CMaterialItem>("MaterialItem").lock();
+
+	if (Material)
+	{
+		Material->SetWorldPos(SpawnPos);
+	}
+
 }
 
 void CMainWorld::WaveStart()

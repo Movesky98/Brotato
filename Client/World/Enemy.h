@@ -26,6 +26,18 @@ public:
 	CEnemy(CEnemy&& src) noexcept;
 	virtual ~CEnemy();
 
+public:
+	virtual bool Init();
+	virtual void Update(float DeltaTime);
+	virtual void Destroy();
+	virtual float TakeDamage(float fDamage, const std::string& Instigator, const std::weak_ptr<CActor>& CauseActor);
+
+protected:
+	virtual CEnemy* Clone()
+	{
+		return new CEnemy(*this);
+	}
+
 protected:
 	std::weak_ptr<class CMeshComponent> mMeshComp;
 	std::weak_ptr<class CColliderBox2D> mBoxCollision;
@@ -38,19 +50,16 @@ protected:
 
 	void UseSkill(const ESkillTrigger Trigger);
 
-protected:
-	virtual CEnemy* Clone()
-	{
-		return new CEnemy(*this);
-	}
+	std::function<void(const FVector3& /* DeathPosition */)> mNotifyDeathFunc;
 
 public:
-	virtual bool Init();
-	virtual void Update(float DeltaTime);
-	virtual void Destroy();
-	virtual float TakeDamage(float fDamage, const std::string& Instigator, const std::weak_ptr<CActor>& CauseActor);
-
 	bool InitializeEnemyInfo(const std::shared_ptr<const CEnemyData>& Data, const std::weak_ptr<CActor> Target);
+
+	template<typename T>
+	void SetNotifyDeathFunc(T* Object, void (T::* Func)(const FVector3&))
+	{
+		mNotifyDeathFunc = std::bind(Func, Object, std::placeholders::_1);
+	}
 
 protected:
 	bool mIsHit = false;
@@ -78,7 +87,6 @@ protected:
 	bool mIsKnockBack = true;
 
 	std::weak_ptr<CActor> mTarget;
-
 
 	std::vector<EEnemyMovement> MovementsByRange;
 	ERangeState CurrentRangeState = ERangeState::OutOfRange;

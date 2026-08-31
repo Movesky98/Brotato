@@ -66,6 +66,8 @@ protected:
 
 	void SpawnPlayer();
 	void SpawnEnemy(const std::weak_ptr<class CPlayer>& wPlayer);
+	void OnEnemyDeath(const FVector3& DeathPos);
+	void SpawnMaterial(const FVector3& SpawnPos);
 
 	void WaveStart();
 	void WaveEnd();
@@ -73,7 +75,6 @@ protected:
 	void EnterShop();
 
 public:
-	void NotifyEnemyDead();
 
 	const FArenaDesc GetArenaDesc() const { return mArenaDesc; }
 

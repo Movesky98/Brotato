@@ -11,7 +11,7 @@ protected:
 
 	bool mIsDead = false;
 
-	std::function<void()> mDeathFunc;
+	std::vector<std::function<void()>> mDeathFuncs;
 	std::function<void(float /* Current */, float /* Max */)> mUpdateHPFunc;
 
 	void SetHPMax(float HPMax)
@@ -23,6 +23,8 @@ protected:
 	virtual void SetHP(float HP) = 0;
 
 	void AddHP(float HP);
+
+	void CallDeathFuncs();
 
 public:
 	float GetHP() const
@@ -44,7 +46,8 @@ public:
 	template<typename T>
 	void SetDeathFunction(T* Object, void (T::* Func)())
 	{
-		mDeathFunc = std::bind(Func, Object);
+		auto BindFunc = std::bind(Func, Object);
+		mDeathFuncs.push_back(BindFunc);
 	}
 
 	template<typename T>
