@@ -453,7 +453,6 @@ void CPlayer::TestInput()
 					SpawnDirection.Normalize();
 
 					Weapon->SetWorldPos(GetWorldPos() + SpawnDirection * 50.f);
-					Weapon->SetWorldScale(40.f, 40.f);
 					Weapon->SetRelativeRotationZ(Angle * Index);
 				}
 			}
@@ -555,7 +554,6 @@ void CPlayer::SetWeaponSettings()
 			SpawnDirection.Normalize();
 
 			Weapon->SetWorldPos(GetWorldPos() + SpawnDirection * 50.f);
-			Weapon->SetWorldScale(40.f, 40.f);
 			Weapon->SetRelativeRotationZ(Angle * Index);
 		}
 	}
