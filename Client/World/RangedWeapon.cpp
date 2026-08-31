@@ -29,26 +29,6 @@ bool CRangedWeapon::Init()
 {
     if (!CWeapon::Init()) return false;
 
-	//auto MeshComp = mMeshComp.lock();
-
-	//if (MeshComp)
-	//{
-	//	MeshComp->SetMesh("TexRect");
-	//	MeshComp->SetShader("Material");
-	//	MeshComp->AddTexture(0, "RangedWeapon", TEXT("Custom/pistol.png"));
-	//	MeshComp->AddTexture(0, "DissolveTexture", TEXT("dissolve_smoke.png"), "Texture", 1);
-	//	MeshComp->SetBlendState(0, "AlphaBlend");
-	//	MeshComp->SetRelativeScale(40.f, 40.f);
-	//}
-
-	//auto SphereCollision = mSphereCollision.lock();
-	//if (SphereCollision)
-	//{
-	//	SphereCollision->SetRadius(300.f);
-	//}
-
-	//mAttackDelay = 0.1f;
-
     return true;
 }
 
