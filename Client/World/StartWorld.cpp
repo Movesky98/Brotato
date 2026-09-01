@@ -4,6 +4,7 @@
 
 #include "World/UIManager.h"
 #include "StartWidget.h"
+#include "TitleScreen.h"
 
 CStartWorld::CStartWorld()
 {}
@@ -21,7 +22,7 @@ bool CStartWorld::Init()
 
 	if (UIMgr)
 	{
-		auto MainUI = UIMgr->CreateWidgetContainer<CStartWidget>("StartWidget", 0).lock();
+		auto MainUI = UIMgr->CreateWidgetContainer<CTitleScreen>("TitleScreen", 0).lock();
 
 		if (MainUI)
 		{

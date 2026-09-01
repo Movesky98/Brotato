@@ -201,6 +201,7 @@
     <ClCompile Include="World\StartWidget.cpp" />
     <ClCompile Include="World\StartWorld.cpp" />
     <ClCompile Include="World\StatRow.cpp" />
+    <ClCompile Include="World\TitleScreen.cpp" />
     <ClCompile Include="World\Wall.cpp" />
     <ClCompile Include="World\Weapon.cpp" />
     <ClCompile Include="World\WeaponData.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="World\StartWidget.h" />
     <ClInclude Include="World\StartWorld.h" />
     <ClInclude Include="World\StatRow.h" />
+    <ClInclude Include="World\TitleScreen.h" />
     <ClInclude Include="World\Wall.h" />
     <ClInclude Include="World\Weapon.h" />
     <ClInclude Include="World\WeaponData.h" />
