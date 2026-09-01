@@ -454,6 +454,25 @@ void CMainWorld::WaveEnd()
 	// 그리고 웨이브 끝나면 살아있던 Enemy 다 죽어야 함
 	mStage = EGameplayStage::Shop;
 
+	// WaveEnd Delegate 함수 실행.
+	// 적, 스폰 포인트 객체는 여기에 오면 안됨.
+	// 차라리 여기서 삭제하게 하는게 나을 수도 있긴 하겠다.
+	auto iter = mOnWaveEndedFuncs.begin();
+	auto iterEnd = mOnWaveEndedFuncs.end();
+	for (; iter != iterEnd;)
+	{
+		if (iter->first.expired())
+		{
+			iter = mOnWaveEndedFuncs.erase(iter);
+			iterEnd = mOnWaveEndedFuncs.end();
+		}
+
+		if (iter->second)
+			iter->second();
+
+		iter++;
+	}
+
 	// 생존해있는 적들 삭제
 	std::list<std::weak_ptr<CEnemy>> Enemies;
 
@@ -502,6 +521,11 @@ void CMainWorld::EnterShop()
 	
 
 	// WaveStart();
+}
+
+std::weak_ptr<class CPlayer> CMainWorld::GetPlayer() const
+{
+	return mPlayer;
 }
 
 void CMainWorld::TogglePauseMenu()

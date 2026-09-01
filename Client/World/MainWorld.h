@@ -33,6 +33,38 @@ protected:
 	std::weak_ptr<class CPlayerHUD> mPlayerHUD;
 	std::vector<std::weak_ptr<class CWall>> mWalls;
 
+	std::vector<std::pair<std::weak_ptr<CActor>, std::function<void()>>> mOnWaveEndedFuncs;
+
+public:
+	template<typename T>
+	void SetOnWaveEndedFunction(T* Object, void(T::* Func)())
+	{
+		std::weak_ptr<CActor> BindObject = Object->GetThisPtr<CActor>();
+		auto BindFunc = std::bind(Func, Object);
+
+		mOnWaveEndedFuncs.push_back(std::make_pair(BindObject, BindFunc));
+	}
+
+	template<typename T>
+	void RemoveOnWaveEndedFunction(T* Object)
+	{
+		std::weak_ptr<CActor> ObjectPtr = Object->GetThisPtr<CActor>();
+		
+		auto iter = mOnWaveEndedFuncs.begin();
+		auto iterEnd = mOnWaveEndedFuncs.end();
+		
+		for (; iter != iterEnd;)
+		{
+			if (iter->first.owner_before(ObjectPtr) && ObjectPtr.owner_before(iter->first))
+			{
+				mOnWaveEndedFuncs.erase(iter);
+				return;
+			}
+
+			++iter;
+		}
+	}
+
 protected:
 	void InitializeInputSettings();
 
@@ -78,6 +110,7 @@ protected:
 public:
 
 	const FArenaDesc GetArenaDesc() const { return mArenaDesc; }
+	std::weak_ptr<class CPlayer> GetPlayer() const;
 
 	/* UI */
 protected:

@@ -1,5 +1,8 @@
 #include "MaterialItem.h"
 
+#include "MainWorld.h"
+#include "Player.h"
+
 #include "World/MeshComponent.h"
 #include "World/ColliderBox2D.h"
 #include "World/MovementComponent.h"
@@ -69,6 +72,12 @@ bool CMaterialItem::Init()
         BoxCollision->SetBeginOverlapFunc(this, &CMaterialItem::OnCollsiionBeginOverlap);
     }
 
+    auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());
+    if (MainWorld)
+    {
+        MainWorld->SetOnWaveEndedFunction(this, &CMaterialItem::OnWaveEnded);
+    }
+
     return true;
 }
 
@@ -94,6 +103,12 @@ void CMaterialItem::Destroy()
     if (Target && mOnAcquiredFunc)
     {
         mOnAcquiredFunc(1);
+    }
+
+    auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());
+    if (MainWorld)
+    {
+        MainWorld->RemoveOnWaveEndedFunction(this);
     }
 
     CActor::Destroy();
@@ -130,5 +145,15 @@ void CMaterialItem::OnCollsiionBeginOverlap(const FVector3& HitPoint, const FVec
     if (Player && Player->GetActorTag() == "Player")
     {
         Destroy();
+    }
+}
+
+void CMaterialItem::OnWaveEnded()
+{
+    auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());
+    if (MainWorld)
+    {
+        auto Player = MainWorld->GetPlayer().lock();
+        mTarget = Player;
     }
 }
