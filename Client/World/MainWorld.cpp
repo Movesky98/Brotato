@@ -11,6 +11,7 @@
 #include "PlayerHUD.h"
 #include "ItemSlot.h"
 
+#include "DataAsset.h"
 #include "EnemyData.h"
 #include "BackgroundActor.h"
 
@@ -363,8 +364,48 @@ void CMainWorld::OnEnemyDeath(const FVector3& DeathPos)
 
 	if (MaxAliveEnemy > AliveEnemyCount)
 	{
-		SpawnEnemy(mPlayer);
+		CreateSpawnPoint(ESpawnType::Enemy);
 	}
+}
+
+void CMainWorld::CreateSpawnPoint(ESpawnType Type)
+{
+	auto SpawnPoint = CreateActor<CSpawnPoint>("SpawnActor").lock();
+	if (!SpawnPoint) return;
+
+	std::weak_ptr<CDataAsset> Data;
+	switch (Type)
+	{
+	case ESpawnType::Enemy:
+		Data = CDataManager::GetInst()->GetRandomEnemyData();
+		break;
+	case ESpawnType::Structure:
+		break;
+	default:
+		break;
+	}
+
+	SpawnPoint->SetWorldPos(GetRandomSpawnPosition());
+	SpawnPoint->InitializeSpawnSettings(Type, Data);
+	SpawnPoint->SetOnSpawnEntityFunction(this, &CMainWorld::SpawnEntity);
+}
+
+void CMainWorld::SpawnEntity(const FVector3 SpawnPos, ESpawnType Type, std::weak_ptr<CDataAsset> Data)
+{
+	if (Data.expired()) return;
+	if (mStage != EGameplayStage::Wave) return;
+
+	switch (Type)
+	{
+	case ESpawnType::Enemy:
+		SpawnEnemy(SpawnPos, mPlayer, std::dynamic_pointer_cast<CEnemyData>(Data.lock()));
+		break;
+	case ESpawnType::Structure:
+		break;
+	default:
+		break;
+	}
+
 }
 
 void CMainWorld::SpawnPlayer()
@@ -379,34 +420,18 @@ void CMainWorld::SpawnPlayer()
 	}
 }
 
-void CMainWorld::SpawnEnemy(const std::weak_ptr<class CPlayer>& wPlayer)
+void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CEnemyData> Data)
 {
-	FVector2 TileMapSize;
-	TileMapSize.x = mArenaDesc.CountX * mArenaDesc.TileSize;
-	TileMapSize.y = mArenaDesc.CountY * mArenaDesc.TileSize;
+	if (!Data || wPlayer.expired()) return;
 
-	FVector3 SpawnPos;
-	SpawnPos.x = (float)(rand() % (int)(TileMapSize.x / 2 - 2 * mArenaDesc.TileSize));
-	SpawnPos.y = (float)(rand() % (int)(TileMapSize.y / 2 - 2 * mArenaDesc.TileSize));
-
-	auto Enemy = CreateActor<CEnemy>("Enemy").lock();
 	auto Player = wPlayer.lock();
-	if (Enemy && Player)
+	auto Enemy = CreateActor<CEnemy>("Enemy").lock();
+
+	if (Player && Enemy)
 	{
-		auto EnemyInfo = CDataManager::GetInst()->GetRandomEnemyData();
-		// auto EnemyInfo = CDataManager::GetInst()->GetEnemyData(1001);
-		Enemy->InitializeEnemyInfo(EnemyInfo, mPlayer);
-
-		bool IsNegativeX = rand() % 2;
-		bool IsNegativeY = rand() % 2;
-
-		// Negative 여부
-		SpawnPos.x *= IsNegativeX ? -1.f : 1.f;
-		SpawnPos.y *= IsNegativeY ? -1.f : 1.f;
-
+		Enemy->InitializeEnemyInfo(Data, Player);
 		Enemy->SetWorldPos(SpawnPos);
 		Enemy->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
-
 		AliveEnemyCount++;
 	}
 }
@@ -419,7 +444,6 @@ void CMainWorld::SpawnMaterial(const FVector3& SpawnPos)
 	{
 		Material->SetWorldPos(SpawnPos);
 	}
-
 }
 
 void CMainWorld::WaveStart()
@@ -447,7 +471,7 @@ void CMainWorld::WaveStart()
 
 	for (int i = 0; i < MaxAliveEnemy; i++)
 	{
-		SpawnEnemy(mPlayer);
+		CreateSpawnPoint(ESpawnType::Enemy);
 	}
 }
 
@@ -478,6 +502,7 @@ void CMainWorld::WaveEnd()
 
 	// 생존해있는 적들 삭제
 	std::list<std::weak_ptr<CEnemy>> Enemies;
+	std::list<std::weak_ptr<CSpawnPoint>> SpawnPoints;
 
 	if (FindObjectList<CEnemy>(Enemies))
 	{
@@ -488,6 +513,18 @@ void CMainWorld::WaveEnd()
 			{
 				// 우선 이렇게
 				Enemy->Destroy();
+			}
+		}
+	}
+
+	if (FindObjectList<CSpawnPoint>(SpawnPoints))
+	{
+		for (auto& SpawnPoint : SpawnPoints)
+		{
+			auto Point = SpawnPoint.lock();
+			if (Point)
+			{
+				Point->Destroy();
 			}
 		}
 	}
@@ -524,6 +561,23 @@ void CMainWorld::EnterShop()
 	
 
 	// WaveStart();
+}
+
+FVector3 CMainWorld::GetRandomSpawnPosition() const
+{
+	FVector2 TileMapSize;
+	TileMapSize.x = mArenaDesc.CountX * mArenaDesc.TileSize;
+	TileMapSize.y = mArenaDesc.CountY * mArenaDesc.TileSize;
+
+	FVector3 SpawnPos;
+	SpawnPos.x = (float)(rand() % (int)(TileMapSize.x / 2 - 2 * mArenaDesc.TileSize));
+	SpawnPos.y = (float)(rand() % (int)(TileMapSize.y / 2 - 2 * mArenaDesc.TileSize));
+
+	// Negative 여부
+	SpawnPos.x *= rand() % 2 ? -1.f : 1.f;
+	SpawnPos.y *= rand() % 2 ? -1.f : 1.f;
+
+	return SpawnPos;
 }
 
 std::weak_ptr<class CPlayer> CMainWorld::GetPlayer() const

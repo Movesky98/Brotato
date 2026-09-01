@@ -216,6 +216,9 @@
     <ClCompile Include="World\MaterialItem.cpp">
       <Filter>소스 파일\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="World\SpawnPoint.cpp">
+      <Filter>소스 파일\Actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -375,6 +378,9 @@
       <Filter>소스 파일\Interface</Filter>
     </ClInclude>
     <ClInclude Include="World\MaterialItem.h">
+      <Filter>소스 파일\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="World\SpawnPoint.h">
       <Filter>소스 파일\Actor</Filter>
     </ClInclude>
   </ItemGroup>

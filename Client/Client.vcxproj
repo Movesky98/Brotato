@@ -166,6 +166,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="World\ItemDetailPanel.cpp" />
     <ClCompile Include="World\ShopMenu.cpp" />
+    <ClCompile Include="World\SpawnPoint.cpp" />
     <ClCompile Include="World\StatPanel.cpp" />
     <ClCompile Include="World\SlotContainer.cpp" />
     <ClCompile Include="World\ItemSlot.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="World\ItemDetailPanel.h" />
     <ClInclude Include="World\ShopMenu.h" />
     <ClInclude Include="World\GameTypes.h" />
+    <ClInclude Include="World\SpawnPoint.h" />
     <ClInclude Include="World\StatPanel.h" />
     <ClInclude Include="World\ItemSlot.h" />
     <ClInclude Include="World\PauseMenu.h" />
