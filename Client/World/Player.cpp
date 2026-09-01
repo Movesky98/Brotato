@@ -208,11 +208,6 @@ bool CPlayer::Init()
 
 	if (mInventoryComponent.expired()) return false;
 
-	/*for (int i = 0; i < 6; i++)
-	{
-		TestInput();
-	}*/
-
 	return true;
 }
 

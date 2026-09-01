@@ -27,6 +27,10 @@ public:
 	CMainWorld();
 	virtual ~CMainWorld();
 
+public:
+	virtual bool Init();
+	virtual void Update(float DeltaTime) override;
+
 protected:
 	std::weak_ptr<class CPlayer> mPlayer;
 	std::weak_ptr<class CPauseMenu> mPauseMenu;
@@ -68,10 +72,6 @@ public:
 
 protected:
 	void InitializeInputSettings();
-
-public:
-	virtual bool Init();
-	virtual void Update(float DeltaTime) override;
 	
 	/* TileMap */
 protected:
@@ -113,11 +113,10 @@ protected:
 	void EnterShop();
 
 public:
-
 	const FArenaDesc GetArenaDesc() const { return mArenaDesc; }
 	FVector3 GetRandomSpawnPosition() const;
 	std::weak_ptr<class CPlayer> GetPlayer() const;
-
+	
 	/* UI */
 protected:
 	void TogglePauseMenu();

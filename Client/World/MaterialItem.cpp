@@ -125,12 +125,6 @@ void CMaterialItem::Collect(const std::weak_ptr<CActor>& W_Collector, std::funct
     }
 
     mTarget = Collector;
-
-
-    // 1. Overlap Enable
-    // 2. 타겟 지정
-    // 3. 타겟에게 이동
-    // 4. Begin Overlap 때, 플레이어에게 닿으면 Destroy(), 재화++
 }
 
 void CMaterialItem::OnCollsiionBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider)

@@ -180,7 +180,7 @@ bool CEnemy::InitializeEnemyInfo(const std::shared_ptr<const CEnemyData>& Data, 
 	{
 		BoxCollision->SetInheritScale(true);
 		BoxCollision->SetBoxSize(Texture.SizeX, 40.f);
-		BoxCollision->SetDebugDraw(true);
+		BoxCollision->SetDebugDraw(false);
 		BoxCollision->SetCollisionProfile("Enemy");
 		BoxCollision->SetBeginOverlapFunc(this, &CEnemy::OnCollisionBeginOverlap);
 		BoxCollision->SetEndOverlapFunc(this, &CEnemy::OnCollisionEndOverlap);
@@ -236,7 +236,7 @@ void CEnemy::SetSkills(const std::unordered_multimap<ESkillTrigger, std::shared_
 		{
 			PerceptionRange->SetInheritScale(false);
 			PerceptionRange->SetRadius(200.f);
-			PerceptionRange->SetDebugDraw(true);
+			PerceptionRange->SetDebugDraw(false);
 			PerceptionRange->SetCollisionProfile("DetectPlayer");
 			PerceptionRange->SetBeginOverlapFunc(this, &CEnemy::OnPerceptionRangeBeginOverlap);
 			PerceptionRange->SetEndOverlapFunc(this, &CEnemy::OnPerceptionRangeEndOverlap);
