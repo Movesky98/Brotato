@@ -13,6 +13,7 @@ public:
 public:
 	virtual bool Init();
 	virtual void Update(float DeltaTime);
+	virtual void Destroy();
 
 protected:
 	virtual CMaterialItem* Clone()
@@ -27,8 +28,10 @@ protected:
 
 	std::weak_ptr<CActor> mTarget;
 
+	std::function<void(int)> mOnAcquiredFunc;
+
 protected:
-	void Collect(const std::weak_ptr<CActor>& W_Collector) override;
+	void Collect(const std::weak_ptr<CActor>& W_Collector, std::function<void(int)> BindFunc) override;
 	void OnCollsiionBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider);
 
 };

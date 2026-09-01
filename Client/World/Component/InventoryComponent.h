@@ -15,6 +15,7 @@ public:
 protected:
 	std::unordered_multimap<EDataAssetType /* AssetType */, std::weak_ptr<CDataAsset> /* DataAsset */> mDataAssets;
 	FStat mStat;
+	int mMaterial = 0;
 
 public:
 	virtual bool Init();
@@ -28,8 +29,10 @@ public:
 
 protected:
 	std::vector<std::function<void()>> mOnUpdatedAssetsFuncs;
+	std::vector<std::function<void(int)>> mOnAddedMaterialFuncs;
 
 	void CallOnUpdatedAssetsFunction();
+	void CallOnAddedMaterialFunction();
 
 public:
 	std::vector<std::weak_ptr<CDataAsset>> GetWeaponData() const;
@@ -46,7 +49,16 @@ public:
 		mOnUpdatedAssetsFuncs.push_back(BindFunc);
 	}
 
-	const FStat GetStat() const { return mStat; }
+	template<typename T>
+	void SetOnAddedMaterialFunction(T* Object, void(T::* Func)(int))
+	{
+		std::function<void(int)> BindFunc = std::bind(Func, Object, std::placeholders::_1);
 
+		mOnAddedMaterialFuncs.push_back(BindFunc);
+	}
+
+	const FStat GetStat() const { return mStat; }
+	int GetMaterial() const { return mMaterial; }
+	void AddMaterial(int Amount);
 };
 

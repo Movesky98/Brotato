@@ -59,6 +59,7 @@ protected:
 	float mRemainingWaveTime = 10.f;	// 현재 웨이브가 끝날 때까지 남아있는 시간
 
 	int mCurrentWave = 0;
+	int mCurrentMaterial = 0;
 
 	EGameplayStage mStage = EGameplayStage::None;
 

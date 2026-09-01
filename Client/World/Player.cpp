@@ -335,9 +335,12 @@ void CPlayer::OnPickupRangeBeginOverlap(const FVector3& HitPoint, const FVector3
 	if (!ColliderOwner) return;
 
 	auto CollectableActor = std::dynamic_pointer_cast<ICollectableInterface>(ColliderOwner);
-	if (CollectableActor)
+	auto InvComp = mInventoryComponent.lock();
+	if (CollectableActor && InvComp)
 	{
-		CollectableActor->Collect(GetThisPtr<CActor>());
+		std::function<void(int)> BindFunc = std::bind(&CInventoryComponent::AddMaterial, InvComp, std::placeholders::_1);
+
+		CollectableActor->Collect(GetThisPtr<CActor>(), BindFunc);
 	}
 }
 

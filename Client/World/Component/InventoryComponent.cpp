@@ -45,6 +45,17 @@ void CInventoryComponent::CallOnUpdatedAssetsFunction()
     }
 }
 
+void CInventoryComponent::CallOnAddedMaterialFunction()
+{
+    for (auto It : mOnAddedMaterialFuncs)
+    {
+        if (It)
+        {
+            It(mMaterial);
+        }
+    }
+}
+
 std::vector<std::weak_ptr<CDataAsset>> CInventoryComponent::GetWeaponData() const
 {
     std::vector<std::weak_ptr<CDataAsset>> AssetArr;
@@ -93,4 +104,11 @@ void CInventoryComponent::AddItem(std::weak_ptr<CItemData> _Asset)
     mDataAssets.insert(std::pair(EDataAssetType::Item, _Asset));
 
     CallOnUpdatedAssetsFunction();
+}
+
+void CInventoryComponent::AddMaterial(int Amount)
+{
+    mMaterial += Amount;
+
+    CallOnAddedMaterialFunction();
 }

@@ -48,7 +48,7 @@ bool CMaterialItem::Init()
         MeshComp->AddTexture(0, Name, TexturePath.c_str());
         MeshComp->SetBlendState(0, "AlphaBlend");
         MeshComp->SetRelativeScale(40.f, 40.f);
-        MeshComp->SetBaseColor(0, FVector4(0.462745, 1.0, 0.462745, 1.f));
+        MeshComp->SetBaseColor(0, FVector4(0.462745f, 1.0f, 0.462745f, 1.f));
     }
 
     auto MoveComp = mMoveComp.lock();
@@ -88,10 +88,26 @@ void CMaterialItem::Update(float DeltaTime)
     }
 }
 
-void CMaterialItem::Collect(const std::weak_ptr<CActor>& W_Collector)
+void CMaterialItem::Destroy()
+{
+    auto Target = mTarget.lock();
+    if (Target && mOnAcquiredFunc)
+    {
+        mOnAcquiredFunc(1);
+    }
+
+    CActor::Destroy();
+}
+
+void CMaterialItem::Collect(const std::weak_ptr<CActor>& W_Collector, std::function<void(int)> BindFunc)
 {
     auto Collector = W_Collector.lock();
     if (!Collector) return;
+
+    if (BindFunc)
+    {
+        mOnAcquiredFunc = BindFunc;
+    }
 
     mTarget = Collector;
 
