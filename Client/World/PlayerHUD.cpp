@@ -1,5 +1,7 @@
 #include "PlayerHUD.h"
 
+#include "Component/InventoryComponent.h"
+
 #include "World/Image.h"
 #include "World/TextBlock.h"
 #include "World/ProgressBar.h"
@@ -25,6 +27,7 @@ bool CPlayerHUD::Init()
     mWaveCountText = CreateWidget<CTextBlock>("WaveCountText");
     mLifeBar = CreateWidget<CProgressBar>("HPBar");
     mXPBar = CreateWidget<CProgressBar>("ProgressBar");
+    mMaterialText = CreateWidget<CTextBlock>("MaterialText");
 
     auto WaveText = mWaveText.lock();
     auto WaveCountText = mWaveCountText.lock();
@@ -116,6 +119,25 @@ bool CPlayerHUD::Init()
         }
     }
 
+    auto MaterialIcon = CreateWidget<CImage>("MaterialIcon").lock();
+    auto MaterialText = mMaterialText.lock();
+    if (MaterialIcon && MaterialText)
+    {
+        MaterialIcon->SetPos(10.f, 93.f);
+        MaterialIcon->SetSize(42.f, 42.f);
+        MaterialIcon->SetTexture("MaterialIcon", TEXT("Custom/Material/material_ui.png"));
+        MaterialIcon->SetTint(0.462745f, 1.f, 0.462745f, 1.f);
+
+        MaterialText->SetPos(60.f, 93.f);
+        MaterialText->SetSize(132.f, 42.f);
+        MaterialText->SetFontSize(36.f);
+        MaterialText->SetText(TEXT("0"));
+        MaterialText->SetAlignH(ETextAlignH::Left);
+        MaterialText->SetAlignV(ETextAlignV::Middle);
+        MaterialText->SetTextColor(FVector4::White);
+    }
+
+
     return true;
 }
 
@@ -178,5 +200,25 @@ void CPlayerHUD::SetXPText(int XPLevel)
         std::wstring WaveWStr = L"LV." + std::to_wstring(XPLevel);
 
         XPText->SetText(WaveWStr.c_str());
+    }
+}
+
+void CPlayerHUD::SetMaterialText(int Material)
+{
+    auto MaterialText = mMaterialText.lock();
+    if (MaterialText)
+    {
+        MaterialText->SetText(std::to_wstring(Material).c_str());
+    }
+}
+
+void CPlayerHUD::InitializeWithInventory(std::weak_ptr<class CInventoryComponent> InvCompWeak)
+{
+    auto InvComp = InvCompWeak.lock();
+    if (InvComp)
+    {
+        InvComp->SetOnAddedMaterialFunction(this, &CPlayerHUD::SetMaterialText);
+
+       
     }
 }

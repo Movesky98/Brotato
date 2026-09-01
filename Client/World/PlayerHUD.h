@@ -22,6 +22,8 @@ protected:
 	std::weak_ptr<class CProgressBar> mXPBar;
 	std::weak_ptr<class CTextBlock> mXPText;
 
+	std::weak_ptr<class CTextBlock> mMaterialText;
+
 	void SetLifeBarPercent(const float Percent);
 	
 public:
@@ -31,5 +33,8 @@ public:
 	void SetLifeText(float CurrentHP, float MaxHP);
 	void SetXPText(int XPLevel);
 
+	void SetMaterialText(int Material);
+
+	void InitializeWithInventory(std::weak_ptr<class CInventoryComponent> InvCompWeak);
 };
 

@@ -14,6 +14,8 @@
 #include "EnemyData.h"
 #include "BackgroundActor.h"
 
+#include "Component/InventoryComponent.h"
+
 #include "LogManager.h"
 
 #include "World/CameraManager.h"
@@ -74,6 +76,7 @@ bool CMainWorld::Init()
 			PlayerHUD->SetEnable(true);
 
 			PlayerHUD->SetLifeText(Player->GetHP(), Player->GetMaxHP());
+			PlayerHUD->InitializeWithInventory(Player->GetInventoryComponent());
 			Player->SetUpdateHPFunction(PlayerHUD.get(), &CPlayerHUD::SetLifeText);
 		}
 

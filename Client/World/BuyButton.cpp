@@ -54,7 +54,7 @@ bool CBuyButton::Init()
 		Icon->SetPos(77.f, 8.f);
 		Icon->SetSize(30.f, 30.f);
 		Icon->SetTexture("MaterialIcon", TEXT("Custom/Material/Harvesting_Icon.png"));
-		Icon->SetTint(1.f, 1.f, 1.f, 1.f);
+		Icon->SetTint(0.462745f, 1.f, 0.462745f, 1.f);
 	}
 
 	auto PriceText = mPriceText.lock();

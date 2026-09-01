@@ -30,6 +30,7 @@ public:
 	void SetTrailingIconPos(float x, float y);
 	void SetTrailingIconSize(float x, float y);
 	void SetTrailingIconTexture(const std::string Name, const TCHAR* FilePath);
+	void SetTrailingIconTint(FVector4 Tint);
 	void SetTrailingIconEnable(bool IsEnable);
 	
 	void SetLabelText(const TCHAR* Text);

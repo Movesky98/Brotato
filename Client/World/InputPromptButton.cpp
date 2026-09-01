@@ -155,6 +155,15 @@ void CInputPromptButton::SetTrailingIconTexture(const std::string Name, const TC
     }
 }
 
+void CInputPromptButton::SetTrailingIconTint(FVector4 Tint)
+{
+    auto TrailingIcon = mTrailingIcon.lock();
+    if (TrailingIcon)
+    {
+        TrailingIcon->SetTint(Tint);
+    }
+}
+
 void CInputPromptButton::SetTrailingIconEnable(bool IsEnable)
 {
     auto TrailingIcon = mTrailingIcon.lock();

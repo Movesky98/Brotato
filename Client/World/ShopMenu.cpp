@@ -37,6 +37,7 @@ bool CShopMenu::Init()
     mWeaponSlotContainer = CreateWidget<CSlotContainer>("WeaponSlotContainer");
     mRerollButton = CreateWidget<CInputPromptButton>("RerollButton");
     mCurrentWaveText = CreateWidget<CTextBlock>("CurrentWaveText");
+    mMaterialText = CreateWidget<CTextBlock>("MaterialText");
 
     auto StatPanel = mStatPanel.lock();
     if (StatPanel)
@@ -75,6 +76,7 @@ bool CShopMenu::Init()
         RerollButton->SetTrailingIconPos(179.f, 8.f);
         RerollButton->SetTrailingIconSize(28.f, 28.f);
         RerollButton->SetTrailingIconTexture("MaterialIcon", TEXT("Custom/Material/Harvesting_Icon.png"));
+        RerollButton->SetTrailingIconTint(FVector4(0.462745f, 1.f, 0.462745f, 1.f));
         RerollButton->SetClickedButtonFunction(EWidgetEventState::Clicked, this, &CShopMenu::OnClickedRerollButton);
     }
 
@@ -86,6 +88,24 @@ bool CShopMenu::Init()
         CurrentWaveText->SetFontSize(36.f);
         CurrentWaveText->SetTextColor(FVector4::White);
         CurrentWaveText->SetAlignV(ETextAlignV::Middle);
+    }
+
+    auto MaterialText = mMaterialText.lock();
+    auto MaterialIcon = CreateWidget<CImage>("MaterialIcon").lock();
+    if (MaterialIcon && MaterialText)
+    {
+        MaterialIcon->SetPos(502.f, 20.f);
+        MaterialIcon->SetSize(40.f, 40.f);
+        MaterialIcon->SetTexture("MaterialIcon", TEXT("Custom/Material/Harvesting_Icon.png"));
+        MaterialIcon->SetTint(FVector4(0.462745f, 1.f, 0.462745f, 1.f));
+        
+        MaterialText->SetPos(550.f, 15.f);
+        MaterialText->SetSize(190.f, 50.f);
+        MaterialText->SetText(TEXT("0"));
+        MaterialText->SetAlignH(ETextAlignH::Left);
+        MaterialText->SetAlignV(ETextAlignV::Middle);
+        MaterialText->SetTextColor(FVector4::White);
+        MaterialText->SetFontSize(44.f);
     }
 
     return true;
@@ -248,6 +268,15 @@ void CShopMenu::UpdateSlotContainer()
     }
 }
 
+void CShopMenu::SetMaterialText(int Material)
+{
+    auto MaterialText = mMaterialText.lock();
+    if (MaterialText)
+    {
+        MaterialText->SetText(std::to_wstring(Material).c_str());
+    }
+}
+
 void CShopMenu::OnClickedRerollButton()
 {
     CreateOfferCards();
@@ -289,6 +318,7 @@ void CShopMenu::InitializeWithInventory(std::weak_ptr<class CInventoryComponent>
     if (InvComp)
     {
         InvComp->SetUpdatedAssetsFunction(this, &CShopMenu::UpdateSlotContainer);
+        InvComp->SetOnAddedMaterialFunction(this, &CShopMenu::SetMaterialText);
 
         mPlayerInvComp = InvComp;
     }

@@ -27,6 +27,8 @@ protected:
 	std::weak_ptr<class CTextBlock>				mCurrentWaveText;
 	std::weak_ptr<class CInventoryComponent>	mPlayerInvComp;
 
+	std::weak_ptr<class CTextBlock>				mMaterialText;
+
 	std::function<void()> mNextWaveButtonClickedFunc;
 
 	void OnClickedRerollButton();
@@ -39,6 +41,7 @@ protected:
 	// 1. SlotContainer 업데이트
 	// 2. StatPanel 업데이트
 	void UpdateSlotContainer();
+	void SetMaterialText(int Material);
 
 	void AddDataAssetToInventoryComponent();
 
