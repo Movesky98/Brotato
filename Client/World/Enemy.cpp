@@ -179,7 +179,7 @@ bool CEnemy::InitializeEnemyInfo(const std::shared_ptr<const CEnemyData>& Data, 
 	if (BoxCollision)
 	{
 		BoxCollision->SetInheritScale(true);
-		BoxCollision->SetBoxSize(Texture.SizeX, 40.f);
+		BoxCollision->SetBoxSize(Texture.SizeX, Texture.SizeY);
 		BoxCollision->SetDebugDraw(false);
 		BoxCollision->SetCollisionProfile("Enemy");
 		BoxCollision->SetBeginOverlapFunc(this, &CEnemy::OnCollisionBeginOverlap);
