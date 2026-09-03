@@ -1,5 +1,6 @@
 #include "PlayerHUD.h"
 
+#include "Player.h"
 #include "Component/InventoryComponent.h"
 
 #include "World/Image.h"
@@ -11,7 +12,7 @@ CPlayerHUD::CPlayerHUD()
 }
 
 CPlayerHUD::CPlayerHUD(const CPlayerHUD& src)
-    : CWidgetContainer(src)
+    : CPlayerWidgetContainer(src)
 {
 }
 
@@ -21,7 +22,7 @@ CPlayerHUD::~CPlayerHUD()
 
 bool CPlayerHUD::Init()
 {
-    if (!CWidgetContainer::Init()) return false;
+    if (!CPlayerWidgetContainer::Init()) return false;
 
     mWaveText = CreateWidget<CTextBlock>("WaveText");
     mWaveCountText = CreateWidget<CTextBlock>("WaveCountText");
@@ -144,6 +145,23 @@ bool CPlayerHUD::Init()
 CPlayerHUD* CPlayerHUD::Clone()
 {
     return new CPlayerHUD(*this);
+}
+
+void CPlayerHUD::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
+{
+    if (InPlayer.expired()) return;
+
+    auto Player = InPlayer.lock();
+    auto InvComp = Player->GetInventoryComponent().lock();
+    if (InvComp && Player)
+    {
+        Player->SetUpdateHPFunction(this, &CPlayerHUD::SetLifeText);
+        InvComp ->SetOnAddedMaterialFunction(this, &CPlayerHUD::SetMaterialText);
+    }
+}
+
+void CPlayerHUD::UnsubscribeDelegates()
+{
 }
 
 void CPlayerHUD::SetLifeBarPercent(const float Percent)

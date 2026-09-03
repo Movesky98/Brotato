@@ -11,7 +11,9 @@
 #include "DataManager.h"
 #include "MainWorld.h"
 
+#include "Player.h"
 #include "Component/InventoryComponent.h"
+
 #include "ItemData.h"
 #include "WeaponData.h"
 
@@ -20,7 +22,7 @@ CShopMenu::CShopMenu()
 }
 
 CShopMenu::CShopMenu(const CShopMenu& src)
-    : CWidgetContainer(src)
+    : CPlayerWidgetContainer(src)
 {
 }
 
@@ -30,14 +32,23 @@ CShopMenu::~CShopMenu()
 
 bool CShopMenu::Init()
 {
-    if (!CWidgetContainer::Init()) return false;
+    if (!CPlayerWidgetContainer::Init()) return false;
 
+    mBackgroundImage = CreateWidget<CImage>("BackgroundImage");
     mStatPanel = CreateWidget<CStatPanel>("StatPanel");
     mItemSlotContainer = CreateWidget<CSlotContainer>("ItemSlotContainer");
     mWeaponSlotContainer = CreateWidget<CSlotContainer>("WeaponSlotContainer");
     mRerollButton = CreateWidget<CInputPromptButton>("RerollButton");
     mCurrentWaveText = CreateWidget<CTextBlock>("CurrentWaveText");
     mMaterialText = CreateWidget<CTextBlock>("MaterialText");
+
+    auto BackgroundImage = mBackgroundImage.lock();
+    if (BackgroundImage)
+    {
+        BackgroundImage->SetPos(0.f, 0.f);
+        BackgroundImage->SetSize(1280.f, 720.f);
+        BackgroundImage->SetTexture("Shop_BackgroundImage", TEXT("Custom/Shop/Background.png"));
+    }
 
     auto StatPanel = mStatPanel.lock();
     if (StatPanel)
@@ -114,6 +125,24 @@ bool CShopMenu::Init()
 CShopMenu* CShopMenu::Clone()
 {
     return new CShopMenu(*this);
+}
+
+void CShopMenu::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
+{
+    if (InPlayer.expired()) return;
+
+    auto Player = InPlayer.lock();
+    auto InvComp = Player->GetInventoryComponent().lock();
+    if (Player && InvComp)
+    {
+        InvComp->SetUpdatedAssetsFunction(this, &CShopMenu::UpdateSlotContainer);
+        InvComp->SetOnAddedMaterialFunction(this, &CShopMenu::SetMaterialText);
+        mPlayerInvComp = InvComp;
+    }
+}
+
+void CShopMenu::UnsubscribeDelegates()
+{
 }
 
 void CShopMenu::CreateNextWaveButton(int NextWave)
@@ -301,15 +330,20 @@ void CShopMenu::SetWaveTexts(int Wave)
     }
 }
 
-void CShopMenu::Show(int Wave)
+void CShopMenu::SetUp()
 {
-    SetEnable(true);
-    SetWaveTexts(Wave);
+    auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());
+    if (!MainWorld) return;
+
+    CPlayerWidgetContainer::SetUp();
+
+    SetWaveTexts(MainWorld->GetCurrentWave());
     CreateOfferCards();
 }
 
-void CShopMenu::Hide()
+void CShopMenu::TearDown()
 {
+    CPlayerWidgetContainer::TearDown();
 }
 
 void CShopMenu::InitializeWithInventory(std::weak_ptr<class CInventoryComponent> InvCompWeak)

@@ -6,6 +6,7 @@
 #include "MaterialItem.h"
 #include "DataManager.h"
 
+#include "PlayerWidgetContainer.h"
 #include "PauseMenu.h"
 #include "ShopMenu.h"
 #include "PlayerHUD.h"
@@ -76,9 +77,9 @@ bool CMainWorld::Init()
 			PlayerHUD->SetPos(0.f, 0.f);
 			PlayerHUD->SetEnable(true);
 
+			std::shared_ptr<CPlayerWidgetContainer> HUDBase = PlayerHUD;
+			HUDBase->SubscribeDelegates(Player);
 			PlayerHUD->SetLifeText(Player->GetHP(), Player->GetMaxHP());
-			PlayerHUD->InitializeWithInventory(Player->GetInventoryComponent());
-			Player->SetUpdateHPFunction(PlayerHUD.get(), &CPlayerHUD::SetLifeText);
 		}
 
 		mPauseMenu = UIManager->CreateWidgetContainer<CPauseMenu>("PauseMenu", 0);
@@ -87,6 +88,8 @@ bool CMainWorld::Init()
 		{
 			PauseMenu->SetPos(0.f, 0.f);
 			PauseMenu->SetEnable(false);
+			std::shared_ptr<CPlayerWidgetContainer> PauseBase = PauseMenu;
+			PauseBase->SubscribeDelegates(Player);
 		}
 
 		mShopMenu = UIManager->CreateWidgetContainer<CShopMenu>("ShopMenu", 0);
@@ -95,7 +98,8 @@ bool CMainWorld::Init()
 		{
 			ShopMenu->SetPos(0.f, 0.f);
 			ShopMenu->SetEnable(false);
-			ShopMenu->InitializeWithInventory(Player->GetInventoryComponent());
+			std::shared_ptr<CPlayerWidgetContainer> ShopBase = ShopMenu;
+			ShopBase->SubscribeDelegates(Player);
 			ShopMenu->SetOnClickedNextWaveFunction(this, &CMainWorld::WaveStart);
 		}
 	}
@@ -454,7 +458,7 @@ void CMainWorld::WaveStart()
 	auto ShopMenu = mShopMenu.lock();
 	if(ShopMenu)
 	{
-		ShopMenu->SetEnable(false);
+		ShopMenu->TearDown();
 	}
 
 	auto PlayerHUD = mPlayerHUD.lock();
@@ -550,7 +554,7 @@ void CMainWorld::EnterShop()
 	auto ShopMenu = mShopMenu.lock();
 	if (ShopMenu)
 	{
-		ShopMenu->Show(mCurrentWave);	
+		ShopMenu->SetUp();
 	}
 
 	// Hide PlayerHUD
@@ -589,17 +593,15 @@ std::weak_ptr<class CPlayer> CMainWorld::GetPlayer() const
 void CMainWorld::TogglePauseMenu()
 {
 	auto PauseMenu = mPauseMenu.lock();
-	auto Player = mPlayer.lock();
-	if (PauseMenu && Player)
+	if (PauseMenu)
 	{
 		if (PauseMenu->IsEnable())
 		{
-			PauseMenu->SetEnable(false);
+			PauseMenu->TearDown();
 		}
 		else
 		{
-			PauseMenu->UpdateInventory(Player->GetInventoryComponent());
-			PauseMenu->SetEnable(true);
+			PauseMenu->SetUp();
 		}
 	}
 }

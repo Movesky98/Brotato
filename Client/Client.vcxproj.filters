@@ -222,6 +222,9 @@
     <ClCompile Include="World\TitleScreen.cpp">
       <Filter>소스 파일\World\UI</Filter>
     </ClCompile>
+    <ClCompile Include="World\PlayerWidgetContainer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -388,6 +391,9 @@
     </ClInclude>
     <ClInclude Include="World\TitleScreen.h">
       <Filter>소스 파일\World\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="World\PlayerWidgetContainer.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

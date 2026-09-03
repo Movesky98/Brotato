@@ -1,8 +1,8 @@
 #pragma once
-#include "World/WidgetContainer.h"
+#include "PlayerWidgetContainer.h"
 #include <functional>
 
-class CShopMenu : public CWidgetContainer
+class CShopMenu : public CPlayerWidgetContainer
 {
 public:
 	CShopMenu();
@@ -16,6 +16,11 @@ public:
 	virtual CShopMenu* Clone();
 
 protected:
+	void SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer) override;
+	void UnsubscribeDelegates() override;
+
+protected:
+	std::weak_ptr<class CImage>					mBackgroundImage;
 	std::weak_ptr<class CStatPanel>				mStatPanel;
 	std::weak_ptr<class CShopOfferCard>			mOfferCards[4];
 	std::weak_ptr<class CSlotContainer>			mItemSlotContainer;
@@ -54,8 +59,8 @@ public:
 
 	void SetWaveTexts(int Wave);
 
-	void Show(int Wave);
-	void Hide();
+	virtual void SetUp();
+	virtual void TearDown();
 
 	void InitializeWithInventory(std::weak_ptr<class CInventoryComponent> InvCompWeak);
 	bool TryPurchase(const int ID, const bool IsWeapon, int Price);

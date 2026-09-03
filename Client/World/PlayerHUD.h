@@ -1,7 +1,7 @@
 #pragma once
-#include "World/WidgetContainer.h"
+#include "PlayerWidgetContainer.h"
 class CPlayerHUD :
-    public CWidgetContainer
+    public CPlayerWidgetContainer
 {
 public:
 	CPlayerHUD();
@@ -11,6 +11,10 @@ public:
 public:
 	virtual bool Init();
 	virtual CPlayerHUD* Clone();
+
+protected:
+	void SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer) override;
+	void UnsubscribeDelegates() override;
 
 protected:
 	std::weak_ptr<class CTextBlock> mWaveText;

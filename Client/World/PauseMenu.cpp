@@ -5,8 +5,10 @@
 #include "World/TextBlock.h"
 
 #include "StatPanel.h"
-#include "DataAsset.h"
 #include "SlotContainer.h"
+
+#include "MainWorld.h"
+#include "Player.h"
 #include "Component/InventoryComponent.h"
 
 #include "DataManager.h"
@@ -17,7 +19,7 @@ CPauseMenu::CPauseMenu()
 }
 
 CPauseMenu::CPauseMenu(const CPauseMenu& src)
-    : CWidgetContainer(src)
+    : CPlayerWidgetContainer(src)
 {
 }
 
@@ -27,7 +29,7 @@ CPauseMenu::~CPauseMenu()
 
 bool CPauseMenu::Init()
 {
-    if (!CWidgetContainer::Init()) return false;
+    if (!CPlayerWidgetContainer::Init()) return false;
 
     mResumeButton = CreateMenuButton("Resume", TEXT("Resume"), FVector2(64.f, 160.f));
     mEndRunButton = CreateMenuButton("EndRun", TEXT("EndRun"), FVector2(64.f, 216.f));
@@ -37,7 +39,8 @@ bool CPauseMenu::Init()
     mQuitButton = CreateMenuButton("Quit", TEXT("Quit"), FVector2(64.f, 440.f));
     
     mBackgroundImage = CreateWidget<CImage>("BackgroundImage", 0);
-    mStatPanel = CreateWidget<CStatPanel>("StatPanel", 0);
+    mBackgroundPanelImage = CreateWidget<CImage>("BackgroundPanelImage", 1);
+    mStatPanel = CreateWidget<CStatPanel>("StatPanel", 1);
 
     auto BackgroundImage = mBackgroundImage.lock();
     if (BackgroundImage)
@@ -45,7 +48,15 @@ bool CPauseMenu::Init()
         BackgroundImage->SetPos(0.f, 0.f);
         BackgroundImage->SetSize(1280.f, 720.f);
         BackgroundImage->SetTexture("Pause_BackgroundImage", TEXT("Custom/PauseMenu/Background.png"));
-        BackgroundImage->SetOpacity(0.6);
+    }
+
+    auto BackgroundPanelImage = mBackgroundPanelImage.lock();
+    if (BackgroundPanelImage)
+    {
+        BackgroundPanelImage->SetPos(0.f, 0.f);
+        BackgroundPanelImage->SetSize(1280.f, 720.f);
+        BackgroundPanelImage->SetTexture("Pause_BackgroundPanelImage", TEXT("Custom/PauseMenu/BackgroundPanel.png"));
+        BackgroundPanelImage->SetOpacity(0.6);
     }
 
     auto StatPanel = mStatPanel.lock();
@@ -65,10 +76,43 @@ CPauseMenu* CPauseMenu::Clone()
     return new CPauseMenu(*this);
 }
 
+void CPauseMenu::SetUp()
+{
+    CPlayerWidgetContainer::SetUp();
+
+    auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());
+    if (!MainWorld) return;
+
+    auto BackgroundImage = mBackgroundImage.lock();
+    if (!BackgroundImage) return;
+
+    if (MainWorld->GetStage() == EGameplayStage::Wave)
+        BackgroundImage->SetEnable(false);
+    else
+        BackgroundImage->SetEnable(true);
+}
+
+void CPauseMenu::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
+{
+    if (InPlayer.expired()) return;
+
+	auto Player = InPlayer.lock();
+	auto InvComp = Player->GetInventoryComponent().lock();
+	if (InvComp && Player)
+	{
+		InvComp->SetUpdatedAssetsFunction(this, &CPauseMenu::UpdateInventory);
+		mPlayerInvComp = InvComp;
+	}
+}
+
+void CPauseMenu::UnsubscribeDelegates()
+{
+}
+
 std::weak_ptr<CButton> CPauseMenu::CreateMenuButton(const std::string& Name, const TCHAR* Text, const FVector2& Position)
 {
-    std::weak_ptr<CButton> TempButton = CreateWidget<CButton>(Name + std::string("Button"), 1);
-    std::weak_ptr<CTextBlock> TempTextBlock = CreateWidget<CTextBlock>(Name + std::string("TextBlock"), 1);
+    std::weak_ptr<CButton> TempButton = CreateWidget<CButton>(Name + std::string("Button"), 2);
+    std::weak_ptr<CTextBlock> TempTextBlock = CreateWidget<CTextBlock>(Name + std::string("TextBlock"), 2);
     
     auto Button = TempButton.lock();
     auto TextBlock = TempTextBlock.lock();
@@ -95,12 +139,12 @@ std::weak_ptr<CButton> CPauseMenu::CreateMenuButton(const std::string& Name, con
 
 void CPauseMenu::CreateInventorySlotPanel()
 {
-    mWeaponTextBlock = CreateWidget<CTextBlock>("WeaponTextBlock", 1);
-    mWeaponSlotContainer = CreateWidget<CSlotContainer>("WeaponSlotContainer", 1);
-    mItemTextBlock = CreateWidget<CTextBlock>("ItemTextBlock", 1);
-    mItemSlotContainer = CreateWidget<CSlotContainer>("ItemSlotContainer", 1);
-    auto ItemHSeparator = CreateWidget<CImage>("ItemHSeparator", 1).lock();
-    auto WeaponHSeparator = CreateWidget<CImage>("WeaponHSeparator", 1).lock();
+    mWeaponTextBlock = CreateWidget<CTextBlock>("WeaponTextBlock", 2);
+    mWeaponSlotContainer = CreateWidget<CSlotContainer>("WeaponSlotContainer", 2);
+    mItemTextBlock = CreateWidget<CTextBlock>("ItemTextBlock", 2);
+    mItemSlotContainer = CreateWidget<CSlotContainer>("ItemSlotContainer", 2);
+    auto ItemHSeparator = CreateWidget<CImage>("ItemHSeparator", 2).lock();
+    auto WeaponHSeparator = CreateWidget<CImage>("WeaponHSeparator", 2).lock();
 
     if (ItemHSeparator && WeaponHSeparator)
     {
@@ -152,37 +196,35 @@ void CPauseMenu::CreateInventorySlotPanel()
     }
 }
 
-void CPauseMenu::UpdateInventory(std::weak_ptr<const class CInventoryComponent> InInventoryComp)
+void CPauseMenu::UpdateInventory()
 {
-    auto InventoryComp = InInventoryComp.lock();
-    if (InventoryComp)
+    auto ItemSlotContainer = mItemSlotContainer.lock();
+    auto WeaponSlotContainer = mWeaponSlotContainer.lock();
+    if (!ItemSlotContainer || !WeaponSlotContainer) return;
+
+    auto InvComp = mPlayerInvComp.lock();
+    if (!InvComp) return;
+
+    // 추가하기 전에 child 제거 필요함.
+    ItemSlotContainer->ClearSlot();
+    WeaponSlotContainer->ClearSlot();
+
+    auto Items = InvComp->GetItemData();
+    auto Weapons = InvComp->GetWeaponData();
+
+    for (auto Item : Items)
     {
-        // 우선은 이렇게
-        // 나중에 상점 생기고 추가할 수 있게 되면
-        // 데이터 전체를 변경하는 방식이 아니라, 추가하는 방식으로 변경할 것
-        // mWeaponAssets = InventoryComp->GetWeaponData();
-        // mItemAssets = InventoryComp->GetItemData();
-        
-        // 근데 무기 / 아이템의 데이터에셋화를 아직 진행 안했으니 Enemy 정보가지고 보여줄 필요가 있을 듯?
-        mItemAssets = CDataManager::GetInst()->GetEnemiesData();
-        mWeaponAssets = mItemAssets;
+        ItemSlotContainer->AddSlotData(Item);
+    }
 
-        auto ItemSlotContainer = mItemSlotContainer.lock();
-        if (ItemSlotContainer)
-        {
-            for (auto& Asset : mItemAssets)
-            {
-                ItemSlotContainer->AddSlotData(Asset);
-            }
-        }
+    for (auto Weapon : Weapons)
+    {
+        WeaponSlotContainer->AddSlotData(Weapon);
+    }
 
-        auto WeaponSlotContainer = mWeaponSlotContainer.lock();
-        if (WeaponSlotContainer)
-        {
-            for (auto& Asset : mWeaponAssets)
-            {
-                WeaponSlotContainer->AddSlotData(Asset);
-            }
-        }
+    auto StatPanel = mStatPanel.lock();
+    if (StatPanel)
+    {
+        StatPanel->UpdateStats(InvComp->GetStat());
     }
 }

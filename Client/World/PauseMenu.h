@@ -1,12 +1,11 @@
 #pragma once
-#include "World/WidgetContainer.h"
+#include "PlayerWidgetContainer.h"
 
 class CTextBlock;
 class CButton;
-class CDataAsset;
 
 class CPauseMenu :
-    public CWidgetContainer
+    public CPlayerWidgetContainer
 {
 public:
 	CPauseMenu();
@@ -21,28 +20,31 @@ protected:
 	std::weak_ptr<CButton> mOptionsButton;		// '옵션' 버튼
 	std::weak_ptr<CButton> mQuitButton;			// '메인 메뉴로 돌아가기' 버튼
 
-	std::weak_ptr<class CImage> mBackgroundImage;
+	std::weak_ptr<class CImage>				mBackgroundImage;
+	std::weak_ptr<class CImage>				mBackgroundPanelImage;
+	std::weak_ptr<class CTextBlock>			mWeaponTextBlock;
+	std::weak_ptr<class CSlotContainer>		mWeaponSlotContainer;
+	std::weak_ptr<class CTextBlock>			mItemTextBlock;
+	std::weak_ptr<class CSlotContainer>		mItemSlotContainer;
+	std::weak_ptr<class CStatPanel>			mStatPanel;
 
-	std::weak_ptr<class CTextBlock> mWeaponTextBlock;
-	std::weak_ptr<class CSlotContainer> mWeaponSlotContainer;
-
-	std::weak_ptr<class CTextBlock> mItemTextBlock;
-	std::weak_ptr<class CSlotContainer> mItemSlotContainer;
-
-	std::weak_ptr<class CStatPanel> mStatPanel;
-
-	std::vector<std::shared_ptr<CDataAsset>> mWeaponAssets;
-	std::vector<std::shared_ptr<CDataAsset>> mItemAssets;
+	std::weak_ptr<class CInventoryComponent>	mPlayerInvComp;
 
 public:
 	virtual bool Init();
 	virtual CPauseMenu* Clone();
+
+	virtual void SetUp();
+
+protected:
+	void SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer) override;
+	void UnsubscribeDelegates() override;
 
 protected:
 	std::weak_ptr<CButton> CreateMenuButton(const std::string& Name, const TCHAR* Text, const FVector2& Position);
 	void CreateInventorySlotPanel();
 
 public:
-	void UpdateInventory(std::weak_ptr<const class CInventoryComponent> InInventoryComp);
+	void UpdateInventory();
 };
 
