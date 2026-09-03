@@ -169,7 +169,6 @@ bool CEnemy::InitializeEnemyInfo(const std::shared_ptr<const CEnemyData>& Data, 
 		MeshComp->SetMesh("TexRect");
 		MeshComp->SetShader("Material");
 		MeshComp->AddTexture(0, Name, Texture.Path.c_str());
-		MeshComp->AddTexture(0, "DissolveTexture", TEXT("dissolve_smoke.png"), "Texture", 1);
 		MeshComp->SetBlendState(0, "AlphaBlend");
 		MeshComp->SetRelativeScale(Texture.SizeX, Texture.SizeY);
 		MeshComp->SetBaseColor(0, FVector4(1.f, 1.f, 1.f, 1.f));
