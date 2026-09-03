@@ -303,6 +303,8 @@ std::shared_ptr<CEnemyData> CDataManager::GetEnemyData(const int ID) const
 
 std::shared_ptr<CEnemyData> CDataManager::GetRandomEnemyData() const
 {
+	if (!mEnemies.size()) return std::shared_ptr<CEnemyData>();
+
 	int ID = rand() % mEnemies.size();
 	ID += 1000;		  
 	
@@ -322,6 +324,8 @@ std::shared_ptr<CItemData> CDataManager::GetItemData(const int ID) const
 
 std::shared_ptr<CItemData> CDataManager::GetRandomItemData() const
 {
+	if (!mItems.size()) return std::shared_ptr<CItemData>();
+
 	int ID = rand() % mItems.size();
 	ID += 2000;
 
@@ -341,6 +345,8 @@ std::shared_ptr<CWeaponData> CDataManager::GetWeaponData(const int ID) const
 
 std::shared_ptr<CShopData> CDataManager::GetRandomShopData() const
 {
+	if (!mItems.size() || !mWeapons.size()) return std::shared_ptr<CShopData>();
+
 	int Type = rand() % 2 ? 2000 : 3000;
 	int Rand = 0;
 
