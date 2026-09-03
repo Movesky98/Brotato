@@ -170,7 +170,27 @@ public:
 
 	void ClearTimer(FTimerHandle& Handle)
 	{
+		//ClearTimer가 핸들을 무효화하므로 ID를 먼저 챙겨둔다.
+		const uint64_t ID = Handle.GetID();
+
 		CTimeManager::ClearTimer(Handle);
+
+		if (ID == 0)
+		{
+			return;
+		}
+
+		//월드가 발급한 핸들 목록에서도 빼줘야한다.
+		//빼주지 않으면 죽은 핸들이 계속 쌓이고
+		//소멸자가 그걸 전부 다시 해제하려 든다.
+		for (auto iter = mTimerHandleList.begin(); iter != mTimerHandleList.end(); ++iter)
+		{
+			if (iter->GetID() == ID)
+			{
+				mTimerHandleList.erase(iter);
+				break;
+			}
+		}
 	}
 
 };

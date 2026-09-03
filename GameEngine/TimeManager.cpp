@@ -62,14 +62,28 @@ void CTimeManager::Update()
 
         if (Timer.ElapsedTime >= Timer.Time)
         {
+            //콜백 안에서 이 타이머 자신이 해제될 수 있다.
+            //그러면 Timer 참조와 iter가 모두 무효화되므로
+            //콜백 호출전에 필요한 값을 복사해둔다.
+            const bool Loop = Timer.Loop;
+            const float TargetTime = Timer.Time;
+
             if (Timer.Callback)
             {
                 Timer.Callback();
             }
 
-            if (Timer.Loop)
+            //콜백이 자기 자신을 지웠는지 다시 확인한다.
+            iter = mTimerMap.find(ID);
+
+            if (iter == mTimerMap.end())
             {
-                Timer.ElapsedTime -= Timer.Time;
+                continue;
+            }
+
+            if (Loop)
+            {
+                iter->second.ElapsedTime -= TargetTime;
             }
             else
             {
@@ -92,8 +106,15 @@ void CTimeManager::ClearTimer(FTimerHandle& Handle)
 
     auto iter = mTimerMap.find(Handle.GetID());
 
-    iter->second.Callback = nullptr;
+    //핸들은 ID가 0인지만 보고 유효하다고 답하기 때문에
+    //이미 만료되어 맵에서 사라진 타이머의 핸들도 여기까지 들어온다.
+    //맵에 실제로 남아있는지 확인한 뒤에 접근해야한다.
+    if (iter != mTimerMap.end())
+    {
+        iter->second.Callback = nullptr;
 
-    mTimerMap.erase(Handle.GetID());
+        mTimerMap.erase(iter);
+    }
+
     Handle.InValidate();
 }
