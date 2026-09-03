@@ -492,6 +492,7 @@ void CMainWorld::WaveEnd()
 		{
 			iter = mOnWaveEndedFuncs.erase(iter);
 			iterEnd = mOnWaveEndedFuncs.end();
+			continue;
 		}
 
 		if (iter->second)
