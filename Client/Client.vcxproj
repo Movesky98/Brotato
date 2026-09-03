@@ -155,6 +155,7 @@
     <ClCompile Include="World\BuyButton.cpp" />
     <ClCompile Include="World\CollectableInterface.cpp" />
     <ClCompile Include="World\ConvertString.cpp" />
+    <ClCompile Include="World\GameOverScreen.cpp" />
     <ClCompile Include="World\InputPromptButton.cpp" />
     <ClCompile Include="World\ItemData.cpp" />
     <ClCompile Include="World\MaterialItem.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="World\CollectableInterface.h" />
     <ClInclude Include="World\ConvertString.h" />
     <ClInclude Include="World\BuyButton.h" />
+    <ClInclude Include="World\GameOverScreen.h" />
     <ClInclude Include="World\InputPromptButton.h" />
     <ClInclude Include="World\ItemData.h" />
     <ClInclude Include="World\MaterialItem.h" />

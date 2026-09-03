@@ -8,6 +8,7 @@ enum class EGameplayStage
 	None = -1,
 	Wave,
 	Shop,
+	GameOver,
 	MAX
 };
 
@@ -36,6 +37,7 @@ protected:
 	std::weak_ptr<class CPauseMenu> mPauseMenu;
 	std::weak_ptr<class CShopMenu> mShopMenu;
 	std::weak_ptr<class CPlayerHUD> mPlayerHUD;
+	std::weak_ptr<class CGameOverScreen> mGameOverScreen;
 	std::vector<std::weak_ptr<class CWall>> mWalls;
 
 	std::vector<std::pair<std::weak_ptr<CActor>, std::function<void()>>> mOnWaveEndedFuncs;
@@ -108,6 +110,7 @@ protected:
 	void SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CEnemyData> Data);
 	void SpawnEnemy(const std::weak_ptr<class CPlayer>& wPlayer);
 	void OnEnemyDeath(const FVector3& DeathPos);
+	void OnPlayerDeath();
 	void SpawnMaterial(const FVector3& SpawnPos);
 	
 	template<typename T> 

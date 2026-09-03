@@ -8,6 +8,7 @@ enum class EScreenType
 	None = -1,
 	ShopMenu,
 	PauseMenu,
+	GameOverScreen,
 	MAX
 };
 

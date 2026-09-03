@@ -4,6 +4,7 @@
 #include "PlayerHUD.h"
 #include "ShopMenu.h"
 #include "PauseMenu.h"
+#include "GameOverScreen.h"
 
 #include "Component/InventoryComponent.h"
 
@@ -32,10 +33,12 @@ bool CScreenManager::Init(std::weak_ptr<class CUIManager> InUIManager, std::weak
 	auto PlayerHUD = std::dynamic_pointer_cast<CPlayerWidgetContainer>(mPlayerHUD.lock());
 	auto ShopMenu = UIManager->CreateWidgetContainer<CShopMenu>("ShopMenu").lock();
 	auto PauseMenu = UIManager->CreateWidgetContainer<CPauseMenu>("PauseMenu").lock();
+	auto GameOverScreen = UIManager->CreateWidgetContainer<CGameOverScreen>("GameOverScreen").lock();
 
 	if (!PlayerHUD) return false;
 	if (!ShopMenu) return false;
 	if (!PauseMenu) return false;
+	if (!GameOverScreen) return false;
 
 	/*BackgroundImage->SetPos(0.f, 0.f);
 	BackgroundImage->SetSize(1280.f, 720.f);
@@ -44,6 +47,7 @@ bool CScreenManager::Init(std::weak_ptr<class CUIManager> InUIManager, std::weak
 
 	mScreenMap.insert(std::make_pair(EScreenType::ShopMenu, ShopMenu));
 	mScreenMap.insert(std::make_pair(EScreenType::PauseMenu, PauseMenu));
+	mScreenMap.insert(std::make_pair(EScreenType::GameOverScreen, GameOverScreen));
 
 	PlayerHUD->SubscribeDelegates(Player);
 	PlayerHUD->SetEnable(true);
@@ -65,6 +69,8 @@ bool CScreenManager::Init(std::weak_ptr<class CUIManager> InUIManager, std::weak
 
 void CScreenManager::ShowScreen(EScreenType InType)
 {
+	if (mCurScreenType == EScreenType::GameOverScreen) return;
+
 	for (const auto& [Type, ScreenWeak] : mScreenMap)
 	{
 		auto Screen = ScreenWeak.lock();

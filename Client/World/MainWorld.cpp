@@ -11,6 +11,7 @@
 #include "PauseMenu.h"
 #include "ShopMenu.h"
 #include "PlayerHUD.h"
+#include "GameOverScreen.h"
 #include "ItemSlot.h"
 
 #include "DataAsset.h"
@@ -47,7 +48,7 @@ CMainWorld::CMainWorld()
 
 CMainWorld::~CMainWorld()
 {
-	CDataManager::DestroyInst();
+
 }
 
 bool CMainWorld::Init()
@@ -66,6 +67,7 @@ bool CMainWorld::Init()
 	if (Player)
 	{
 		mPlayer = Player;
+		Player->SetDeathFunction(this, &CMainWorld::OnPlayerDeath);
 	}
 
 	mScreenManager = std::make_shared<CScreenManager>();
@@ -93,6 +95,7 @@ void CMainWorld::Update(float DeltaTime)
 {
 	CWorld::Update(DeltaTime);
 
+	if( mStage == EGameplayStage::GameOver) return;
 	if (mStage != EGameplayStage::Wave) return;
 
 	mElapsedTime += DeltaTime;
@@ -344,6 +347,17 @@ void CMainWorld::OnEnemyDeath(const FVector3& DeathPos)
 	{
 		CreateSpawnPoint(ESpawnType::Enemy);
 	}
+}
+
+void CMainWorld::OnPlayerDeath()
+{
+	mScreenManager->ShowScreen(EScreenType::GameOverScreen);
+	mStage = EGameplayStage::GameOver;
+
+	ClearObjects<CEnemy>();
+	ClearObjects<CSpawnPoint>();
+
+	CDataManager::GetInst()->DestroyInst();
 }
 
 void CMainWorld::CreateSpawnPoint(ESpawnType Type)
