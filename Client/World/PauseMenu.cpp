@@ -44,7 +44,7 @@ bool CPauseMenu::Init()
     {
         BackgroundImage->SetPos(0.f, 0.f);
         BackgroundImage->SetSize(1280.f, 720.f);
-        BackgroundImage->SetTexture("Background", TEXT("Custom/PauseMenu/Background.png"));
+        BackgroundImage->SetTexture("Pause_BackgroundImage", TEXT("Custom/PauseMenu/Background.png"));
         BackgroundImage->SetOpacity(0.6);
     }
 

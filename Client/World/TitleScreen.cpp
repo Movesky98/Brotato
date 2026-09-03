@@ -98,7 +98,7 @@ void CTitleScreen::CreateImage()
 	{
 		BackgroundImage->SetPos(-50.f, 0.f);
 		BackgroundImage->SetSize(1380.f, 720.f);
-		BackgroundImage->SetTexture("BackgroundImage", TEXT("Custom/TitleScreen/Background.png"));
+		BackgroundImage->SetTexture("Title_BackgroundImage", TEXT("Custom/TitleScreen/Background.png"));
 	}
 
 	if (LogoImage)
