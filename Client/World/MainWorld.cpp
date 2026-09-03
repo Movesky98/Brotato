@@ -4,9 +4,10 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "MaterialItem.h"
-#include "DataManager.h"
 
-#include "PlayerWidgetContainer.h"
+#include "DataManager.h"
+#include "ScreenManager.h"
+
 #include "PauseMenu.h"
 #include "ShopMenu.h"
 #include "PlayerHUD.h"
@@ -56,6 +57,7 @@ bool CMainWorld::Init()
 	srand((unsigned int)time(0));
 	
 	CDataManager::GetInst()->InitializeCSVData();
+
 	InitializeInputSettings();
 
 	mRemainingWaveTime = mMaxWaveTime;
@@ -66,40 +68,16 @@ bool CMainWorld::Init()
 		mPlayer = Player;
 	}
 
+	mScreenManager = std::make_shared<CScreenManager>();
 	auto UIManager = GetUIManager().lock();
 	if (UIManager)
 	{
-		mPlayerHUD = UIManager->CreateWidgetContainer<CPlayerHUD>("PlayerHUD");
-		auto PlayerHUD = mPlayerHUD.lock();
-		auto Player = mPlayer.lock();
-		if (PlayerHUD)
-		{
-			PlayerHUD->SetPos(0.f, 0.f);
-			PlayerHUD->SetEnable(true);
+		if (!mScreenManager->Init(UIManager, Player)) return false;
 
-			std::shared_ptr<CPlayerWidgetContainer> HUDBase = PlayerHUD;
-			HUDBase->SubscribeDelegates(Player);
-			PlayerHUD->SetLifeText(Player->GetHP(), Player->GetMaxHP());
-		}
-
-		mPauseMenu = UIManager->CreateWidgetContainer<CPauseMenu>("PauseMenu", 0);
-		auto PauseMenu = mPauseMenu.lock();
-		if (PauseMenu)
-		{
-			PauseMenu->SetPos(0.f, 0.f);
-			PauseMenu->SetEnable(false);
-			std::shared_ptr<CPlayerWidgetContainer> PauseBase = PauseMenu;
-			PauseBase->SubscribeDelegates(Player);
-		}
-
-		mShopMenu = UIManager->CreateWidgetContainer<CShopMenu>("ShopMenu", 0);
-		auto ShopMenu = mShopMenu.lock();
+		auto ShopScreen = mScreenManager->GetScreen(EScreenType::ShopMenu);
+		auto ShopMenu = std::dynamic_pointer_cast<CShopMenu>(ShopScreen.lock());
 		if (ShopMenu)
 		{
-			ShopMenu->SetPos(0.f, 0.f);
-			ShopMenu->SetEnable(false);
-			std::shared_ptr<CPlayerWidgetContainer> ShopBase = ShopMenu;
-			ShopBase->SubscribeDelegates(Player);
 			ShopMenu->SetOnClickedNextWaveFunction(this, &CMainWorld::WaveStart);
 		}
 	}
@@ -123,11 +101,7 @@ void CMainWorld::Update(float DeltaTime)
 		mElapsedTime -= 1.f;
 		mRemainingWaveTime -= 1.f;
 
-		auto PlayerHUD = mPlayerHUD.lock();
-		if (PlayerHUD)
-		{
-			PlayerHUD->SetWaveCountText((int)mRemainingWaveTime);
-		}
+		mScreenManager->SetWaveCountText((int)mRemainingWaveTime);
 		
 		if (mRemainingWaveTime < 0.f)
 		{
@@ -417,6 +391,7 @@ void CMainWorld::SpawnPlayer()
 	auto Player = mPlayer.lock();
 	if (Player)
 	{
+		Player->SetRenderEnable(true);
 		Player->SetEnable(true);
 		Player->SetWorldPos(0.f, 0.f);
 		Player->SetHP(Player->GetMaxHP());
@@ -454,22 +429,10 @@ void CMainWorld::WaveStart()
 {
 	mStage = EGameplayStage::Wave;
 	mCurrentWave++;
+	mRemainingWaveTime = mMaxWaveTime;
 
-	auto ShopMenu = mShopMenu.lock();
-	if(ShopMenu)
-	{
-		ShopMenu->TearDown();
-	}
-
-	auto PlayerHUD = mPlayerHUD.lock();
-	if (PlayerHUD)
-	{
-		PlayerHUD->SetEnable(true);
-		PlayerHUD->SetWaveText(mCurrentWave);
-
-		mRemainingWaveTime = mMaxWaveTime;
-		PlayerHUD->SetWaveCountText((int)mRemainingWaveTime);
-	}
+	mScreenManager->HideScreen();
+	mScreenManager->ShowPlayerHUD(mCurrentWave, (int)mRemainingWaveTime);
 
 	SpawnPlayer();
 
@@ -506,38 +469,14 @@ void CMainWorld::WaveEnd()
 	}
 
 	// 생존해있는 적들 삭제
-	std::list<std::weak_ptr<CEnemy>> Enemies;
-	std::list<std::weak_ptr<CSpawnPoint>> SpawnPoints;
-
-	if (FindObjectList<CEnemy>(Enemies))
-	{
-		for (auto& EnemyPtr : Enemies)
-		{
-			auto Enemy = EnemyPtr.lock();
-			if (Enemy)
-			{
-				// 우선 이렇게
-				Enemy->Destroy();
-			}
-		}
-	}
-
-	if (FindObjectList<CSpawnPoint>(SpawnPoints))
-	{
-		for (auto& SpawnPoint : SpawnPoints)
-		{
-			auto Point = SpawnPoint.lock();
-			if (Point)
-			{
-				Point->Destroy();
-			}
-		}
-	}
+	ClearObjects<CEnemy>();
+	ClearObjects<CSpawnPoint>();
 
 	auto Player = mPlayer.lock();
 	if (Player)
 	{
-		Player->DestroyWeapons();
+		Player->DestroyWeapons();	
+		Player->SetRenderEnable(false);
 		Player->SetEnable(false);
 	}
 
@@ -551,21 +490,10 @@ void CMainWorld::WaveEnd()
 void CMainWorld::EnterShop()
 {
 	// Show Shop UI
-	auto ShopMenu = mShopMenu.lock();
-	if (ShopMenu)
-	{
-		ShopMenu->SetUp();
-	}
+	mScreenManager->ShowScreen(EScreenType::ShopMenu);
 
 	// Hide PlayerHUD
-	auto PlayerHUD = mPlayerHUD.lock();
-	if (PlayerHUD)
-	{
-		PlayerHUD->SetEnable(false);
-	}
-	
-
-	// WaveStart();
+	mScreenManager->HidePlayerHUD();
 }
 
 FVector3 CMainWorld::GetRandomSpawnPosition() const
@@ -592,16 +520,14 @@ std::weak_ptr<class CPlayer> CMainWorld::GetPlayer() const
 
 void CMainWorld::TogglePauseMenu()
 {
-	auto PauseMenu = mPauseMenu.lock();
-	if (PauseMenu)
+	EScreenType CurScreenType = mScreenManager->GetCurrentScreenType();
+
+	if (CurScreenType == EScreenType::PauseMenu)
 	{
-		if (PauseMenu->IsEnable())
-		{
-			PauseMenu->TearDown();
-		}
-		else
-		{
-			PauseMenu->SetUp();
-		}
+		mScreenManager->HideScreen();
+	}
+	else
+	{
+		mScreenManager->ShowScreen(EScreenType::PauseMenu);
 	}
 }

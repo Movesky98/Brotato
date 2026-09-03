@@ -160,6 +160,7 @@
     <ClCompile Include="World\MaterialItem.cpp" />
     <ClCompile Include="World\PlayerHUD.cpp" />
     <ClCompile Include="World\PlayerWidgetContainer.cpp" />
+    <ClCompile Include="World\ScreenManager.cpp" />
     <ClCompile Include="World\ShopData.cpp" />
     <ClCompile Include="World\ShopOfferCard.cpp" />
     <ClCompile Include="World\Component\ArenaCameraComponent.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="World\MaterialItem.h" />
     <ClInclude Include="World\PlayerHUD.h" />
     <ClInclude Include="World\PlayerWidgetContainer.h" />
+    <ClInclude Include="World\ScreenManager.h" />
     <ClInclude Include="World\ShopData.h" />
     <ClInclude Include="World\ShopOfferCard.h" />
     <ClInclude Include="World\Component\ArenaCameraComponent.h" />

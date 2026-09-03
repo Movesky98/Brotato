@@ -40,6 +40,8 @@ protected:
 
 	std::vector<std::pair<std::weak_ptr<CActor>, std::function<void()>>> mOnWaveEndedFuncs;
 
+	std::shared_ptr<class CScreenManager> mScreenManager;
+
 public:
 	template<typename T>
 	void SetOnWaveEndedFunction(T* Object, void(T::* Func)())
@@ -102,14 +104,30 @@ protected:
 	void SpawnEntity(const FVector3 SpawnPos, ESpawnType Type, std::weak_ptr<class CDataAsset> Data);
 
 	void SpawnPlayer();
+	
 	void SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CEnemyData> Data);
 	void SpawnEnemy(const std::weak_ptr<class CPlayer>& wPlayer);
 	void OnEnemyDeath(const FVector3& DeathPos);
 	void SpawnMaterial(const FVector3& SpawnPos);
+	
+	template<typename T> 
+	void ClearObjects()
+	{
+		std::list<std::weak_ptr<T>> List;
+		FindObjectList<T>(List);
+		for (auto& ElementWeak : List)
+		{
+			auto Element = ElementWeak.lock();
+			if (Element)
+			{
+				Element->Destroy();
+			}
+		}
+	}
+
 
 	void WaveStart();
 	void WaveEnd();
-
 	void EnterShop();
 
 public:
