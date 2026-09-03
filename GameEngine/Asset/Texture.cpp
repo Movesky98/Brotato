@@ -91,7 +91,7 @@ bool CTexture::LoadTexture(const TCHAR* FullPath)
 	}
 	else if (strcmp(ConvertExt, ".TGA") == 0)
 	{
-		if (FAILED(DirectX::LoadFromTGAFile(FullPath, DirectX::TGA_FLAGS_NONE, nullptr, *Image)))
+		if (FAILED(DirectX::LoadFromTGAFile(FullPath, DirectX::TGA_FLAGS_IGNORE_SRGB, nullptr, *Image)))
 		{
 			SAFE_DELETE(Texture);
 			SAFE_DELETE(Image);
@@ -101,13 +101,22 @@ bool CTexture::LoadTexture(const TCHAR* FullPath)
 	}
 	else
 	{
-		if (FAILED(DirectX::LoadFromWICFile(FullPath, DirectX::WIC_FLAGS_NONE, nullptr, *Image)))
+		if (FAILED(DirectX::LoadFromWICFile(FullPath, DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, *Image)))
 		{
 			SAFE_DELETE(Texture);
 			SAFE_DELETE(Image);
 
 			return false;
 		}
+	}
+
+	//포맷이 _SRGB로 잡혀있다면 픽셀은 그대로 두고 태그만 선형 포맷으로 바꿔준다.
+	//_SRGB 포맷을 그대로 Convert에 넘기면 TEX_FILTER_SRGB_IN이 자동으로 켜져서
+	//감마가 제거된 값이 픽셀에 구워져버린다. 비트 레이아웃은 동일하므로 재태깅으로 충분하다.
+	//DDS는 포맷이 파일에 박혀있어서 로드 플래그로 막을 수 없기 때문에 여기서 처리한다.
+	if (DirectX::IsSRGB(Image->GetMetadata().format))
+	{
+		Image->OverrideFormat(DirectX::MakeLinear(Image->GetMetadata().format));
 	}
 
 	//텍스처를 RGBA 포맷으로 강제 변환
