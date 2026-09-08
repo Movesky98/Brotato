@@ -12,6 +12,5 @@ public:
     float HP, Speed, Damage;
     std::vector<EEnemyMovement> Movement;
     std::unordered_multimap<ESkillTrigger, std::shared_ptr<CSkillData>> Skills;
-    
 };
 

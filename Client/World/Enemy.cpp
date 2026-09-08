@@ -1,4 +1,6 @@
 #include "Enemy.h"
+
+#include "DataAsset.h"
 #include "EnemyData.h"
 
 #include "Player.h"
@@ -142,84 +144,103 @@ float CEnemy::TakeDamage(float fDamage, const std::string& Instigator, const std
 	}
 
 	UseSkill(ESkillTrigger::OnHit);
+
 	AddHP(-Damage);
 
 	return 0.0f;
 }
 
-bool CEnemy::InitializeEnemyInfo(const std::shared_ptr<const CEnemyData>& Data, const std::weak_ptr<CActor> Target)
+void CEnemy::InitializeMeshComponent(const std::string Name, const TCHAR* Path, float SizeX, float SizeY)
 {
-	if (!Data)
-		return false;
-
-	//auto Info = EnemyInfo.lock();
-	//auto BaseData = Info->BaseData;
-	//auto TextureData = Info->TextureData;
-	//auto SkillData = Info->SkillData;
-	const FTextureDesc& Texture = Data->TextureInfo;
-	mSpeed = Data->Speed;
-	mHP = Data->HP;
-	mDamage = Data->Damage;
-
 	auto MeshComp = mMeshComp.lock();
 	if (MeshComp)
 	{
-		const std::string& Name = Data->Name;
-
 		MeshComp->SetMesh("TexRect");
 		MeshComp->SetShader("Material");
-		MeshComp->AddTexture(0, Name, Texture.Path.c_str());
+		MeshComp->AddTexture(0, Name, Path);
 		MeshComp->SetBlendState(0, "AlphaBlend");
-		MeshComp->SetRelativeScale(Texture.SizeX, Texture.SizeY);
+		MeshComp->SetRelativeScale(SizeX, SizeY);
 		MeshComp->SetBaseColor(0, FVector4(1.f, 1.f, 1.f, 1.f));
 	}
+}
 
+void CEnemy::InitializeBoxCollision(float SizeX, float SizeY)
+{
 	auto BoxCollision = mBoxCollision.lock();
 	if (BoxCollision)
 	{
 		BoxCollision->SetInheritScale(true);
-		BoxCollision->SetBoxSize(Texture.SizeX, Texture.SizeY);
-		BoxCollision->SetDebugDraw(false);
+		BoxCollision->SetBoxSize(SizeX, SizeY);
+		BoxCollision->SetDebugDraw(true);
 		BoxCollision->SetCollisionProfile("Enemy");
 		BoxCollision->SetBeginOverlapFunc(this, &CEnemy::OnCollisionBeginOverlap);
 		BoxCollision->SetEndOverlapFunc(this, &CEnemy::OnCollisionEndOverlap);
 	}
+}
 
+void CEnemy::InitializeSpeed(float Speed)
+{
 	auto MoveComp = mMoveComp.lock();
 	if (MoveComp)
 	{
 		MoveComp->SetUpdateComp(mRoot);
-		MoveComp->SetSpeed(mSpeed);
-		MoveComp->SetCurrentSpeed(mSpeed);
+		MoveComp->SetSpeed(Speed);
+		MoveComp->SetCurrentSpeed(Speed);
 	}
+}
+
+bool CEnemy::PostInitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target)
+{
+	auto EnemyData = std::dynamic_pointer_cast<CEnemyData>(Data);
+	if (!EnemyData) return false;
+
+	mHP = EnemyData->HP;
+	mSpeed = EnemyData->Speed;
+	mDamage = EnemyData->Damage;
 
 	SetHP(mHP);
 	SetDeathFunction(this, &CEnemy::OnDeath);
 
-	mCurrentScaleWidth = Texture.SizeX;
-	mCurrentScaleHeight = Texture.SizeY;
-	mMaxScaleHeight = mCurrentScaleHeight * 1.2f;
-	mMinScaleHeight = mCurrentScaleHeight * 0.9f;
+	InitializeSpeed(mSpeed);
 
-	switch (Data->Movement.size())
+	switch (EnemyData->Movement.size())
 	{
 	case 1:
-		MovementsByRange.push_back(Data->Movement[0]);
-		MovementsByRange.push_back(Data->Movement[0]);
+		MovementsByRange.push_back(EnemyData->Movement[0]);
+		MovementsByRange.push_back(EnemyData->Movement[0]);
 		break;
 	case 2:
-		MovementsByRange.push_back(Data->Movement[0]);
-		MovementsByRange.push_back(Data->Movement[1]);
+		MovementsByRange.push_back(EnemyData->Movement[0]);
+		MovementsByRange.push_back(EnemyData->Movement[1]);
 		break;
 	default:
 		// ERROR
 		break;
 	}
 
-	SetSkills(Data->Skills);
+	SetSkills(EnemyData->Skills);
 
 	if (MovementsByRange[(int)CurrentRangeState] != EEnemyMovement::Random)
 		mTarget = Target;
+
+	return true;
+}
+
+bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target)
+{
+	const FTextureDesc& Texture = Data->TextureInfo;
+
+	const TCHAR* Path = Texture.Path.c_str();
+
+	InitializeMeshComponent(Data->Name, Path, Texture.SizeX, Texture.SizeY);
+	InitializeBoxCollision(Texture.SizeX, Texture.SizeY);
+
+	mCurrentScaleWidth = Texture.SizeX;
+	mCurrentScaleHeight = Texture.SizeY;
+	mMaxScaleHeight = mCurrentScaleHeight * 1.2f;
+	mMinScaleHeight = mCurrentScaleHeight * 0.9f;
+
+	if (!PostInitializeProperties(Data, Target)) return false;
 
 	return true;
 }

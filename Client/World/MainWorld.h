@@ -108,8 +108,7 @@ protected:
 
 	void SpawnPlayer();
 	
-	void SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CEnemyData> Data);
-	void SpawnEnemy(const std::weak_ptr<class CPlayer>& wPlayer);
+	void SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data);
 	void OnEnemyDeath(const FVector3& DeathPos);
 	void OnPlayerDeath();
 	void SpawnMaterial(const FVector3& SpawnPos);

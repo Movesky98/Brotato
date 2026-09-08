@@ -386,7 +386,7 @@ void CMainWorld::SpawnEntity(const FVector3 SpawnPos, ESpawnType Type, std::weak
 	switch (Type)
 	{
 	case ESpawnType::Enemy:
-		SpawnEnemy(SpawnPos, mPlayer, std::dynamic_pointer_cast<CEnemyData>(Data.lock()));
+		SpawnEnemy(SpawnPos, mPlayer, Data.lock());
 		break;
 	case ESpawnType::Structure:
 		break;
@@ -414,7 +414,7 @@ void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class C
 
 	if (Player && Enemy)
 	{
-		Enemy->InitializeEnemyInfo(Data, Player);
+		Enemy->InitializeProperties(Data, Player);
 		Enemy->SetWorldPos(SpawnPos);
 		Enemy->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
 		AliveEnemyCount++;

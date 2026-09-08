@@ -52,8 +52,15 @@ protected:
 
 	std::function<void(const FVector3& /* DeathPosition */)> mNotifyDeathFunc;
 
+	void InitializeMeshComponent(const std::string Name, const TCHAR* Path, float SizeX, float SizeY);
+	void InitializeBoxCollision(float SizeX, float SizeY);
+	void InitializeSpeed(float Speed);
+
+	// 초기 설정 값 이후 DataAsset을 가지고 알아서 값을 설정하는 함수.
+	virtual bool PostInitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target);
+
 public:
-	bool InitializeEnemyInfo(const std::shared_ptr<const CEnemyData>& Data, const std::weak_ptr<CActor> Target);
+	virtual bool InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target);
 
 	template<typename T>
 	void SetNotifyDeathFunc(T* Object, void (T::* Func)(const FVector3&))
