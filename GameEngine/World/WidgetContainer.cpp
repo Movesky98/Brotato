@@ -164,16 +164,24 @@ bool CWidgetContainer::CollisionMouse(std::weak_ptr<CWidget>& Result, const FVec
 }
 
 void CWidgetContainer::MouseHovered()
-{}
+{
+	SetWidgetState(EWidgetState::Hovered);
+}
 
 void CWidgetContainer::MouseUnHovered()
-{}
+{
+	SetWidgetState(EWidgetState::Normal);
+}
 
 void CWidgetContainer::MouseClicked()
-{}
+{
+	SetWidgetState(EWidgetState::Clicked);
+}
 
 void CWidgetContainer::MouseRelease()
-{}
+{
+	SetWidgetState(EWidgetState::Release);
+}
 
 CWidgetContainer* CWidgetContainer::Clone()
 {

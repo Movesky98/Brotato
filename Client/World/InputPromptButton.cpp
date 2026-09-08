@@ -34,8 +34,11 @@ bool CInputPromptButton::Init()
 
         for (int i = 0; i < EWidgetState::End; ++i)
         {
-            Button->SetTexture((EWidgetState::Type)i, "BuyButton", TEXT("Custom/Shop/RoundBox_Grey_Prompt.png"));
+            Button->SetTexture((EWidgetState::Type)i, "BuyButton", TEXT("Custom/Shop/RoundBox_Prompt.png"));
         }
+
+        // 텍스처가 흰색이므로 색은 전적으로 틴트가 결정한다.
+        ApplyButtonTint(mBaseTint);
     }
 
     auto KeyIcon = mKeyIcon.lock();
@@ -92,6 +95,131 @@ void CInputPromptButton::SetLabelText(const TCHAR* Text)
     }
 }
 
+void CInputPromptButton::SetLabelTextPos(float x, float y)
+{
+    auto LabelText = mLabelText.lock();
+    if (LabelText)
+    {
+        LabelText->SetPos(x, y);
+    }
+}
+
+void CInputPromptButton::SetLabelTextSize(float x, float y)
+{
+    auto LabelText = mLabelText.lock();
+    if (LabelText)
+    {
+        LabelText->SetSize(x, y);
+    }
+}
+
+void CInputPromptButton::SetLabelTextFontSize(float Size)
+{
+    auto LabelText = mLabelText.lock();
+    if (LabelText)
+    {
+        LabelText->SetFontSize(Size);
+    }
+}
+
+void CInputPromptButton::SetLabelTextColor(const FVector4 Tint)
+{
+    auto LabelText = mLabelText.lock();
+    if (LabelText)
+    {
+        LabelText->SetTextColor(Tint);
+    }
+}
+
+void CInputPromptButton::ApplyButtonTint(const FVector4& Tint)
+{
+    auto Button = mButton.lock();
+    if (Button)
+    {
+        // CollisionMouse 오버라이드 이후 자식 버튼은 상태가 바뀌지 않으므로 전 상태에 같은 값을 넣는다.
+        for (int i = 0; i < (int)EWidgetState::End; i++)
+        {
+            Button->SetTint((EWidgetState::Type)i, Tint);
+        }
+    }
+}
+
+void CInputPromptButton::SetButtonTint(const FVector4& Tint)
+{
+    mBaseTint = Tint;
+
+    ApplyButtonTint(mBaseTint);
+}
+
+void CInputPromptButton::SetButtonTint(const FVector4& Tint, EWidgetState::Type Type)
+{
+    auto Button = mButton.lock();
+    if (Button)
+    {
+        Button->SetTint(Type, Tint);
+    }
+}
+
+void CInputPromptButton::SetButtonTexture(std::string Name, const TCHAR* Path)
+{
+    auto Button = mButton.lock();
+    if (Button)
+    {
+        for (int i = 0; i < (int)EWidgetState::End; i++)
+        {
+            Button->SetTexture((EWidgetState::Type)i, Name, Path);
+        }
+    }
+}
+
+bool CInputPromptButton::CollisionMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos)
+{
+    // 오버라이드를 통해 자식 위젯의 콜리전 검사를 스킵하도록 함.
+    // 버튼의 크기가 InputPromptButton과 같기 때문에 위젯컨테이너의 콜리전 이벤트가 발생하기 전에, 버튼의 콜리전이 발생하게 됨.
+    return CWidget::CollisionMouse(Result, MousePos);
+}
+
+void CInputPromptButton::MouseHovered()
+{
+    CWidgetContainer::MouseHovered();
+
+    // 기본 색의 알파는 유지한 채 흰색으로 바꾼다.
+    ApplyButtonTint(FVector4(1.f, 1.f, 1.f, mBaseTint.w));
+
+    auto LabelText = mLabelText.lock();
+    if (LabelText)
+    {
+        LabelText->SetTextColor(FVector4::Black);
+    }
+
+    if (mOnHovered)
+        mOnHovered();
+}
+
+void CInputPromptButton::MouseUnHovered()
+{
+    CWidgetContainer::MouseUnHovered();
+
+    ApplyButtonTint(mBaseTint);
+
+    auto LabelText = mLabelText.lock();
+    if (LabelText)
+    {
+        LabelText->SetTextColor(FVector4::White);
+    }
+
+    if (mOnUnHovered)
+        mOnUnHovered();
+}
+
+void CInputPromptButton::MouseClicked()
+{
+    CWidgetContainer::MouseClicked();
+
+    if (mOnClicked)
+        mOnClicked();
+}
+
 void CInputPromptButton::SetKeyIconPos(float x, float y)
 {
     auto KeyIcon = mKeyIcon.lock();
@@ -115,7 +243,7 @@ void CInputPromptButton::SetKeyIconTexture(const std::string Name, const TCHAR* 
     auto KeyIcon = mKeyIcon.lock();
     if (KeyIcon)
     {
-        KeyIcon->SetTexture(Name, FilePath);
+        KeyIcon->SetTexture(Name + "_Icon", FilePath);
     }
 }
 

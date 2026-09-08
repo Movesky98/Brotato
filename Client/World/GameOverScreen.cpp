@@ -218,14 +218,20 @@ void CGameOverScreen::ToStartWorld()
 
 void CGameOverScreen::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
 {
-	if (InPlayer.expired()) return;
-
 	auto Player = InPlayer.lock();
+	if (!Player) return;
+
 	auto InvComp = Player->GetInventoryComponent().lock();
-	if (InvComp && Player)
+	if (!InvComp) return;
+
+	mPlayerInvComp = InvComp;
+
+	InvComp->SetUpdatedAssetsFunction(this, &CGameOverScreen::UpdateResultPanel);
+
+	auto StatPanel = mStatPanel.lock();
+	if (StatPanel)
 	{
-		InvComp->SetUpdatedAssetsFunction(this, &CGameOverScreen::UpdateResultPanel);
-		mPlayerInvComp = InvComp;
+		InvComp->SetOnStatUpdatedFunction(StatPanel.get(), &CStatPanel::UpdateStats);
 	}
 }
 

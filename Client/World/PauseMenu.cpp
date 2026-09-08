@@ -94,15 +94,20 @@ void CPauseMenu::SetUp()
 
 void CPauseMenu::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
 {
-    if (InPlayer.expired()) return;
-
 	auto Player = InPlayer.lock();
+    if (!Player) return;
+
 	auto InvComp = Player->GetInventoryComponent().lock();
-	if (InvComp && Player)
-	{
-		InvComp->SetUpdatedAssetsFunction(this, &CPauseMenu::UpdateInventory);
-		mPlayerInvComp = InvComp;
-	}
+    if (!InvComp) return;
+	
+    mPlayerInvComp = InvComp;
+    InvComp->SetUpdatedAssetsFunction(this, &CPauseMenu::UpdateInventory);
+    
+    auto StatPanel = mStatPanel.lock();
+    if (StatPanel)
+    {
+        InvComp->SetOnStatUpdatedFunction(StatPanel.get(), &CStatPanel::UpdateStats);
+    }
 }
 
 void CPauseMenu::UnsubscribeDelegates()
@@ -220,11 +225,5 @@ void CPauseMenu::UpdateInventory()
     for (auto Weapon : Weapons)
     {
         WeaponSlotContainer->AddSlotData(Weapon);
-    }
-
-    auto StatPanel = mStatPanel.lock();
-    if (StatPanel)
-    {
-        StatPanel->UpdateStats(InvComp->GetStat());
     }
 }
