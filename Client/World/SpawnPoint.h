@@ -6,6 +6,7 @@ enum class ESpawnType
 	None = -1,
 	Enemy,
 	Structure,
+	Boss,
 	MAX
 };
 

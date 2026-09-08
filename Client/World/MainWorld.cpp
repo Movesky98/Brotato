@@ -2,6 +2,7 @@
 
 #include "Wall.h"
 #include "Enemy.h"
+#include "Boss.h"
 #include "Player.h"
 #include "MaterialItem.h"
 
@@ -15,6 +16,7 @@
 #include "ItemSlot.h"
 
 #include "DataAsset.h"
+#include "BossData.h"
 #include "CharacterData.h"
 #include "EnemyData.h"
 #include "BackgroundActor.h"
@@ -369,6 +371,9 @@ void CMainWorld::CreateSpawnPoint(ESpawnType Type)
 		break;
 	case ESpawnType::Structure:
 		break;
+	case ESpawnType::Boss:
+		Data = CDataManager::GetInst()->GetRandomBossData();
+		break;
 	default:
 		break;
 	}
@@ -390,10 +395,12 @@ void CMainWorld::SpawnEntity(const FVector3 SpawnPos, ESpawnType Type, std::weak
 		break;
 	case ESpawnType::Structure:
 		break;
+	case ESpawnType::Boss:
+		SpawnBoss(SpawnPos, mPlayer, Data.lock());
+		break;
 	default:
 		break;
 	}
-
 }
 
 void CMainWorld::SpawnPlayer()
@@ -421,6 +428,22 @@ void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class C
 	}
 }
 
+void CMainWorld::SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data)
+{
+	if (!Data || wPlayer.expired()) return;
+
+	auto Player = wPlayer.lock();
+	auto Boss = CreateActor<CBoss>("Boss").lock();
+
+	if (Player && Boss)
+	{
+		Boss->InitializeProperties(Data, Player);
+		Boss->SetWorldPos(SpawnPos);
+		Boss->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
+		AliveEnemyCount++;
+	}
+}
+
 void CMainWorld::SpawnMaterial(const FVector3& SpawnPos)
 {
 	auto Material = CreateActor<CMaterialItem>("MaterialItem").lock();
@@ -442,9 +465,9 @@ void CMainWorld::WaveStart()
 
 	SpawnPlayer();
 
-	for (int i = 0; i < MaxAliveEnemy; i++)
+	for (int i = 0; i < 1/*MaxAliveEnemy*/; i++)
 	{
-		CreateSpawnPoint(ESpawnType::Enemy);
+		CreateSpawnPoint(ESpawnType::Boss);
 	}
 }
 
