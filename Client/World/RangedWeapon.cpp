@@ -1,4 +1,5 @@
 #include "RangedWeapon.h"
+#include "WeaponData.h"
 
 #include "Enemy.h"
 #include "Bullet.h"
@@ -41,6 +42,26 @@ void CRangedWeapon::Update(float DeltaTime)
 void CRangedWeapon::Destroy()
 {
     CWeapon::Destroy();
+}
+
+void CRangedWeapon::InitializeSettings(const std::weak_ptr<CWeaponData>& InData, const FStat& Stat)
+{
+	auto Data = InData.lock();
+	if (!Data) return;
+
+	mBaseDamage = Data->BaseDamage + Stat.Primary[(int)EPrimaryStats::RangedDamage];
+	mBaseDamage += mBaseDamage * (float)(Stat.Primary[(int)EPrimaryStats::Damage] / 100.f);
+	if (mBaseDamage < 1) mBaseDamage = 1;
+
+	mCooldown = Data->Cooldown;
+	mKnockback = Data->Knockback;
+	mCritical = Data->Critical;
+	mRange = Data->Range;
+	mLifeSteal = Data->LifeSteal;
+	mPiercing = Data->Piercing;
+	mRange = Data->Range + Stat.Primary[(int)EPrimaryStats::Range];
+
+	CWeapon::InitializeSettings(InData, Stat);
 }
 
 void CRangedWeapon::Attack(std::weak_ptr<class CEnemy> TargetPtr)

@@ -47,6 +47,8 @@ protected:
 		return new CMeleeWeapon(*this);
 	}
 
+	void InitializeSettings(const std::weak_ptr<CWeaponData>& InData, const FStat& Stat) override;
+
 	void Attack(std::weak_ptr<class CEnemy> TargetPtr) override;
 	void HandleAttackPhase(float DeltaTime);
 	void OnHitCollisionBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider);

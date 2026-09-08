@@ -40,7 +40,7 @@ bool CWeapon::Init()
 	{
 		SphereCollision->SetRadius(150.f);
 		SphereCollision->SetCollisionProfile("DetectEnemy");
-		SphereCollision->SetDebugDraw(false);
+		SphereCollision->SetDebugDraw(true);
 		SphereCollision->SetBeginOverlapFunc(this, &CWeapon::OnCollisionBeginOverlap);
 		SphereCollision->SetEndOverlapFunc(this, &CWeapon::OnCollisionEndOverlap);
 	}
@@ -178,19 +178,11 @@ void CWeapon::SetTexture(const std::string& Name, const std::wstring& TexturePat
 	}
 }
 
-void CWeapon::InitializeSettings(const std::weak_ptr<CWeaponData>& InData)
+void CWeapon::InitializeSettings(const std::weak_ptr<CWeaponData>& InData, const FStat& Stat)
 {
 	auto Data = InData.lock();
 	if (Data)
 	{
-		mBaseDamage = Data->BaseDamage;
-		mCooldown = Data->Cooldown;
-		mKnockback = Data->Knockback;
-		mCritical = Data->Critical;
-		mRange = Data->Range;
-		mLifeSteal = Data->LifeSteal;
-		mPiercing = Data->Piercing;
-
 		SetTexture(Data->Name, Data->TextureInfo.Path, Data->TextureInfo.SizeX, Data->TextureInfo.SizeY);
 	}
 

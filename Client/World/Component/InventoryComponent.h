@@ -30,9 +30,11 @@ public:
 protected:
 	std::vector<std::function<void()>> mOnUpdatedAssetsFuncs;
 	std::vector<std::function<void(int)>> mOnAddedMaterialFuncs;
+	std::vector<std::function<void(FStat)>> mOnStatUpdatedFuncs;
 
 	void CallOnUpdatedAssetsFunction();
 	void CallOnAddedMaterialFunction();
+	void CallOnStatUpdatedFunction();
 
 public:
 	std::vector<std::weak_ptr<CDataAsset>> GetWeaponData() const;
@@ -57,8 +59,20 @@ public:
 		mOnAddedMaterialFuncs.push_back(BindFunc);
 	}
 
-	const FStat GetStat() const { return mStat; }
-	int GetMaterial() const { return mMaterial; }
+	template<typename T>
+	void SetOnStatUpdatedFunction(T* Object, void(T::* Func)(FStat))
+	{
+		std::function<void(FStat)> BindFunc = std::bind(Func, Object, std::placeholders::_1);
+
+		mOnStatUpdatedFuncs.push_back(BindFunc);
+	}
+
+	FStat GetStat() const { return mStat; }
+	int GetStatValue(EPrimaryStats Stat) { return mStat.Primary[(int)Stat]; }
+	int GetStatValue(ESecondaryStats Stat) { return mStat.Secondary[(int)Stat]; }
+	void AddStat(const FStat Stat);
+
+	int GetMaterials() const { return mMaterial; }
 	void AddMaterial(int Amount);
 };
 

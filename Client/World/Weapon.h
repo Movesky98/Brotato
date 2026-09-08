@@ -1,5 +1,6 @@
 #pragma once
 #include "World/Actor.h"
+#include "GameTypes.h"
 
 class CWeaponData;
 
@@ -57,7 +58,7 @@ protected:
 	virtual void SetTexture(const std::string& Name, const std::wstring& TexturePath, float SizeX, float SizeY);
 
 public:
-	void InitializeSettings(const std::weak_ptr<CWeaponData>& InData);
+	virtual void InitializeSettings(const std::weak_ptr<CWeaponData>& InData, const FStat& Stat);
 	void SetOwner(const std::weak_ptr<CActor>& Owner) { mOwner = Owner; }
 };
 

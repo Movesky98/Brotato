@@ -24,6 +24,8 @@ bool CInventoryComponent::Init()
 {
     if (!CActorComponent::Init()) return false;
 
+    mStat.Primary[(int)EPrimaryStats::MaxHP] = 10;
+
     return true;
 }
 
@@ -52,6 +54,17 @@ void CInventoryComponent::CallOnAddedMaterialFunction()
         if (It)
         {
             It(mMaterial);
+        }
+    }
+}
+
+void CInventoryComponent::CallOnStatUpdatedFunction()
+{
+    for (auto It : mOnStatUpdatedFuncs)
+    {
+        if (It)
+        {
+            It(mStat);
         }
     }
 }
@@ -99,11 +112,18 @@ void CInventoryComponent::AddItem(std::weak_ptr<CItemData> _Asset)
     if (_Asset.expired()) return;
 
     auto Asset = _Asset.lock();
-    mStat += Asset->Stats;
+    AddStat(Asset->Stats);
 
     mDataAssets.insert(std::pair(EDataAssetType::Item, _Asset));
 
     CallOnUpdatedAssetsFunction();
+}
+
+void CInventoryComponent::AddStat(const FStat Stat)
+{
+    mStat += Stat; 
+    
+    CallOnStatUpdatedFunction();
 }
 
 void CInventoryComponent::AddMaterial(int Amount)

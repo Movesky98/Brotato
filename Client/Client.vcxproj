@@ -152,6 +152,8 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="World\StatLine.cpp" />
+    <ClCompile Include="World\StatTable.cpp" />
     <ClCompile Include="World\BuyButton.cpp" />
     <ClCompile Include="World\CollectableInterface.cpp" />
     <ClCompile Include="World\ConvertString.cpp" />
@@ -208,6 +210,8 @@
     <ClCompile Include="World\WeaponData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="World\StatLine.h" />
+    <ClInclude Include="World\StatTable.h" />
     <ClInclude Include="World\CollectableInterface.h" />
     <ClInclude Include="World\ConvertString.h" />
     <ClInclude Include="World\BuyButton.h" />

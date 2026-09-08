@@ -1,5 +1,7 @@
 #include "MeleeWeapon.h"
 
+#include "WeaponData.h"
+
 #include "Enemy.h"
 #include "EnemyBullet.h"
 
@@ -71,6 +73,26 @@ void CMeleeWeapon::Destroy()
 {
     CWeapon::Destroy();
 
+}
+
+void CMeleeWeapon::InitializeSettings(const std::weak_ptr<CWeaponData>& InData, const FStat& Stat)
+{
+    auto Data = InData.lock();
+    if (!Data) return;
+
+    mBaseDamage = Data->BaseDamage + Stat.Primary[(int)EPrimaryStats::MeleeDamage];
+    mBaseDamage += mBaseDamage * (float)(Stat.Primary[(int)EPrimaryStats::Damage] / 100.f);
+    if (mBaseDamage < 1) mBaseDamage = 1;
+
+    mCooldown = Data->Cooldown;
+    mKnockback = Data->Knockback;
+    mCritical = Data->Critical;
+    mRange = Data->Range;
+    mLifeSteal = Data->LifeSteal;
+    mPiercing = Data->Piercing;
+    mRange = Data->Range + Stat.Primary[(int)EPrimaryStats::Range];
+
+    CWeapon::InitializeSettings(InData, Stat);
 }
 
 void CMeleeWeapon::Attack(std::weak_ptr<class CEnemy> TargetPtr)

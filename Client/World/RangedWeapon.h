@@ -22,6 +22,8 @@ protected:
 		return new CRangedWeapon(*this);
 	}
 
+	void InitializeSettings(const std::weak_ptr<CWeaponData>& InData, const FStat& Stat) override;
+
 	void Attack(std::weak_ptr<class CEnemy> TargetPtr) override;
 };
 

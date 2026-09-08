@@ -26,6 +26,7 @@ public:
     void SetSize(float x, float y) override;
  
     void SetIconVisible(bool IsVisible);
+    void SetIconTexture(const std::string Name, const TCHAR* Path);
     void SetImage(const TCHAR* Path);
     void SetNameText(const TCHAR* Text);
     void SetValueText(int Value);

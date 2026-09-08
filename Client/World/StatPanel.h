@@ -21,9 +21,6 @@ public:
 	virtual CStatPanel* Clone();
 
 protected:
-	const TCHAR* mPrimaryStatTexts[(int)EPrimaryStats::MAX];
-	const TCHAR* mSecondaryStatTexts[(int)ESecondaryStats::MAX];
-
 	std::vector<std::weak_ptr<class CStatRow>> mPrimaryStatRows;
 	std::vector<std::weak_ptr<class CStatRow>> mSecondaryStatRows;
 
@@ -33,6 +30,7 @@ protected:
 	std::weak_ptr<CImage> mBackgroundImage;
 	std::weak_ptr<CButton> mPrimaryButton;
 	std::weak_ptr<CButton> mSecondaryButton;
+
 	bool mIsShowPrimaryStat = true;
 
 	std::weak_ptr<CButton> CreateButton(const std::string& Name, const TCHAR* Text, const FVector2& Position);

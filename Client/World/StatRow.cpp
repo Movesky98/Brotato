@@ -87,6 +87,14 @@ void CStatRow::SetIconVisible(bool IsVisible)
         Name->SetPos(IsVisible ? 26.f : 5.f, 0.f);
 }
 
+void CStatRow::SetIconTexture(const std::string Name, const TCHAR* Path)
+{
+    if (auto Icon = mIconImage.lock())
+    {
+        Icon->SetTexture(Name, Path);
+    }
+}
+
 void CStatRow::SetImage(const TCHAR* Path)
 {
     auto IconImage = mIconImage.lock();
