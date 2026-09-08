@@ -16,8 +16,9 @@
 #include "RangedWeapon.h"
 #include "MeleeWeapon.h"
 
-#include "WeaponData.h"
 #include "DataAsset.h"
+#include "WeaponData.h"
+#include "CharacterData.h"
 
 #include "Component/InventoryComponent.h"
 #include "Component/ArenaCameraComponent.h"
@@ -98,7 +99,6 @@ bool CPlayer::Init()
 {
 	CActor::Init();
 
-	SetHPMax(100.f);
 	SetDeathFunction(this, &CPlayer::OnDeath);
 
 	mActorTag = "Player";
@@ -235,7 +235,8 @@ void CPlayer::Update(float DeltaTime)
 			mIsDissolve = false;
 			mDissolveProgress = 1.f;
 
-			Destroy();
+			// Destroy();
+
 		}
 
 		if (MeshComp)
@@ -315,7 +316,7 @@ void CPlayer::OnDeath()
 		BoxCollision->SetEnable(false);
 	}
 
-	mIsDead = true;
+	// mIsDead = true;
 }
 
 void CPlayer::OnPickupRangeBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider)
@@ -464,7 +465,7 @@ void CPlayer::SpawnWeapons()
 			{
 				NewWeapon->AttachActorToActor(GetThisPtr<CActor>());
 				NewWeapon->SetOwner(GetThisPtr<CActor>());
-				NewWeapon->InitializeSettings(WeaponData);
+				NewWeapon->InitializeSettings(WeaponData, InvComp->GetStat());
 			
 				Weapons.push_back(NewWeapon);
 			}
@@ -517,4 +518,47 @@ void CPlayer::SetWeaponSettings()
 			Weapon->SetRelativeRotationZ(Angle * Index);
 		}
 	}
+}
+
+void CPlayer::SetPlayerDesc(std::weak_ptr<CCharacterData> InData)
+{
+	auto Data = InData.lock();
+	if (!Data) return;
+
+	auto MeshComp = mMeshComp.lock();
+	if (MeshComp)
+	{
+		MeshComp->AddTexture(0, Data->Name, Data->TextureInfo.Path.c_str());
+	}
+
+	auto InvComp = GetInventoryComponent().lock();
+	if (InvComp)
+	{
+		InvComp->AddStat(Data->Stats);
+		InvComp->AddWeapon(Data->StartWeapon);
+	}
+}
+
+void CPlayer::ActiveForWave()
+{
+	SetRenderEnable(true);
+	SetEnable(true);
+	SetWorldPos(0.f, 0.f);
+	
+	auto InvComp = mInventoryComponent.lock();
+	if (InvComp)
+	{
+		SetHPMax(InvComp->GetStatValue(EPrimaryStats::MaxHP));
+		SetHP(GetMaxHP());
+	}
+
+	SpawnWeapons();
+}
+
+void CPlayer::DeactiveForWave()
+{
+	DestroyWeapons();
+
+	SetEnable(false);
+	SetRenderEnable(false);
 }

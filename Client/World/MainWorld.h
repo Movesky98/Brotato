@@ -34,6 +34,7 @@ public:
 
 protected:
 	std::weak_ptr<class CPlayer> mPlayer;
+	std::weak_ptr<class CCharacterData> mPlayerData;
 	std::weak_ptr<class CPauseMenu> mPauseMenu;
 	std::weak_ptr<class CShopMenu> mShopMenu;
 	std::weak_ptr<class CPlayerHUD> mPlayerHUD;
@@ -140,6 +141,8 @@ public:
 
 	int GetCurrentWave() const { return mCurrentWave; }
 	EGameplayStage GetStage() const { return mStage; }
+
+	void InitializeWorldSetting(std::weak_ptr<CDataAsset> Data);
 	
 	/* UI */
 protected:

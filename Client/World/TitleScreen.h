@@ -42,5 +42,14 @@ protected:
 
 	float mProgress = 0.f;
 	float mPeriod = 6.f;
+
+	std::function<void()> mOnStartButtonClicked;
+
+public:
+	template<typename T>
+	void SetOnStartButtonClickedFunction(T* Object, void(T::* Func)())
+	{
+		mOnStartButtonClicked = std::bind(Func, Object);
+	}
 };
 

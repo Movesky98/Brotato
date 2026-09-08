@@ -94,5 +94,9 @@ public:
 	void SetWeaponSettings();
 
 public:
+	void SetPlayerDesc(std::weak_ptr<class CCharacterData> InData);
+
+	void ActiveForWave();
+	void DeactiveForWave();
 };
 

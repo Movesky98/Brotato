@@ -2,6 +2,7 @@
 
 #include "Engine.h"
 #include "resource.h"
+#include "World/DataManager.h"
 
 #include "World/MainWorld.h"
 #include "World/StartWorld.h"
@@ -36,11 +37,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	CGlobalCollision::SetGlobalCollision();
+	CDataManager::GetInst()->InitializeCSVData();
 
 	CWorldManager::GetInst()->CreateWorld<CStartWorld>(false);
 
 	int Ret = CEngine::GetInst()->Run();
 
+	CDataManager::GetInst()->DestroyInst();
 	CEngine::GetInst()->DestroyInst();
 
 	return Ret;

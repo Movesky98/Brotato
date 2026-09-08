@@ -177,7 +177,8 @@ std::weak_ptr<class CButton> CTitleScreen::CreateButton(const std::string& Name,
 
 void CTitleScreen::OnClickedStartButton()
 {
-	CWorldManager::GetInst()->CreateWorld<CMainWorld>(true);
+	if (mOnStartButtonClicked)
+		mOnStartButtonClicked();
 }
 
 void CTitleScreen::OnClickedQuitButton()

@@ -155,7 +155,9 @@
     <ClCompile Include="World\BossData.cpp" />
     <ClCompile Include="World\StatLine.cpp" />
     <ClCompile Include="World\StatTable.cpp" />
+    <ClCompile Include="World\CharacterSelectScreen.cpp" />
     <ClCompile Include="World\BuyButton.cpp" />
+    <ClCompile Include="World\CharacterFrame.cpp" />
     <ClCompile Include="World\CollectableInterface.cpp" />
     <ClCompile Include="World\ConvertString.cpp" />
     <ClCompile Include="World\GameOverScreen.cpp" />
@@ -201,7 +203,6 @@
     <ClCompile Include="World\RangedWeapon.cpp" />
     <ClCompile Include="World\SkillData.cpp" />
     <ClCompile Include="World\SpawnProjectileSkillData.cpp" />
-    <ClCompile Include="World\StartPlayer.cpp" />
     <ClCompile Include="World\StartWidget.cpp" />
     <ClCompile Include="World\StartWorld.cpp" />
     <ClCompile Include="World\StatRow.cpp" />
@@ -214,6 +215,8 @@
     <ClInclude Include="World\BossData.h" />
     <ClInclude Include="World\StatLine.h" />
     <ClInclude Include="World\StatTable.h" />
+    <ClInclude Include="World\CharacterSelectScreen.h" />
+    <ClInclude Include="World\CharacterFrame.h" />
     <ClInclude Include="World\CollectableInterface.h" />
     <ClInclude Include="World\ConvertString.h" />
     <ClInclude Include="World\BuyButton.h" />
@@ -262,7 +265,6 @@
     <ClInclude Include="World\SkillData.h" />
     <ClInclude Include="World\SlotContainer.h" />
     <ClInclude Include="World\SpawnProjectileSkillData.h" />
-    <ClInclude Include="World\StartPlayer.h" />
     <ClInclude Include="World\StartWidget.h" />
     <ClInclude Include="World\StartWorld.h" />
     <ClInclude Include="World\StatRow.h" />

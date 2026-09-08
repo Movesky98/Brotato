@@ -15,6 +15,7 @@
 #include "ItemSlot.h"
 
 #include "DataAsset.h"
+#include "CharacterData.h"
 #include "EnemyData.h"
 #include "BackgroundActor.h"
 
@@ -56,8 +57,6 @@ bool CMainWorld::Init()
 	CWorld::Init();
 	
 	srand((unsigned int)time(0));
-	
-	CDataManager::GetInst()->InitializeCSVData();
 
 	InitializeInputSettings();
 
@@ -86,7 +85,6 @@ bool CMainWorld::Init()
 	
 	SpawnTileMap();
 	SpawnWalls();
-	WaveStart();
 
 	return true;
 }
@@ -356,8 +354,6 @@ void CMainWorld::OnPlayerDeath()
 
 	ClearObjects<CEnemy>();
 	ClearObjects<CSpawnPoint>();
-
-	CDataManager::GetInst()->DestroyInst();
 }
 
 void CMainWorld::CreateSpawnPoint(ESpawnType Type)
@@ -405,15 +401,11 @@ void CMainWorld::SpawnPlayer()
 	auto Player = mPlayer.lock();
 	if (Player)
 	{
-		Player->SetRenderEnable(true);
-		Player->SetEnable(true);
-		Player->SetWorldPos(0.f, 0.f);
-		Player->SetHP(Player->GetMaxHP());
-		Player->SpawnWeapons();
+		Player->ActiveForWave();
 	}
 }
 
-void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CEnemyData> Data)
+void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data)
 {
 	if (!Data || wPlayer.expired()) return;
 
@@ -489,9 +481,7 @@ void CMainWorld::WaveEnd()
 	auto Player = mPlayer.lock();
 	if (Player)
 	{
-		Player->DestroyWeapons();	
-		Player->SetRenderEnable(false);
-		Player->SetEnable(false);
+		Player->DeactiveForWave();
 	}
 
 	// 플레이어가 죽었으면 GG
@@ -530,6 +520,25 @@ FVector3 CMainWorld::GetRandomSpawnPosition() const
 std::weak_ptr<class CPlayer> CMainWorld::GetPlayer() const
 {
 	return mPlayer;
+}
+
+void CMainWorld::InitializeWorldSetting(std::weak_ptr<CDataAsset> Data)
+{
+	if (Data.expired()) return;
+
+	auto CharacterData = std::dynamic_pointer_cast<CCharacterData>(Data.lock());
+	if (CharacterData)
+	{
+		mPlayerData = CharacterData;
+
+		auto Player = mPlayer.lock();
+		if (Player)
+		{
+			Player->SetPlayerDesc(CharacterData);
+		}
+	}
+
+	WaveStart();
 }
 
 void CMainWorld::TogglePauseMenu()
