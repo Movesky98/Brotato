@@ -200,7 +200,7 @@ bool CPlayer::Init()
 	{
 		MoveComp->SetUpdateComp(mRoot);
 		MoveComp->SetSpeed(300.f);
-		MoveComp->SetCurrentSpeed(200.f);
+		MoveComp->SetCurrentSpeed(300.f);
 	}
 
 	if (mInventoryComponent.expired()) return false;
