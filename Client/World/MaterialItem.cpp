@@ -144,7 +144,7 @@ void CMaterialItem::OnCollsiionBeginOverlap(const FVector3& HitPoint, const FVec
 
 void CMaterialItem::OnWaveEnded()
 {
-    auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());
+    auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());  
     if (MainWorld)
     {
         auto Player = MainWorld->GetPlayer().lock();

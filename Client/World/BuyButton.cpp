@@ -44,7 +44,10 @@ bool CBuyButton::Init()
 
 		for (int i = 0; i < EWidgetState::End; ++i)
 		{
-			Button->SetTexture((EWidgetState::Type)i, "BuyButton", TEXT("Custom/Shop/RoundBox_Grey_Buy.png"));
+			Button->SetTexture((EWidgetState::Type)i, "BuyButton", TEXT("Custom/Shop/RoundBox_Buy.png"));
+
+			// 텍스처를 흰색으로 교체했으므로 기존 회색은 틴트로 맞춘다.
+			Button->SetTint((EWidgetState::Type)i, FVector4(0.5f, 0.5f, 0.5f, 1.f));
 		}
 	}
 

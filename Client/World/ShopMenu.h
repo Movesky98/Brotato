@@ -1,5 +1,6 @@
 #pragma once
 #include "PlayerWidgetContainer.h"
+#include <unordered_set>
 #include <functional>
 
 class CShopMenu : public CPlayerWidgetContainer
@@ -35,9 +36,11 @@ protected:
 	std::weak_ptr<class CTextBlock>				mMaterialText;
 
 	std::function<void()> mNextWaveButtonClickedFunc;
+	std::unordered_set<int> mBanIDs;
 
 	void OnClickedRerollButton();
 	void OnClickedNextWaveButton();
+	void OnBanButtonClicked(std::weak_ptr<CShopOfferCard> wOfferCard);
 	
 	void CreateNextWaveButton(int NextWave);
 	void CreateSlotContainer();

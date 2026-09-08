@@ -66,6 +66,7 @@ bool CShopMenu::Init()
         {
             OfferCard->SetPos(13.f + 241.f * i, 100.f);
             OfferCard->SetSize(235.f, 393.f);
+            OfferCard->SetBanButtonClickedFunction(this, &CShopMenu::OnBanButtonClicked);
         }
     }
 
@@ -79,6 +80,7 @@ bool CShopMenu::Init()
         RerollButton->SetPos(752.f, 28.f);
         RerollButton->SetSize(219.f, 44.f);
         RerollButton->SetLabelText(TEXT("초기화 -10"));
+        RerollButton->SetButtonTint(FVector4(0.25f, 0.25f, 0.25f, 1.f));
         
         RerollButton->SetKeyIconPos(15.f, 8.f);
         RerollButton->SetKeyIconSize(28.f, 28.f);
@@ -88,7 +90,7 @@ bool CShopMenu::Init()
         RerollButton->SetTrailingIconSize(28.f, 28.f);
         RerollButton->SetTrailingIconTexture("MaterialIcon", TEXT("Custom/Material/Harvesting_Icon.png"));
         RerollButton->SetTrailingIconTint(FVector4(0.462745f, 1.f, 0.462745f, 1.f));
-        RerollButton->SetClickedButtonFunction(EWidgetEventState::Clicked, this, &CShopMenu::OnClickedRerollButton);
+        RerollButton->SetClickedFunction(this, &CShopMenu::OnClickedRerollButton);
     }
 
     auto CurrentWaveText = mCurrentWaveText.lock();
@@ -129,15 +131,21 @@ CShopMenu* CShopMenu::Clone()
 
 void CShopMenu::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
 {
-    if (InPlayer.expired()) return;
-
     auto Player = InPlayer.lock();
+    if (!Player) return;
+
     auto InvComp = Player->GetInventoryComponent().lock();
-    if (Player && InvComp)
+    if (!InvComp) return;
+
+    mPlayerInvComp = InvComp;
+    
+    InvComp->SetUpdatedAssetsFunction(this, &CShopMenu::UpdateSlotContainer);
+    InvComp->SetOnAddedMaterialFunction(this, &CShopMenu::SetMaterialText);
+
+    auto StatPanel = mStatPanel.lock();
+    if (StatPanel)
     {
-        InvComp->SetUpdatedAssetsFunction(this, &CShopMenu::UpdateSlotContainer);
-        InvComp->SetOnAddedMaterialFunction(this, &CShopMenu::SetMaterialText);
-        mPlayerInvComp = InvComp;
+        InvComp->SetOnStatUpdatedFunction(StatPanel.get(), &CStatPanel::UpdateStats);
     }
 }
 
@@ -181,6 +189,38 @@ void CShopMenu::OnClickedNextWaveButton()
 {
     if(mNextWaveButtonClickedFunc)
         mNextWaveButtonClickedFunc();
+}
+
+void CShopMenu::OnBanButtonClicked(std::weak_ptr<CShopOfferCard> wOfferCard)
+{
+    auto OfferCard = wOfferCard.lock();
+    if (OfferCard)
+    {
+        mBanIDs.insert(OfferCard->GetCardDesc().ID);
+        OfferCard->SetEnable(false);
+    }
+
+    if (mBanIDs.size() >= 6)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            auto OfferCard = mOfferCards[i].lock();
+            if (OfferCard) OfferCard->SetEnableBanButton(false);
+        }
+
+        return;
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        auto OfferCard = mOfferCards[i].lock();
+        if (!OfferCard) continue;
+
+        if (OfferCard && mBanIDs.contains(OfferCard->GetCardDesc().ID))
+        {
+            OfferCard->SetEnable(false);
+        }
+    }
 }
 
 void CShopMenu::CreateSlotContainer()
@@ -237,9 +277,18 @@ void CShopMenu::CreateOfferCards()
     for (int i = 0; i < 4; ++i)
     {
         auto OfferCard = mOfferCards[i].lock();
-        auto ShopData = CDataManager::GetInst()->GetRandomShopData();
+        std::shared_ptr<CShopData> ShopData;
+        while (true)
+        {
+            ShopData = CDataManager::GetInst()->GetRandomShopData();
+            if (!mBanIDs.contains(ShopData->ID)) break;
+        }
+
         if (ShopData && OfferCard)
         {
+            int ID = OfferCard->GetCardDesc().ID;
+            if (OfferCard->IsLocked() && !mBanIDs.contains(ID)) continue;
+
             FShopOfferCardDesc OfferCardDesc;
             OfferCardDesc.ID = ShopData->ID;
             OfferCardDesc.IsWeapon = ShopData->AssetType == EDataAssetType::Weapon;
@@ -247,7 +296,10 @@ void CShopMenu::CreateOfferCards()
             OfferCardDesc.IconPath = ShopData->TextureInfo.IconPath.c_str();
             OfferCardDesc.BasePrice = ShopData->BasePrice;
 
-            OfferCard->SetCardDesc(OfferCardDesc);
+            bool HideBanButton = false;
+            if (mBanIDs.size() >= 6) HideBanButton = true;
+
+            OfferCard->SetCardDesc(OfferCardDesc, HideBanButton);
             OfferCard->SetEnable(true);
         }
     }
@@ -361,21 +413,32 @@ void CShopMenu::InitializeWithInventory(std::weak_ptr<class CInventoryComponent>
 bool CShopMenu::TryPurchase(const int ID, const bool IsWeapon, int Price)
 {
     // 일단 재화 없음. 그냥 구매로 감.
-
     auto InvComp = mPlayerInvComp.lock();
     if (InvComp)
     {
-        if (IsWeapon)
+        int Materials = InvComp->GetMaterials();
+
+        if (Materials >= Price)
         {
-            auto Data = CDataManager::GetInst()->GetWeaponData(ID);
-            InvComp->AddWeapon(Data);
-        }
-        else
-        {
-            auto Data = CDataManager::GetInst()->GetItemData(ID);
-            InvComp->AddItem(Data);
+            if (IsWeapon)
+            {
+                if (InvComp->GetWeaponData().size() < 6)
+                {
+                    auto Data = CDataManager::GetInst()->GetWeaponData(ID);
+                    InvComp->AddWeapon(Data);
+                }
+                else return false;
+            }
+            else
+            {
+                auto Data = CDataManager::GetInst()->GetItemData(ID);
+                InvComp->AddItem(Data);
+            }
+
+            InvComp->AddMaterial(-Price);
+            return true;
         }
     }
 
-    return true;
+    return false;
 }

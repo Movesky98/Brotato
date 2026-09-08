@@ -23,6 +23,7 @@ public:
 
 protected:
 	std::weak_ptr<class CImage>					mBackgroundImage;
+	std::weak_ptr<class CImage>					mBackgroundFrame;
 	std::weak_ptr<class CItemDetailPanel>		mItemDetailPanel;
 	std::weak_ptr<class CBuyButton>				mBuyButton;
 	std::weak_ptr<class CInputPromptButton>		mLockButton;
@@ -30,9 +31,37 @@ protected:
 
 	FShopOfferCardDesc mCardDesc;
 
+	std::function<void(std::weak_ptr<CShopOfferCard> /* this */)> mOnLockButtonClicked;
+	std::function<void(std::weak_ptr<CShopOfferCard> /* this */)> mOnBanButtonClicked;
+
+	bool mIsLocked = false;
+
+	void OnLockButtonClicked();
+	void OnLockButtonHovered();
+	void OnLockButtonUnHovered();
+
+	void OnBanButtonClicked();
+
 	void RequestPurchase();
 
 public:
 	virtual void SetSize(float x, float y);
-	void SetCardDesc(const FShopOfferCardDesc& CardDesc);
+	void SetCardDesc(const FShopOfferCardDesc& CardDesc, bool bHideBanButton = false);
+
+	bool IsLocked() const { return mIsLocked; }
+	FShopOfferCardDesc GetCardDesc() const { return mCardDesc; }
+
+	void SetEnableBanButton(bool IsEnable);
+
+	template<typename T>
+	void SetLockButtonClickedFunction(T* Obj, void(T::* Func)(std::weak_ptr<CShopOfferCard> /* this */))
+	{
+		mOnLockButtonClicked = std::bind(Func, Obj, std::placeholders::_1);
+	}
+
+	template<typename T>
+	void SetBanButtonClickedFunction(T* Obj, void(T::* Func)(std::weak_ptr<CShopOfferCard> /* this */))
+	{
+		mOnBanButtonClicked = std::bind(Func, Obj, std::placeholders::_1);
+	}
 };

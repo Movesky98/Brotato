@@ -34,6 +34,32 @@ CSlotContainer* CSlotContainer::Clone()
     return new CSlotContainer(*this);
 }
 
+void CSlotContainer::OnSlotHovered(int Index, std::weak_ptr<class CDataAsset> Data)
+{
+    if (Data.expired())
+    {
+        if (mOnSlotHovered) 
+            mOnSlotHovered(std::weak_ptr<CDataAsset>());
+        return;
+    }
+    
+    if (mOnSlotHovered)
+        mOnSlotHovered(Data);
+}
+
+void CSlotContainer::OnSlotClicked(int Index, std::weak_ptr<class CDataAsset> Data)
+{
+    if (Data.expired())
+    {
+        if (mOnSlotClicked)
+            mOnSlotClicked(std::weak_ptr<CDataAsset>());
+        return;
+    }
+
+    if (mOnSlotClicked)
+        mOnSlotClicked(Data);
+}
+
 void CSlotContainer::AddSlotData(std::weak_ptr<class CDataAsset> InAsset)
 {
     auto Asset = InAsset.lock();
@@ -75,9 +101,16 @@ void CSlotContainer::AddSlotData(std::weak_ptr<class CDataAsset> InAsset)
                 DrawPos.x = (Count % RowCount) * 65.f;
                 DrawPos.y = (Count / RowCount) * 65.f;
 
+                Slot->Index = Count;
                 Slot->SetPos(DrawPos);
-                Slot->SetIcon(Asset->Name, Asset->TextureInfo.IconPath.c_str());
+                Slot->SetDataAsset(Asset);
+
+                Slot->SetOnHoveredFunction(this, &CSlotContainer::OnSlotHovered);
+                Slot->SetOnClickedFunction(this, &CSlotContainer::OnSlotClicked);
+
                 Slots.insert(std::pair(Asset->Name, Slot));
+
+                return;
             }
         }
     }

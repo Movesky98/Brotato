@@ -1,5 +1,7 @@
 #include "ItemSlot.h"
 
+#include "DataAsset.h"
+
 #include "World/Image.h"
 
 CItemSlot::CItemSlot()
@@ -48,6 +50,8 @@ bool CItemSlot::Init()
 
 void CItemSlot::MouseHovered()
 {
+    CWidgetContainer::MouseHovered();
+
     auto SlotFrame = mSlotFrame.lock();
     auto Icon = mIcon.lock();
 
@@ -58,6 +62,9 @@ void CItemSlot::MouseHovered()
 
     SlotFrame->SetTint(Tint);
     Icon->SetTint(Tint);
+
+    if(mOnHovered)
+        mOnHovered(Index, mDataAsset);
 }
 
 void CItemSlot::MouseUnHovered()
@@ -72,6 +79,13 @@ void CItemSlot::MouseUnHovered()
     Icon->SetTint(1.f, 1.f, 1.f, 1.f);
 }
 
+void CItemSlot::MouseClicked()
+{
+
+    if(mOnClicked)
+        mOnClicked(Index, mDataAsset);
+}
+
 CItemSlot* CItemSlot::Clone()
 {
     return new CItemSlot(*this);
@@ -84,4 +98,14 @@ void CItemSlot::SetIcon(std::string Name, const TCHAR* Path)
     {
         Icon->SetTexture(Name + std::string("Icon"), Path);
     }
+}
+
+void CItemSlot::SetDataAsset(std::weak_ptr<class CDataAsset> InAsset)
+{
+    if (InAsset.expired()) return;
+
+    mDataAsset = InAsset;
+    
+    auto Asset = InAsset.lock();
+    SetIcon(Asset->Name, Asset->TextureInfo.IconPath.c_str());
 }
