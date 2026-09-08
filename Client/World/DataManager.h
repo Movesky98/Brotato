@@ -12,6 +12,8 @@ class CDataAsset;
 class CItemData;
 class CWeaponData;
 class CShopData;
+class CCharacterData;
+class CBossData;
 
 class CDataManager
 {
@@ -26,11 +28,15 @@ protected:
 	std::unordered_map<int /* ID */, std::shared_ptr<CEnemyData>> mEnemies;
 	std::unordered_map<int /* ID */, std::shared_ptr<CItemData>> mItems;
 	std::unordered_map<int /* ID */, std::shared_ptr<CWeaponData>> mWeapons;
+	std::unordered_map<int /* ID */, std::shared_ptr<CCharacterData>> mCharacters;
+	std::unordered_map<int /* ID */, std::shared_ptr<CBossData>> mBosses;
 
 	void LoadEnemyCSV();
 	void LoadSkillCSV();
 	void LoadItemCSV();
 	void LoadWeaponCSV();
+	void LoadCharacterCSV();
+	void LoadBossCSV();
 
 	void AddEnemyInfo(const FCSV_EnemyInfo& EnemyInfo);
 	void AddTextureInfo(const FCSV_Texture& TextureInfo);
@@ -45,10 +51,17 @@ public:
 	std::shared_ptr<CEnemyData> GetEnemyData(const int ID) const;
 	std::shared_ptr<CEnemyData> GetRandomEnemyData() const;
 
+	std::shared_ptr<CBossData> GetBossData(const int ID) const;
+	std::shared_ptr<CBossData> GetRandomBossData() const;
+
+
+	std::vector<std::shared_ptr<CDataAsset>> GetAllItemData() const;
 	std::shared_ptr<CItemData> GetItemData(const int ID) const;
 	std::shared_ptr<CItemData> GetRandomItemData() const;
 
 	std::shared_ptr<CWeaponData> GetWeaponData(const int ID) const;
+
+	std::vector<std::shared_ptr<CDataAsset>> GetCharactersData() const;
 
 	std::shared_ptr<CShopData> GetRandomShopData() const;
 };

@@ -9,6 +9,7 @@
 
 bool ConvertWideToUTF8(const std::wstring& In, std::string& Out);
 bool ConvertWideToMovement(const std::wstring& In, std::vector<EEnemyMovement>& Out);
+bool ConvertWideToMovement(const std::wstring& In, std::vector<FMovementType>& Out);
 bool ConvertWideToTrigger(const std::wstring& In, ESkillTrigger& Out);
 bool SplitDataToSkills(const std::wstring& In, std::vector<std::wstring>& Out);
 bool ConvertWideToSkillComponent(const std::wstring& In, ESkillComponent& Out);
@@ -24,6 +25,9 @@ bool ConvertWideToSecondaryStats(const std::wstring& In, FStat& Out);
 
 bool ConvertWideToWeaponType(const std::wstring& In, EWeaponType& Out);
 
+//**********************************************************************
+//                                Texture
+//**********************************************************************
 struct FCSV_Texture
 {
 	int ID;
@@ -121,6 +125,10 @@ public:
 		: ID(0), Trigger(ESkillTrigger::None)
 	{ }
 };
+
+//**********************************************************************
+//                                Skill
+//**********************************************************************
 
 struct FCSV_Skill
 {
@@ -267,4 +275,74 @@ struct FCSV_WeaponDesc
 	FCSV_WeaponDesc()
 		: ID(0), Name(""), Type(EWeaponType::None), Damage(0), Critical(0.f), Cooldown(0.f), Knockback(0), Range(0.f), Piercing(0), BasePrice(0)
 	{ }
+};
+
+//**********************************************************************
+//                                Character
+//**********************************************************************
+struct FCSV_CharacterDesc
+{
+	int ID;
+	std::string Name;
+	FStat Stats;
+	int StartWeaponID;
+
+	bool Init(const std::vector<std::wstring>& Data)
+	{
+		if (Data.size() != 5) return false;
+
+		ID = std::stoi(Data[0]);
+		if (!ConvertWideToUTF8(Data[1], Name)) return false;
+		ConvertWideToPrimaryStats(Data[2], Stats);
+		ConvertWideToSecondaryStats(Data[3], Stats);
+		StartWeaponID = std::stoi(Data[4]);
+
+		return true;
+	}
+
+	FCSV_CharacterDesc()
+		: ID(0), Name(""), StartWeaponID(0)
+	{
+
+	}
+};
+
+//**********************************************************************
+//                                Boss
+//**********************************************************************
+
+struct FCSV_BossDesc
+{
+public:
+	int ID;
+	std::string Name;
+	float HP;
+	float Speed;
+	float Damage;
+	std::vector<FMovementType> MovementTypes;
+
+	bool Init(const std::vector<std::wstring>& Data)
+	{
+		if (Data.size() != 6)
+			return false;
+
+		ID = std::stoi(Data[0]);
+
+		if (!ConvertWideToUTF8(Data[1], Name))
+			return false;
+
+		HP = std::stof(Data[2]);
+		Speed = std::stof(Data[3]);
+		Damage = std::stof(Data[4]);
+
+		if (!ConvertWideToMovement(Data[5], MovementTypes))
+			return false;
+
+		return true;
+	}
+
+	FCSV_BossDesc()
+		: ID(0), Name(""), HP(0.f), Speed(0.f), Damage(0.f)
+	{
+	}
 };

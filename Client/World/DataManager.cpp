@@ -11,6 +11,8 @@
 #include "ShopData.h"
 #include "ItemData.h"
 #include "WeaponData.h"
+#include "CharacterData.h"
+#include "BossData.h"
 
 #include <random>
 
@@ -32,6 +34,8 @@ void CDataManager::InitializeCSVData()
 	LoadEnemyCSV();
 	LoadItemCSV();
 	LoadWeaponCSV();
+	LoadCharacterCSV();
+	LoadBossCSV();
 }
 
 void CDataManager::LoadEnemyCSV()
@@ -149,6 +153,87 @@ void CDataManager::LoadWeaponCSV()
 		if (iter != mWeapons.end())
 		{
 			std::shared_ptr<CWeaponData> Data = iter->second;
+			if (Data)
+			{
+				Data->TextureInfo.Path = Texture.Path;
+				Data->TextureInfo.SizeX = Texture.SizeX;
+				Data->TextureInfo.SizeY = Texture.SizeY;
+				Data->TextureInfo.IconPath = Texture.IconPath;
+				Data->TextureInfo.IconSizeX = Texture.IconSizeX;
+				Data->TextureInfo.IconSizeY = Texture.IconSizeY;
+			}
+		}
+	}
+}
+
+void CDataManager::LoadCharacterCSV()
+{
+	auto CharacterDataList = CSVReader::ReadData<FCSV_CharacterDesc>(TEXT("CSV/Character/CharacterDesc.csv"));
+	for (const auto Data : CharacterDataList)
+	{
+		int ID = Data.ID;
+		std::shared_ptr<CCharacterData> NewCharacter = std::make_shared<CCharacterData>();
+
+		NewCharacter->ID = ID;
+		NewCharacter->Name = Data.Name;
+		NewCharacter->Stats = Data.Stats;
+
+		auto iter = mWeapons.find(Data.StartWeaponID);
+		if (iter != mWeapons.end())
+		{
+			NewCharacter->StartWeapon = iter->second;
+		}
+
+		mCharacters.insert(std::make_pair(ID, NewCharacter));
+	}
+
+	auto TextureList = CSVReader::ReadData<FCSV_Texture>(TEXT("CSV/Character/CharacterTexture.csv"));
+	for (const auto& Texture : TextureList)
+	{
+		int ID = Texture.ID;
+		auto iter = mCharacters.find(ID);
+		if (iter != mCharacters.end())
+		{
+			std::shared_ptr<CCharacterData> Data = iter->second;
+			if (Data)
+			{
+				Data->TextureInfo.Path = Texture.Path;
+				Data->TextureInfo.SizeX = Texture.SizeX;
+				Data->TextureInfo.SizeY = Texture.SizeY;
+				Data->TextureInfo.IconPath = Texture.IconPath;
+				Data->TextureInfo.IconSizeX = Texture.IconSizeX;
+				Data->TextureInfo.IconSizeY = Texture.IconSizeY;
+			}
+		}
+	}
+}
+
+void CDataManager::LoadBossCSV()
+{
+	auto BossDataList = CSVReader::ReadData<FCSV_BossDesc>(TEXT("CSV/Boss/BossDesc.csv"));
+	for (const auto& Data : BossDataList)
+	{
+		int ID = Data.ID;
+		std::shared_ptr<CBossData> NewBoss = std::make_shared<CBossData>();
+		
+		NewBoss->Name = Data.Name;
+		NewBoss->HP = Data.HP;
+		NewBoss->Speed = Data.Speed;
+		NewBoss->Damage = Data.Damage;
+		NewBoss->MovementTypes = Data.MovementTypes;
+
+		mBosses.insert(std::make_pair(ID, NewBoss));
+	}
+
+	// 스킬 넘겨주기
+	auto TextureList = CSVReader::ReadData<FCSV_Texture>(TEXT("CSV/Boss/BossTexture.csv"));
+	for (const auto& Texture : TextureList)
+	{
+		int ID = Texture.ID;
+		auto iter = mBosses.find(ID);
+		if (iter != mBosses.end())
+		{
+			std::shared_ptr<CBossData> Data = iter->second;
 			if (Data)
 			{
 				Data->TextureInfo.Path = Texture.Path;
@@ -311,9 +396,48 @@ std::shared_ptr<CEnemyData> CDataManager::GetRandomEnemyData() const
 	return GetEnemyData(ID);
 }
 
+std::shared_ptr<CBossData> CDataManager::GetBossData(const int ID) const
+{
+	auto iter = mBosses.find(ID);
+	if (iter != mBosses.end())
+	{
+		return iter->second;
+	}
+
+	return std::shared_ptr<CBossData>();
+}
+
+std::shared_ptr<CBossData> CDataManager::GetRandomBossData() const
+{
+	if (!mBosses.size()) return std::shared_ptr<CBossData>();
+
+	int ID = rand() % mBosses.size();
+	ID += 4000;
+
+	return GetBossData(ID);
+}
+
+std::vector<std::shared_ptr<CDataAsset>> CDataManager::GetAllItemData() const
+{
+	if(!mItems.size()) return std::vector<std::shared_ptr<CDataAsset>>();
+
+	std::vector<std::shared_ptr<CDataAsset>> ItemsArr;
+
+	for (auto& [ID, Item] : mItems)
+	{
+		if (Item)
+		{
+			ItemsArr.push_back(Item);
+		}
+	}
+
+	return ItemsArr;
+}
+
 std::shared_ptr<CItemData> CDataManager::GetItemData(const int ID) const
 {
 	auto iter = mItems.find(ID);
+
 	if (iter != mItems.end())
 	{
 		return iter->second;
@@ -335,12 +459,30 @@ std::shared_ptr<CItemData> CDataManager::GetRandomItemData() const
 std::shared_ptr<CWeaponData> CDataManager::GetWeaponData(const int ID) const
 {
 	auto iter = mWeapons.find(ID);
+
 	if (iter != mWeapons.end())
 	{
 		return iter->second;
 	}
 
 	return std::shared_ptr<CWeaponData>();
+}
+
+std::vector<std::shared_ptr<CDataAsset>> CDataManager::GetCharactersData() const
+{
+	if (!mCharacters.size()) return std::vector<std::shared_ptr<CDataAsset>>();
+
+	std::vector<std::shared_ptr<CDataAsset>> CharacterArr;
+
+	for (auto& [ID, Character] : mCharacters)
+	{
+		if (Character)
+		{
+			CharacterArr.push_back(Character);
+		}
+	}
+
+	return CharacterArr;
 }
 
 std::shared_ptr<CShopData> CDataManager::GetRandomShopData() const
@@ -352,6 +494,7 @@ std::shared_ptr<CShopData> CDataManager::GetRandomShopData() const
 
 	if (Type == 2000) 
 	{
+
 		Rand = rand() % mItems.size();
 		return GetItemData(Rand + Type);
 	}

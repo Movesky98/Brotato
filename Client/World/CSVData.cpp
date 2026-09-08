@@ -1,5 +1,7 @@
 #include "CSVData.h"
 
+#include "StatTable.h"
+
 namespace {
 	struct FMovementEntry
 	{
@@ -54,63 +56,6 @@ namespace {
 		{L"Owner", ESkillTarget::Owner},
 	};
 
-	struct FPrimaryStatEntry
-	{
-		const wchar_t* Name;
-		EPrimaryStats Value;
-	};
-
-	struct FSecondaryStatEntry
-	{
-		const wchar_t* Name;
-		ESecondaryStats Value;
-	};
-
-	const FPrimaryStatEntry PrimaryStatTable[] =
-	{
-		{ L"MaxHP", EPrimaryStats::MaxHP },
-		{ L"HPRegeneration", EPrimaryStats::HPRegeneration },
-		{ L"LifeSteal", EPrimaryStats::LifeSteal },
-		{ L"Damage", EPrimaryStats::Damage },
-		{ L"MeleeDamage", EPrimaryStats::MeleeDamage },
-		{ L"RangedDamage", EPrimaryStats::RangedDamage },
-		{ L"ElementalDamage", EPrimaryStats::ElementalDamage },
-		{ L"AttackSpeed", EPrimaryStats::AttackSpeed },
-		{ L"CritChance", EPrimaryStats::CritChance },
-		{ L"Engineering", EPrimaryStats::Engineering },
-		{ L"Range", EPrimaryStats::Range },
-		{ L"Armor", EPrimaryStats::Armor },
-		{ L"Dodge", EPrimaryStats::Dodge },
-		{ L"Speed", EPrimaryStats::Speed },
-		{ L"Luck", EPrimaryStats::Luck },
-		{ L"Harvesting", EPrimaryStats::Harvesting },
-	};
-
-	const FSecondaryStatEntry SecondaryStatTable[] =
-	{
-		{ L"ConsumableHeal", ESecondaryStats::ConsumableHeal },
-		{ L"MaterialsHealing", ESecondaryStats::MaterialsHealing },
-		{ L"XPGain", ESecondaryStats::XPGain },
-		{ L"PickupRange", ESecondaryStats::PickupRange },
-		{ L"ItemsPrice", ESecondaryStats::ItemsPrice },
-		{ L"ExplosionDamage", ESecondaryStats::ExplosionDamage },
-		{ L"ExplosionSize", ESecondaryStats::ExplosionSize },
-		{ L"Bounces", ESecondaryStats::Bounces },
-		{ L"Piercing", ESecondaryStats::Piercing },
-		{ L"PiercingDamage", ESecondaryStats::PiercingDamage },
-		{ L"DamageAgainstBosses", ESecondaryStats::DamageAgainstBosses },
-		{ L"StructureAttackSpeed", ESecondaryStats::StructureAttackSpeed },
-		{ L"StructureRange", ESecondaryStats::StructureRange },
-		{ L"BurningSpeed", ESecondaryStats::BurningSpeed },
-		{ L"BurningSpread", ESecondaryStats::BurningSpread },
-		{ L"Knockback", ESecondaryStats::Knockback },
-		{ L"DoubleMaterialChance", ESecondaryStats::DoubleMaterialChance },
-		{ L"FreeRerolls", ESecondaryStats::FreeRerolls },
-		{ L"Trees", ESecondaryStats::Trees },
-		{ L"Enemies", ESecondaryStats::Enemies },
-		{ L"EnemySpeed", ESecondaryStats::EnemySpeed },
-	};
-
 	struct FWeaponTypeEntry
 	{
 		const wchar_t* Name;
@@ -154,6 +99,57 @@ bool ConvertWideToMovement(const std::wstring& In, std::vector<EEnemyMovement>& 
 	}
 
 	Out = MovementTypes;
+	return true;
+}
+
+bool ConvertWideToMovement(const std::wstring& In, std::vector<FMovementType>& Out)
+{
+	std::wstringstream WSS(In);
+	std::vector<std::wstring> Phases;
+	std::wstring Token;
+
+	// 보스의 경우 '>'를 기준으로 페이즈를 나눈다.
+	while (std::getline(WSS, Token, L'>'))
+	{
+		Phases.push_back(Token);
+	}
+
+	for (auto Phase : Phases)
+	{
+		wchar_t Delimiter = L'|';
+		size_t Pos = Phase.find(Delimiter);
+		std::wstring InRangeStr;
+		std::wstring OutRangeStr;
+
+		FMovementType MovementType;
+		
+		if (Pos != std::wstring::npos)
+		{
+			InRangeStr = Phase.substr(0, Pos);
+			OutRangeStr = Phase.substr(Pos + 1);
+		}
+		else
+		{
+			InRangeStr = Phase;
+			OutRangeStr = Phase;
+		}
+
+		for (const auto& Element : MovementTable)
+		{
+			if (Element.Name == InRangeStr)
+			{
+				MovementType.InRange = Element.Value;
+			}
+
+			if (Element.Name == OutRangeStr)
+			{
+				MovementType.OutRange = Element.Value;
+			}
+		}
+
+		Out.push_back(MovementType);
+	}
+
 	return true;
 }
 
@@ -233,16 +229,13 @@ bool ConvertWideToPrimaryStats(const std::wstring& In, FStat& Out)
 
 		if (Pos != std::wstring::npos)
 		{
-			std::wstring PrimaryStat = Stat.substr(0, Pos);
+			std::wstring PrimaryStatWStr = Stat.substr(0, Pos);
 			std::wstring Value = Stat.substr(Pos + 1);
 
-			for (const auto& Element : PrimaryStatTable)
+			EPrimaryStats PrimaryStat; 
+			if (FindStat(PrimaryStatWStr, PrimaryStat))
 			{
-				if (Element.Name == PrimaryStat)
-				{
-					Out.Primary[(int)Element.Value] = std::stoi(Value);
-					break;
-				}
+				Out.Primary[(int)PrimaryStat] = std::stoi(Value);
 			}
 		}
 	}
@@ -268,16 +261,13 @@ bool ConvertWideToSecondaryStats(const std::wstring& In, FStat& Out)
 
 		if (Pos != std::wstring::npos)
 		{
-			std::wstring Secondary = Stat.substr(0, Pos);
+			std::wstring SecondaryStatWStr = Stat.substr(0, Pos);
 			std::wstring Value = Stat.substr(Pos + 1);
 
-			for (const auto& Element : SecondaryStatTable)
+			ESecondaryStats SecondaryStat;
+			if (FindStat(SecondaryStatWStr, SecondaryStat))
 			{
-				if (Element.Name == Secondary)
-				{
-					Out.Secondary[(int)Element.Value] = std::stoi(Value);
-					break;
-				}
+				Out.Secondary[(int)SecondaryStat] = std::stoi(Value);
 			}
 		}
 	}

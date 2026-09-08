@@ -46,3 +46,9 @@ enum class EExpansionMode
 	Deflate,
 	MAX
 };
+
+struct FMovementType
+{
+	EEnemyMovement InRange;
+	EEnemyMovement OutRange;
+};

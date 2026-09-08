@@ -1,4 +1,5 @@
 #include "CharacterData.h"
+#include "WeaponData.h"
 
 CCharacterData::CCharacterData()
 {

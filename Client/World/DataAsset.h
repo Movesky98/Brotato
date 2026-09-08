@@ -20,6 +20,7 @@ enum class EDataAssetType
 	Enemy,
 	Item,
 	Weapon,
+	Boss,
 	MAX
 };
 

@@ -1,0 +1,51 @@
+ID,Name,PrimaryStat,SecondaryStat,StartWeaponID
+0,Apprentice,0,0,3000
+1,Arms Dealer,Harvesting:30,0,3004
+2,Artificer,Damage:-100,ExplosionDamage:175,3001
+3,Baby,Harvesting:12,ItemsPrice:-20,3001
+4,Beast Master,0,0,3004
+5,Brawler,RangedDamage:-50|Range:-50|Dodge:15,0,3004
+6,Bull,MaxHP:20|HPRegeneration:15|Armor:10,0,3004
+7,Chunky,LifeSteal:-100,ConsumableHeal:3,3001
+8,Crazy,RangedDamage:-10|AttackSpeed:25|Engineering:-10|Dodge:-30,0,3003
+9,Cryptid,LifeSteal:-100|Range:-100,Trees:6,3000
+10,Cyborg,0,0,3000
+11,Demon,0,0,3002
+12,Doctor,HPRegeneration:5|AttackSpeed:-100|Harvesting:5,0,3001
+13,Engineer,Engineering:10,0,3003
+14,Entrepreneur,0,ItemsPrice:-25,3001
+15,Explorer,Damage:-40|Speed:10,PickupRange:50|Enemies:25|EnemySpeed:10,3004
+16,Farmer,Harvesting:20,0,3000
+17,Fisherman,MaxHP:5|Harvesting:20,0,3005
+18,Generalist,0,0,3004
+19,Ghost,Armor:-100|Dodge:30,0,3001
+20,Gladiator,MeleeDamage:5|AttackSpeed:-40|Luck:-30,0,3005
+21,Glutton,Luck:50,XPGain:-25|ItemsPrice:25,3000
+22,Golem,MaxHP:20,0,3004
+23,Hunter,Range:100,0,3005
+24,Jack,0,DamageAgainstBosses:125|Enemies:-70,3002
+25,King,Luck:50,0,3004
+26,Knight,Armor:3,0,3002
+27,Lich,HPRegeneration:10|LifeSteal:10,0,3003
+28,Loud,Damage:30,Enemies:50,3003
+29,Lucky,AttackSpeed:-60|Luck:100,XPGain:-50,3004
+30,Mage,0,0,3000
+31,Masochist,MaxHP:10|HPRegeneration:20|Damage:-100|Armor:8,0,3001
+32,Multitasker,Damage:20,0,3002
+33,Mutant,0,ItemsPrice:50,3001
+34,Old,Speed:-10|Harvesting:10,Enemies:-10|EnemySpeed:-25,3000
+35,One Arm,AttackSpeed:200,0,3005
+36,Pacifist,Damage:-100|Engineering:-100,0,3000
+37,Ranger,Range:50,0,3003
+38,Renegade,Damage:-400,Piercing:1,3001
+39,Saver,Harvesting:15,ItemsPrice:50,3000
+40,Sick,MaxHP:12|HPRegeneration:-100|LifeSteal:25,0,3004
+41,Soldier,Speed:10,PickupRange:200|Knockback:15,3000
+42,Speedy,Armor:-3|Speed:30,0,3003
+43,Streamer,0,0,3001
+44,Technomage,0,0,3005
+45,Vagabond,Armor:-5|Dodge:-5,0,3005
+46,Vampire,HPRegeneration:-100|Damage:-60,ConsumableHeal:-100,3004
+47,Well Rounded,MaxHP:5|Speed:5|Harvesting:8,0,3002
+48,Wildling,0,0,3003
+49,Wounded,0,0,3001
