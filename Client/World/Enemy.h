@@ -102,7 +102,6 @@ protected:
 	bool mIsRandomMove = false;
 	FVector3 RandomPos;
 
-	float mHP = 1.f;
 	float mSpeed = 10.f;
 	float mDamage = 10.f;
 
