@@ -6,7 +6,8 @@ void CStatusInterface::AddHP(float HP)
 
 	if (mHP <= 0.f)
 	{
-		mDeathFuncs();
+		if(mDeathFuncs)
+			mDeathFuncs();
 	}
 	else if (mHP > mHPMax)
 	{

@@ -45,6 +45,7 @@ public:
 	void SetDeathFunction(T* Object, void (T::* Func)())
 	{
 		mDeathFuncs = std::bind(Func, Object);
+		// mDeathFuncs.push_back(BindFunc);
 	}
 
 	template<typename T>
