@@ -25,9 +25,6 @@
     <Filter Include="소스 파일\Player\Interface">
       <UniqueIdentifier>{aa2b20f2-01b1-4a34-8bab-ea432042fe46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\UI">
-      <UniqueIdentifier>{d8b91811-15df-4f47-8134-1641ff1348c4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Player\UI">
       <UniqueIdentifier>{dfc78209-63c3-4e42-b169-ba8f219f9ef4}</UniqueIdentifier>
     </Filter>
@@ -52,9 +49,6 @@
     <Filter Include="소스 파일\World\DataAsset">
       <UniqueIdentifier>{52f10e88-3b15-45d8-924c-f9267ef07dba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\World\UI\Widget">
-      <UniqueIdentifier>{aec81698-7659-4475-bb54-98b215c71067}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Actor">
       <UniqueIdentifier>{24002c9c-6350-4f00-95e5-d5e1c7b17ea6}</UniqueIdentifier>
     </Filter>
@@ -63,6 +57,12 @@
     </Filter>
     <Filter Include="소스 파일\World\Manager">
       <UniqueIdentifier>{ec0d84d9-fb34-4cac-a5ce-b5704451c29f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\UI">
+      <UniqueIdentifier>{d8b91811-15df-4f47-8134-1641ff1348c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\UI\Widget">
+      <UniqueIdentifier>{aec81698-7659-4475-bb54-98b215c71067}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,7 +91,7 @@
       <Filter>소스 파일\World</Filter>
     </ClCompile>
     <ClCompile Include="World\MainUI.cpp">
-      <Filter>소스 파일\World\UI</Filter>
+      <Filter>소스 파일\UI</Filter>
     </ClCompile>
     <ClCompile Include="World\StartWorld.cpp">
       <Filter>소스 파일\World</Filter>
@@ -101,9 +101,6 @@
     </ClCompile>
     <ClCompile Include="World\StartWidget.cpp">
       <Filter>소스 파일\Player\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="World\StartPlayer.cpp">
-      <Filter>소스 파일\Player</Filter>
     </ClCompile>
     <ClCompile Include="World\Component\DashSkillComponent.cpp">
       <Filter>소스 파일\Enemy\Component</Filter>
@@ -138,9 +135,6 @@
     <ClCompile Include="World\CharacterData.cpp">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClCompile>
-    <ClCompile Include="World\DataManager.cpp">
-      <Filter>소스 파일\World\DataAsset</Filter>
-    </ClCompile>
     <ClCompile Include="World\CSVData.cpp">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClCompile>
@@ -154,19 +148,19 @@
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClCompile>
     <ClCompile Include="World\PauseMenu.cpp">
-      <Filter>소스 파일\World\UI</Filter>
+      <Filter>소스 파일\UI</Filter>
     </ClCompile>
     <ClCompile Include="World\ItemSlot.cpp">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="World\SlotContainer.cpp">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="World\StatPanel.cpp">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="World\StatRow.cpp">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="World\Wall.cpp">
       <Filter>소스 파일\Actor</Filter>
@@ -178,19 +172,19 @@
       <Filter>소스 파일\Actor</Filter>
     </ClCompile>
     <ClCompile Include="World\ItemDetailPanel.cpp">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="World\ShopOfferCard.cpp">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="World\ShopMenu.cpp">
-      <Filter>소스 파일\World\UI</Filter>
+      <Filter>소스 파일\UI</Filter>
     </ClCompile>
     <ClCompile Include="World\BuyButton.cpp">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="World\InputPromptButton.cpp">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="World\PlayerHUD.cpp">
       <Filter>소스 파일\Player\UI</Filter>
@@ -217,15 +211,36 @@
       <Filter>소스 파일\Actor</Filter>
     </ClCompile>
     <ClCompile Include="World\TitleScreen.cpp">
-      <Filter>소스 파일\World\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="World\GameOverScreen.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\UI</Filter>
     </ClCompile>
     <ClCompile Include="World\ScreenManager.cpp">
       <Filter>소스 파일\World\Manager</Filter>
     </ClCompile>
     <ClCompile Include="World\PlayerWidgetContainer.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="World\GameOverScreen.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CharacterSelectScreen.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CharacterFrame.cpp">
+      <Filter>소스 파일\UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="World\StatTable.cpp">
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="World\StatLine.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Boss.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="World\DataManager.cpp">
+      <Filter>소스 파일\World\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="World\BossData.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -255,7 +270,7 @@
       <Filter>소스 파일\World</Filter>
     </ClInclude>
     <ClInclude Include="World\MainUI.h">
-      <Filter>소스 파일\World\UI</Filter>
+      <Filter>소스 파일\UI</Filter>
     </ClInclude>
     <ClInclude Include="World\StartWorld.h">
       <Filter>소스 파일\World</Filter>
@@ -265,9 +280,6 @@
     </ClInclude>
     <ClInclude Include="World\StartWidget.h">
       <Filter>소스 파일\Player\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="World\StartPlayer.h">
-      <Filter>소스 파일\Player</Filter>
     </ClInclude>
     <ClInclude Include="World\Component\SpawnProjectileComponent.h">
       <Filter>소스 파일\Enemy\Component</Filter>
@@ -305,9 +317,6 @@
     <ClInclude Include="World\CharacterData.h">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClInclude>
-    <ClInclude Include="World\DataManager.h">
-      <Filter>소스 파일\World\DataAsset</Filter>
-    </ClInclude>
     <ClInclude Include="World\CSVData.h">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClInclude>
@@ -321,22 +330,19 @@
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClInclude>
     <ClInclude Include="World\PauseMenu.h">
-      <Filter>소스 파일\World\UI</Filter>
+      <Filter>소스 파일\UI</Filter>
     </ClInclude>
     <ClInclude Include="World\ItemSlot.h">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\SlotContainer.h">
-      <Filter>소스 파일\World\UI\Widget</Filter>
-    </ClInclude>
-    <ClInclude Include="World\GameTypes.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\StatPanel.h">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\StatRow.h">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\Wall.h">
       <Filter>소스 파일\Actor</Filter>
@@ -348,19 +354,19 @@
       <Filter>소스 파일\Actor</Filter>
     </ClInclude>
     <ClInclude Include="World\ShopOfferCard.h">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\ItemDetailPanel.h">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\ShopMenu.h">
-      <Filter>소스 파일\World\UI</Filter>
+      <Filter>소스 파일\UI</Filter>
     </ClInclude>
     <ClInclude Include="World\BuyButton.h">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\InputPromptButton.h">
-      <Filter>소스 파일\World\UI\Widget</Filter>
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\PlayerHUD.h">
       <Filter>소스 파일\Player\UI</Filter>
@@ -387,15 +393,39 @@
       <Filter>소스 파일\Actor</Filter>
     </ClInclude>
     <ClInclude Include="World\TitleScreen.h">
-      <Filter>소스 파일\World\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="World\GameOverScreen.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\UI</Filter>
     </ClInclude>
     <ClInclude Include="World\ScreenManager.h">
       <Filter>소스 파일\World\Manager</Filter>
     </ClInclude>
     <ClInclude Include="World\PlayerWidgetContainer.h">
+      <Filter>소스 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="World\GameOverScreen.h">
+      <Filter>소스 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CharacterSelectScreen.h">
+      <Filter>소스 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CharacterFrame.h">
+      <Filter>소스 파일\UI\Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="World\StatTable.h">
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="World\GameTypes.h">
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="World\StatLine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Boss.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="World\DataManager.h">
+      <Filter>소스 파일\World\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="World\BossData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
