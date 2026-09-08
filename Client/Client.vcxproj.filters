@@ -93,12 +93,6 @@
     <ClCompile Include="World\MainUI.cpp">
       <Filter>소스 파일\World\UI</Filter>
     </ClCompile>
-    <ClCompile Include="World\EditorWorld.cpp">
-      <Filter>소스 파일\World</Filter>
-    </ClCompile>
-    <ClCompile Include="World\EditorPlayer.cpp">
-      <Filter>소스 파일\Player</Filter>
-    </ClCompile>
     <ClCompile Include="World\StartWorld.cpp">
       <Filter>소스 파일\World</Filter>
     </ClCompile>
@@ -262,12 +256,6 @@
     </ClInclude>
     <ClInclude Include="World\MainUI.h">
       <Filter>소스 파일\World\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="World\EditorWorld.h">
-      <Filter>소스 파일\World</Filter>
-    </ClInclude>
-    <ClInclude Include="World\EditorPlayer.h">
-      <Filter>소스 파일\Player</Filter>
     </ClInclude>
     <ClInclude Include="World\StartWorld.h">
       <Filter>소스 파일\World</Filter>

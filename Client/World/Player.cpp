@@ -189,9 +189,6 @@ bool CPlayer::Init()
 		Input->AddBindKey("Fire", VK_LBUTTON);
 		Input->SetBindFunction("Fire", EInputType::Hold, this, &CPlayer::Fire);
 
-		Input->AddBindKey("Test", 'T');
-		Input->SetBindFunction("Test", EInputType::Press, this, &CPlayer::TestInput);
-
 		Input->AddBindKey("Hit", 'Y');
 		Input->SetBindFunction("Hit", EInputType::Press, this, &CPlayer::Hit);
 	}
@@ -423,59 +420,6 @@ void CPlayer::Dissolve()
 		Mesh->SetDissolveEnable(0, true);
 	}
 
-}
-
-void CPlayer::TestDamage()
-{
-	TakeDamage(1.f, "Player", GetThisPtr<CActor>());
-}
-
-void CPlayer::TestInput()
-{
-	// Player - Create and attach to weapon.
-	if (CurrentSpawnNum >= MaxSpawnNum) return;
-
-	auto World = GetWorld().lock();
-	if (World)
-	{
-		std::shared_ptr<CWeapon> NewWeapon;
-
-		// NewWeapon = World->CreateActor<CMeleeWeapon>("MeleeWeapon").lock();
-		/*if (rand() % 2)
-		{
-		}
-		else*/
-		NewWeapon = World->CreateActor<CRangedWeapon>("RangedWeapon").lock();
-
-		if (NewWeapon)
-		{
-			NewWeapon->AttachActorToActor(GetThisPtr<CActor>());
-			NewWeapon->SetOwner(GetThisPtr<CActor>());
-			
-			Weapons.push_back(NewWeapon);
-
-			float Angle = (float)(360 / Weapons.size());
-			
-			auto iter = Weapons.begin();
-			auto iterEnd = Weapons.end();
-			int Index = 0;
-			for (; iter != iterEnd; Index++, iter++)
-			{
-				auto Weapon = iter->lock();
-				if (Weapon)
-				{
-					const float Radian = DirectX::XMConvertToRadians(Angle * Index);
-					FVector3 SpawnDirection = FVector3(cosf(Radian), sinf(Radian), GetWorldPos().z);
-					SpawnDirection.Normalize();
-
-					Weapon->SetWorldPos(GetWorldPos() + SpawnDirection * 50.f);
-					Weapon->SetRelativeRotationZ(Angle * Index);
-				}
-			}
-
-			CurrentSpawnNum++;
-		}
-	}
 }
 
 void CPlayer::Hit()

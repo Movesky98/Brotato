@@ -185,9 +185,7 @@
     <ClCompile Include="World\DashSkillData.cpp" />
     <ClCompile Include="World\DataAsset.cpp" />
     <ClCompile Include="World\DataManager.cpp" />
-    <ClCompile Include="World\EditorPlayer.cpp" />
     <ClCompile Include="World\EditorWidget.cpp" />
-    <ClCompile Include="World\EditorWorld.cpp" />
     <ClCompile Include="World\Enemy.cpp" />
     <ClCompile Include="World\EnemyBullet.cpp" />
     <ClCompile Include="World\EnemyData.cpp" />
@@ -243,9 +241,7 @@
     <ClInclude Include="World\DashSkillData.h" />
     <ClInclude Include="World\DataAsset.h" />
     <ClInclude Include="World\DataManager.h" />
-    <ClInclude Include="World\EditorPlayer.h" />
     <ClInclude Include="World\EditorWidget.h" />
-    <ClInclude Include="World\EditorWorld.h" />
     <ClInclude Include="World\Enemy.h" />
     <ClInclude Include="World\EnemyBullet.h" />
     <ClInclude Include="World\EnemyData.h" />

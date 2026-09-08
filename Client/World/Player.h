@@ -93,13 +93,6 @@ public:
 	void DestroyWeapons();
 	void SetWeaponSettings();
 
-	// Test
 public:
-	void TestDamage();
-
-	void TestInput();
-
-	int MaxSpawnNum = 6;
-	int CurrentSpawnNum = 0;
 };
 
