@@ -42,7 +42,6 @@
 // 테스트용
 #include <thread>
 #include <chrono>
-#include "Slash.h"
 
 using namespace std::chrono_literals;
 
@@ -539,13 +538,6 @@ void CMainWorld::WaveStart()
 	for (int i = 0; i < 1/*MaxAliveEnemy*/; i++)
 	{
 		CreateSpawnPoint(ESpawnType::Boss);
-	}
-
-	auto Slash = CreateActor<CSlash>("Slash").lock();
-	if (Slash)
-	{
-		Slash->SetWorldPos(100.f, 100.f);
-		Slash->InitializeProperties(FVector3(1.f, 1.f, 0.f), 5.f, ESlashMoveMode::Move);
 	}
 }
 
