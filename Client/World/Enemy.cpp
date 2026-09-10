@@ -119,15 +119,6 @@ void CEnemy::Update(float DeltaTime)
 
 void CEnemy::Destroy()
 {
-	/*auto World = GetWorld().lock();
-	if (World)
-	{
-		auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(World);
-		if (MainWorld)
-		{
-			MainWorld->NotifyEnemyDead();
-		}
-	}*/
 
 	CActor::Destroy();
 }
@@ -182,6 +173,20 @@ void CEnemy::InitializeBoxCollision(float SizeX, float SizeY)
 	}
 }
 
+void CEnemy::InitializePerceptionRange(float Range, bool IsDebugDraw)
+{
+	auto PerceptionRange = mPerceptionRange.lock();
+	if (PerceptionRange)
+	{
+		PerceptionRange->SetInheritScale(false);
+		PerceptionRange->SetRadius(Range);
+		PerceptionRange->SetDebugDraw(IsDebugDraw);
+		PerceptionRange->SetCollisionProfile("DetectPlayer");
+		PerceptionRange->SetBeginOverlapFunc(this, &CEnemy::OnPerceptionRangeBeginOverlap);
+		PerceptionRange->SetEndOverlapFunc(this, &CEnemy::OnPerceptionRangeEndOverlap);
+	}
+}
+
 void CEnemy::InitializeSpeed(float Speed)
 {
 	auto MoveComp = mMoveComp.lock();
@@ -224,8 +229,7 @@ bool CEnemy::PostInitializeProperties(const std::shared_ptr<class CDataAsset>& D
 
 	SetSkills(EnemyData->Skills);
 
-	if (MovementsByRange[(int)CurrentRangeState] != EEnemyMovement::Random)
-		mTarget = Target;
+	mTarget = Target;
 
 	return true;
 }
@@ -255,16 +259,7 @@ void CEnemy::SetSkills(const std::unordered_multimap<ESkillTrigger, std::shared_
 
 	if (SkillData.contains(ESkillTrigger::InPerceptionRange) || SkillData.contains(ESkillTrigger::Always))
 	{
-		auto PerceptionRange = mPerceptionRange.lock();
-		if (PerceptionRange)
-		{
-			PerceptionRange->SetInheritScale(false);
-			PerceptionRange->SetRadius(200.f);
-			PerceptionRange->SetDebugDraw(false);
-			PerceptionRange->SetCollisionProfile("DetectPlayer");
-			PerceptionRange->SetBeginOverlapFunc(this, &CEnemy::OnPerceptionRangeBeginOverlap);
-			PerceptionRange->SetEndOverlapFunc(this, &CEnemy::OnPerceptionRangeEndOverlap);
-		}
+		InitializePerceptionRange(mRange, true);
 	}
 
 	// SkillComponent 생성
@@ -372,10 +367,6 @@ void CEnemy::OnPerceptionRangeBeginOverlap(const FVector3& HitPoint, const FVect
 	if (_Collider && _Collider->GetCollisionProfile()->Name == "Player")
 	{
 		auto Owner = _Collider->GetOwner().lock();
-		
-		if (mTarget.expired())
-			mTarget = Owner;
-		
 		auto Target = mTarget.lock();
 
 		if (Owner && Target)
@@ -490,46 +481,49 @@ void CEnemy::UpdateBehavior()
 	auto MoveComp = mMoveComp.lock();
 	FVector3 Direction;
 	
-	if (Target && MoveComp)
+	if (MoveComp)
 	{
 		EEnemyMovement CurrentMovementType = MovementsByRange[(int)CurrentRangeState];
 
-		Direction = Target->GetWorldPos() - GetWorldPos();
-
-		if (MovementsByRange[(int)CurrentRangeState] == EEnemyMovement::FleeFromTarget)
-			Direction = -Direction;
-	}
-	else if (mTarget.expired())
-	{
-		if (!mIsRandomMove)
+		if (Target && CurrentMovementType != EEnemyMovement::Random)
 		{
-			// 랜덤 위치 지정
-			float Angle = (float)(rand() % 360);
-			const float Radian = DirectX::XMConvertToRadians(Angle);
-			Direction = FVector3(cosf(Radian), sinf(Radian), GetWorldPos().z);
-			Direction.Normalize();
+			Direction = Target->GetWorldPos() - GetWorldPos();
 
-			FVector2 MovePos;
-			MovePos.x = GetWorldPos().x + Direction.x * 200.f;
-			MovePos.y = GetWorldPos().y + Direction.y * 200.f;
-
-			if (std::abs(MovePos.x) > mLimitPos.x)
-				Direction.x *= -1;
-			if (std::abs(MovePos.y) > mLimitPos.y)
-				Direction.y *= -1;
-
-			RandomPos = GetWorldPos() + Direction * 200.f;
-			mIsRandomMove = true;
+			if (MovementsByRange[(int)CurrentRangeState] == EEnemyMovement::FleeFromTarget)
+				Direction = -Direction;
 		}
 		else
 		{
-			FVector3 Distance = RandomPos - GetWorldPos();
-			Direction = Distance;
-
-			if (Distance.Length() <= 45.f)
+			if (!mIsRandomMove)
 			{
-				RandomPos = FVector3::Zero;
-				mIsRandomMove = false;
+				// 랜덤 위치 지정
+				float Angle = (float)(rand() % 360);
+				const float Radian = DirectX::XMConvertToRadians(Angle);
+				Direction = FVector3(cosf(Radian), sinf(Radian), GetWorldPos().z);
+				Direction.Normalize();
+
+				FVector2 MovePos;
+				MovePos.x = GetWorldPos().x + Direction.x * 200.f;
+				MovePos.y = GetWorldPos().y + Direction.y * 200.f;
+
+				if (std::abs(MovePos.x) > mLimitPos.x)
+					Direction.x *= -1;
+				if (std::abs(MovePos.y) > mLimitPos.y)
+					Direction.y *= -1;
+
+				RandomPos = GetWorldPos() + Direction * 200.f;
+				mIsRandomMove = true;
+			}
+			else
+			{
+				FVector3 Distance = RandomPos - GetWorldPos();
+				Direction = Distance;
+
+				if (Distance.Length() <= 45.f)
+				{
+					RandomPos = FVector3::Zero;
+					mIsRandomMove = false;
+				}
 			}
 		}
 	}

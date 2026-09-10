@@ -54,6 +54,7 @@ protected:
 
 	void InitializeMeshComponent(const std::string Name, const TCHAR* Path, float SizeX, float SizeY);
 	void InitializeBoxCollision(float SizeX, float SizeY);
+	virtual void InitializePerceptionRange(float Range, bool IsDebugDraw = false);
 	void InitializeSpeed(float Speed);
 
 	// 초기 설정 값 이후 DataAsset을 가지고 알아서 값을 설정하는 함수.
@@ -102,6 +103,7 @@ protected:
 	bool mIsRandomMove = false;
 	FVector3 RandomPos;
 
+	float mRange = 300.f;
 	float mSpeed = 10.f;
 	float mDamage = 10.f;
 
@@ -114,7 +116,7 @@ protected:
 	void OnCollisionEndOverlap(std::weak_ptr<class CCollider> Collider);
 	void OnPerceptionRangeBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider);
 	void OnPerceptionRangeEndOverlap(std::weak_ptr<class CCollider> Collider);
-	void OnDeath();
+	virtual void OnDeath();
 
 	void PlayMoveAnimation();
 	bool PlayHitEffect(float DeltaTime);
