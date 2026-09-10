@@ -10,6 +10,13 @@ enum class ESpawnType
 	MAX
 };
 
+struct FSpawnDesc
+{
+	bool IsWaveSpawn;
+	ESpawnType Type;
+	std::weak_ptr<class CDataAsset> Data;
+};
+
 class CSpawnPoint : public CActor
 {
 public:
@@ -35,8 +42,9 @@ protected:
 	std::weak_ptr<class CDataAsset> mDataAsset;
 
 	ESpawnType mSpawnType = ESpawnType::None;
+	FSpawnDesc mSpawnDesc;
 
-	std::function<void(const FVector3 /* SpawnPos */, ESpawnType /* Type */, std::weak_ptr<class CDataAsset> /* Data */)> mOnSpawnEntityDelegate;
+	std::function<void(const FVector3 /* SpawnPos */, FSpawnDesc /* Desc */)> mOnSpawnEntityDelegate;
 
 	/* 약 4번 정도 깜빡인 듯 */
 	float mSpawnDelayTime = 1.5f;
@@ -46,13 +54,12 @@ protected:
 	void OnCollisionBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider);
 
 public:
-	void InitializeSpawnSettings(ESpawnType SpawnType, std::weak_ptr<class CDataAsset> Data);
+	void InitializeSpawnSettings(const FSpawnDesc& Desc);
 
 	template<typename T>
-	void SetOnSpawnEntityFunction(T* Object, void (T::* Func)(const FVector3, ESpawnType, std::weak_ptr<class CDataAsset>))
+	void SetOnSpawnEntityFunction(T* Object, void (T::* Func)(const FVector3, FSpawnDesc))
 	{
-		mOnSpawnEntityDelegate = std::bind(Func, Object, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+		mOnSpawnEntityDelegate = std::bind(Func, Object, std::placeholders::_1, std::placeholders::_2);
 	}
-
 };
 

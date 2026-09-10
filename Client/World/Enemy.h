@@ -50,7 +50,7 @@ protected:
 
 	void UseSkill(const ESkillTrigger Trigger);
 
-	std::function<void(const FVector3& /* DeathPosition */)> mNotifyDeathFunc;
+	std::function<void(const FVector3& /* DeathPosition */, bool /* IsWaveSpawn */)> mNotifyDeathFunc;
 
 	void InitializeMeshComponent(const std::string Name, const TCHAR* Path, float SizeX, float SizeY);
 	void InitializeBoxCollision(float SizeX, float SizeY);
@@ -61,12 +61,12 @@ protected:
 	virtual bool PostInitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target);
 
 public:
-	virtual bool InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target);
+	virtual bool InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target, bool IsWaveSpawn = true);
 
 	template<typename T>
-	void SetNotifyDeathFunc(T* Object, void (T::* Func)(const FVector3&))
+	void SetNotifyDeathFunc(T* Object, void (T::* Func)(const FVector3&, bool))
 	{
-		mNotifyDeathFunc = std::bind(Func, Object, std::placeholders::_1);
+		mNotifyDeathFunc = std::bind(Func, Object, std::placeholders::_1, std::placeholders::_2);
 	}
 
 protected:
@@ -103,6 +103,7 @@ protected:
 	bool mIsRandomMove = false;
 	FVector3 RandomPos;
 
+	bool mIsWaveSpawn = true;
 	float mRange = 300.f;
 	float mSpeed = 10.f;
 	float mDamage = 10.f;

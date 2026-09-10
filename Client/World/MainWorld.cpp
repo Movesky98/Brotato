@@ -336,11 +336,13 @@ void CMainWorld::InitializeInputSettings()
 	}
 }
 
-void CMainWorld::OnEnemyDeath(const FVector3& DeathPos)
+void CMainWorld::OnEnemyDeath(const FVector3& DeathPos, bool IsWaveSpawn)
 {
 	if (mStage != EGameplayStage::Wave) return;
 
 	SpawnMaterial(DeathPos);
+
+	if (!IsWaveSpawn) return;
 	AliveEnemyCount--;
 
 	if (MaxAliveEnemy > AliveEnemyCount)
@@ -360,7 +362,7 @@ void CMainWorld::OnPlayerDeath()
 
 void CMainWorld::CreateSpawnPoint(ESpawnType Type)
 {
-	auto SpawnPoint = CreateActor<CSpawnPoint>("SpawnActor").lock();
+	auto SpawnPoint = CreateActor<CSpawnPoint>("SpawnPoint").lock();
 	if (!SpawnPoint) return;
 
 	std::weak_ptr<CDataAsset> Data;
@@ -378,25 +380,60 @@ void CMainWorld::CreateSpawnPoint(ESpawnType Type)
 		break;
 	}
 
+	FSpawnDesc Desc;
+	Desc.Data = Data;
+	Desc.IsWaveSpawn = true;
+	Desc.Type = Type;
+
 	SpawnPoint->SetWorldPos(GetRandomSpawnPosition());
-	SpawnPoint->InitializeSpawnSettings(Type, Data);
+	SpawnPoint->InitializeSpawnSettings(Desc);
 	SpawnPoint->SetOnSpawnEntityFunction(this, &CMainWorld::SpawnEntity);
 }
 
-void CMainWorld::SpawnEntity(const FVector3 SpawnPos, ESpawnType Type, std::weak_ptr<CDataAsset> Data)
+void CMainWorld::CreateSpawnPoint(ESpawnType Type, int ID)
 {
-	if (Data.expired()) return;
-	if (mStage != EGameplayStage::Wave) return;
+	auto SpawnPoint = CreateActor<CSpawnPoint>("SpawnPoint").lock();
+	if (!SpawnPoint) return;
 
+	std::weak_ptr<CDataAsset> Data;
 	switch (Type)
 	{
 	case ESpawnType::Enemy:
-		SpawnEnemy(SpawnPos, mPlayer, Data.lock());
+		Data = CDataManager::GetInst()->GetEnemyData(ID);
 		break;
 	case ESpawnType::Structure:
 		break;
 	case ESpawnType::Boss:
-		SpawnBoss(SpawnPos, mPlayer, Data.lock());
+		Data = CDataManager::GetInst()->GetBossData(ID);
+		break;
+	default:
+		break;
+	}
+
+	FSpawnDesc Desc;
+	Desc.Data = Data;
+	Desc.IsWaveSpawn = false;
+	Desc.Type = Type;
+
+	SpawnPoint->SetWorldPos(GetRandomSpawnPosition());
+	SpawnPoint->InitializeSpawnSettings(Desc);
+	SpawnPoint->SetOnSpawnEntityFunction(this, &CMainWorld::SpawnEntity);
+}
+
+void CMainWorld::SpawnEntity(const FVector3 SpawnPos, FSpawnDesc Desc)
+{
+	if (Desc.Data.expired()) return;
+	if (mStage != EGameplayStage::Wave) return;
+
+	switch (Desc.Type)
+	{
+	case ESpawnType::Enemy:
+		SpawnEnemy(SpawnPos, mPlayer, Desc.Data.lock(), Desc.IsWaveSpawn);
+		break;
+	case ESpawnType::Structure:
+		break;
+	case ESpawnType::Boss:
+		SpawnBoss(SpawnPos, mPlayer, Desc.Data.lock(), Desc.IsWaveSpawn);
 		break;
 	default:
 		break;
@@ -412,7 +449,7 @@ void CMainWorld::SpawnPlayer()
 	}
 }
 
-void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data)
+void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsWaveSpawn)
 {
 	if (!Data || wPlayer.expired()) return;
 
@@ -421,14 +458,15 @@ void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class C
 
 	if (Player && Enemy)
 	{
-		Enemy->InitializeProperties(Data, Player);
+		Enemy->InitializeProperties(Data, Player, IsWaveSpawn);
 		Enemy->SetWorldPos(SpawnPos);
 		Enemy->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
+
 		AliveEnemyCount++;
 	}
 }
 
-void CMainWorld::SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data)
+void CMainWorld::SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsWaveSpawn)
 {
 	if (!Data || wPlayer.expired()) return;
 
@@ -437,9 +475,10 @@ void CMainWorld::SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CP
 
 	if (Player && Boss)
 	{
-		Boss->InitializeProperties(Data, Player);
+		Boss->InitializeProperties(Data, Player, IsWaveSpawn);
 		Boss->SetWorldPos(SpawnPos);
 		Boss->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
+
 		AliveEnemyCount++;
 	}
 }

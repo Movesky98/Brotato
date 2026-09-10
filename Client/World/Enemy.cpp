@@ -234,7 +234,7 @@ bool CEnemy::PostInitializeProperties(const std::shared_ptr<class CDataAsset>& D
 	return true;
 }
 
-bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target)
+bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target, bool IsWaveSpawn)
 {
 	const FTextureDesc& Texture = Data->TextureInfo;
 
@@ -247,6 +247,8 @@ bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data,
 	mCurrentScaleHeight = Texture.SizeY;
 	mMaxScaleHeight = mCurrentScaleHeight * 1.2f;
 	mMinScaleHeight = mCurrentScaleHeight * 0.9f;
+
+	mIsWaveSpawn = IsWaveSpawn;
 
 	if (!PostInitializeProperties(Data, Target)) return false;
 
@@ -401,7 +403,8 @@ void CEnemy::OnDeath()
 {
 	UseSkill(ESkillTrigger::OnDeath);
 
-	mNotifyDeathFunc(GetWorldPos());
+	if(mNotifyDeathFunc)
+		mNotifyDeathFunc(GetWorldPos(), mIsWaveSpawn);
 
 	Destroy();
 }

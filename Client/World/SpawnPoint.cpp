@@ -85,7 +85,7 @@ void CSpawnPoint::Update(float DeltaTime)
 void CSpawnPoint::Destroy()
 {
     if(mOnSpawnEntityDelegate)
-        mOnSpawnEntityDelegate(GetWorldPos(), mSpawnType, mDataAsset);
+        mOnSpawnEntityDelegate(GetWorldPos(), mSpawnDesc);
 
     CActor::Destroy();
 }
@@ -109,8 +109,7 @@ void CSpawnPoint::OnCollisionBeginOverlap(const FVector3& HitPoint, const FVecto
     }
 }
 
-void CSpawnPoint::InitializeSpawnSettings(ESpawnType SpawnType, std::weak_ptr<class CDataAsset> Data)
+void CSpawnPoint::InitializeSpawnSettings(const FSpawnDesc& Desc)
 {
-    mSpawnType = SpawnType;
-    mDataAsset = Data;
+    mSpawnDesc = Desc;
 }

@@ -103,13 +103,12 @@ protected:
 
 	FArenaDesc mArenaDesc;
 
-	void CreateSpawnPoint(ESpawnType Type);
-	void SpawnEntity(const FVector3 SpawnPos, ESpawnType Type, std::weak_ptr<class CDataAsset> Data);
+	void SpawnEntity(const FVector3 SpawnPos, FSpawnDesc Desc);
 
 	void SpawnPlayer();
-	void SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data);
-	void SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data);
-	void OnEnemyDeath(const FVector3& DeathPos);
+	void SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsWaveSpawn);
+	void SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsWaveSpawn);
+	void OnEnemyDeath(const FVector3& DeathPos, bool IsWaveSpawn);
 	void OnPlayerDeath();
 	void SpawnMaterial(const FVector3& SpawnPos);
 	
@@ -134,6 +133,9 @@ protected:
 	void EnterShop();
 
 public:
+	void CreateSpawnPoint(ESpawnType Type);
+	void CreateSpawnPoint(ESpawnType Type, int ID);
+
 	const FArenaDesc GetArenaDesc() const { return mArenaDesc; }
 	FVector3 GetRandomSpawnPosition() const;
 	std::weak_ptr<class CPlayer> GetPlayer() const;
