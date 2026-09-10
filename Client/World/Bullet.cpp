@@ -128,7 +128,7 @@ bool CBullet::Init()
 	{
 		Mesh->SetMesh("TexRect");
 		Mesh->SetShader("Material");
-		Mesh->AddTexture(0, "Bullet", TEXT("Custom/Projectile0001.png"));
+		Mesh->AddTexture(0, "Bullet", TEXT("Custom/Projectile/Projectile0001.png"));
 		Mesh->SetRelativeScale(40.f, 40.f);
 		Mesh->SetBlendState(0, "AlphaBlend");
 		Mesh->SetBaseColor(0, FVector4(1.f, 1.f, 0.f, 1.f));
