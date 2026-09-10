@@ -139,7 +139,8 @@ bool CBullet::Init()
 	if (Box)
 	{
 		Box->SetInheritScale(true);
-		Box->SetBoxSize(25.f, 25.f);
+		// 텍스처(120x120) 안에서 총알이 차지하는 97x33을 쿼드 80 기준으로 환산한 값.
+		Box->SetBoxSize(64.7f, 22.f);
 		Box->SetDebugDraw(true);
 		Box->SetCollisionProfile("PlayerProjectile");
 		Box->SetBeginOverlapFunc(this, &CBullet::OnBeginOverlap);

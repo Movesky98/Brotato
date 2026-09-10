@@ -51,7 +51,8 @@ bool CEnemyBullet::Init()
     if (Collision)
     {
         Collision->SetInheritScale(false);
-        Collision->SetRadius(10.f);
+        // 텍스처(120x120) 안에서 총알이 차지하는 87x88을 쿼드 50 기준으로 환산한 값의 절반.
+        Collision->SetRadius(18.1f);
         Collision->SetDebugDraw(false);
         Collision->SetCollisionProfile("EnemyProjectile");
         Collision->SetBeginOverlapFunc(this, &CEnemyBullet::OnBeginOverlap);
