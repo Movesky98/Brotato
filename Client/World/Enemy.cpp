@@ -247,8 +247,9 @@ bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data,
 
 	mCurrentScaleWidth = Texture.SizeX;
 	mCurrentScaleHeight = Texture.SizeY;
-	mMaxScaleHeight = mCurrentScaleHeight * 1.2f;
-	mMinScaleHeight = mCurrentScaleHeight * 0.9f;
+	// 기준 크기보다 커지지 않고, 눌린 만큼 옆으로 퍼지게 한다.
+	mMaxScaleHeight = mCurrentScaleHeight;
+	mMinScaleHeight = mCurrentScaleHeight * 0.85f;
 
 	mIsWaveSpawn = IsWaveSpawn;
 
@@ -438,8 +439,11 @@ void CEnemy::PlayMoveAnimation()
 
 		mCurrentScaleHeight += (mToggleScale ? 0.005f : -0.005f) * MoveComp->GetMoveSpeed();
 
-		MeshComp->SetWorldScale(mCurrentScaleWidth, mCurrentScaleHeight);
-		BoxCollision->SetBoxSize(mCurrentScaleWidth, mCurrentScaleHeight);
+		// 세로로 눌린 비율만큼 가로를 늘려 부피를 유지한다.
+		const float ScaleWidth = mCurrentScaleWidth * (mMaxScaleHeight / mCurrentScaleHeight);
+
+		MeshComp->SetWorldScale(ScaleWidth, mCurrentScaleHeight);
+		BoxCollision->SetBoxSize(ScaleWidth, mCurrentScaleHeight);
 	}
 }
 
