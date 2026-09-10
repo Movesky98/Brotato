@@ -94,9 +94,9 @@ protected:
 	int MaxAliveEnemy = 60;				// 동시 생성 가능한 적 최대 수
 	int AliveEnemyCount = 0;			// 현재 살아있는 적 수
 
-	float mMaxWaveTime = 10.f;			// 최대 웨이브 시간 
+	float mMaxWaveTime = 30.f;			// 최대 웨이브 시간 
 	float mElapsedTime = 0.f;
-	float mRemainingWaveTime = 10.f;	// 현재 웨이브가 끝날 때까지 남아있는 시간
+	float mRemainingWaveTime = 30.f;	// 현재 웨이브가 끝날 때까지 남아있는 시간
 
 	int mCurrentWave = 0;
 	int mCurrentMaterial = 0;
