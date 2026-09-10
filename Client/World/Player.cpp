@@ -121,7 +121,7 @@ bool CPlayer::Init()
 		Mesh->AddTexture(0, "Player", TEXT("Custom/engineer.png"));
 		Mesh->AddTexture(0, "DissolveTexture", TEXT("dissolve_smoke.png"), "Texture", 1);
 		Mesh->SetBlendState(0, "AlphaBlend");
-		Mesh->SetRelativeScale(40.f, 40.f);
+		Mesh->SetRelativeScale(53.f, 53.f);
 
 		Mesh->SetChromaKeyEnable(0, true);
 	}
@@ -134,7 +134,7 @@ bool CPlayer::Init()
 		LegMeshComp->AddTexture(0, "PlayerLeg", TEXT("Custom/legs.png"));
 		LegMeshComp->AddTexture(0, "DissolveTexture", TEXT("dissolve_smoke.png"), "Texture", 1);
 		LegMeshComp->SetBlendState(0, "AlphaBlend");
-		LegMeshComp->SetRelativePos(0.f, -17.5f);
+		LegMeshComp->SetRelativePos(0.f, -23.2f);
 		LegMeshComp->SetRelativeScale(1.f, 0.5f);
 	}
 

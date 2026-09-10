@@ -38,7 +38,7 @@ bool CSlash::Init()
     {
         MeshComponent->SetMesh("TexRect");
         MeshComponent->SetShader("Material");
-        MeshComponent->SetRelativeScale(200.f, 50.f);
+        MeshComponent->SetRelativeScale(240.f, 60.f);
         MeshComponent->AddTexture(0, "Slash", TEXT("Custom/Projectile/Slash_0.png"));
         MeshComponent->SetBlendState(0, "AlphaBlend");
         MeshComponent->SetBaseColor(0, FVector4::Red);
@@ -49,9 +49,9 @@ bool CSlash::Init()
     {
         BodyCollision->SetEnable(false);
         BodyCollision->SetInheritScale(false);
-        BodyCollision->SetRelativeScale(172.2f, 19.4f);
-        BodyCollision->SetRelativePos(-4.4f, 0.f, 0.f);
-        BodyCollision->SetBoxSize(172.2f, 19.4f);
+        BodyCollision->SetRelativeScale(206.7f, 23.3f);
+        BodyCollision->SetRelativePos(-5.3f, 0.f, 0.f);
+        BodyCollision->SetBoxSize(206.7f, 23.3f);
         BodyCollision->SetDebugDraw(true);
         BodyCollision->SetCollisionProfile("EnemyProjectile");
         BodyCollision->SetBeginOverlapFunc(this, &CSlash::OnBeginOverlap);
@@ -62,10 +62,10 @@ bool CSlash::Init()
     {
         HeadCollision->SetEnable(false);
         HeadCollision->SetInheritScale(false);
-        HeadCollision->SetRelativeScale(10.2f, 10.2f);
+        HeadCollision->SetRelativeScale(12.3f, 12.3f);
         HeadCollision->SetRelativeRotationZ(45.f);
-        HeadCollision->SetRelativePos(89.4f, 0.f, 0.f);
-        HeadCollision->SetBoxSize(10.2f, 10.2f);
+        HeadCollision->SetRelativePos(107.3f, 0.f, 0.f);
+        HeadCollision->SetBoxSize(12.3f, 12.3f);
         HeadCollision->SetDebugDraw(true);
         HeadCollision->SetCollisionProfile("EnemyProjectile");
         HeadCollision->SetBeginOverlapFunc(this, &CSlash::OnBeginOverlap);

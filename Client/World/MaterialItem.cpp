@@ -50,7 +50,7 @@ bool CMaterialItem::Init()
         MeshComp->SetShader("Material");
         MeshComp->AddTexture(0, Name, TexturePath.c_str());
         MeshComp->SetBlendState(0, "AlphaBlend");
-        MeshComp->SetRelativeScale(40.f, 40.f);
+        MeshComp->SetRelativeScale(48.f, 48.f);
         MeshComp->SetBaseColor(0, FVector4(0.462745f, 1.0f, 0.462745f, 1.f));
     }
 

@@ -42,7 +42,7 @@ bool CEnemyBullet::Init()
         MeshComp->SetMesh("TexRect");
         MeshComp->SetShader("Material");
         MeshComp->AddTexture(0, "EnemyBullet", TEXT("Custom/Projectile/Projectile0000.png"));
-        MeshComp->SetRelativeScale(40.f, 40.f);
+        MeshComp->SetRelativeScale(50.f, 50.f);
         MeshComp->SetBlendState(0, "AlphaBlend");
         MeshComp->SetBaseColor(0, FVector4::Red);
     }
