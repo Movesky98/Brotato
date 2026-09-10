@@ -398,3 +398,34 @@ public:
 	{
 	}
 };
+
+struct FCSV_BossSkill
+{
+public:
+	int ID;
+	int Phase;
+	ESkillTrigger Trigger;
+	std::vector<std::wstring> SkillIDs;
+
+	bool Init(const std::vector<std::wstring>& Data)
+	{
+		if (Data.size() != 4)
+			return false;
+
+		ID = std::stoi(Data[0]);
+		Phase = std::stoi(Data[1]);
+
+		if (!ConvertWideToTrigger(Data[2], Trigger))
+			return false;
+
+		if (!SplitDataToSkills(Data[3], SkillIDs))
+			return false;
+
+		return true;
+	}
+
+	FCSV_BossSkill()
+		: ID(0), Phase(-1), Trigger(ESkillTrigger::None)
+	{
+	}
+};

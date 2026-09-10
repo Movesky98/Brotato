@@ -1,4 +1,3 @@
-EnemyID,Trigger,SKILL_ID
-1001,InPerceptionRange,SK_Spit
-1002,InPerceptionRange,SK_Dash
-1003,OnHit,SK_RandomProjectile
+ID,Phase,Trigger,SKILL_ID
+4000,0,InPerceptionRange,SK_MovableSlash
+4000,1,Always,SK_StaticSlash|SK_SpawnChaser

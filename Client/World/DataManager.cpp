@@ -227,7 +227,7 @@ void CDataManager::LoadBossCSV()
 		mBosses.insert(std::make_pair(ID, NewBoss));
 	}
 
-	// 스킬 넘겨주기
+	// 텍스쳐
 	auto TextureList = CSVReader::ReadData<FCSV_Texture>(TEXT("CSV/Boss/BossTexture.csv"));
 	for (const auto& Texture : TextureList)
 	{
@@ -244,6 +244,29 @@ void CDataManager::LoadBossCSV()
 				Data->TextureInfo.IconPath = Texture.IconPath;
 				Data->TextureInfo.IconSizeX = Texture.IconSizeX;
 				Data->TextureInfo.IconSizeY = Texture.IconSizeY;
+			}
+		}
+	}
+
+	auto BossSkillList = CSVReader::ReadData<FCSV_BossSkill>(TEXT("CSV/Boss/BossSkill.csv"));
+	for (const auto& Skill : BossSkillList)
+	{
+		int ID = Skill.ID;
+
+		auto iter = mBosses.find(ID);
+		if (iter != mBosses.end())
+		{
+			auto& Skills = iter->second->Skills;
+			auto& MovementTypes = iter->second->MovementTypes;
+
+			Skills.resize(MovementTypes.size());
+			for (const auto& SkillID : Skill.SkillIDs)
+			{
+				auto Skilliter = mSkills.find(SkillID);
+				if (Skilliter != mSkills.end())
+				{
+					Skills[Skill.Phase].insert(std::make_pair(Skill.Trigger, Skilliter->second));
+				}
 			}
 		}
 	}

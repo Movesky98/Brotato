@@ -1,5 +1,7 @@
 #pragma once
 #include "Enemy.h"
+#include "EnemyTypes.h"
+
 class CBoss :
     public CEnemy
 {
@@ -23,8 +25,17 @@ protected:
 
 protected:
 	std::weak_ptr<class CWidgetComponent> mWidgetComponent;
-
+	
+	int mPhase = 0;
+	int mMaxPhase = 0;
+	std::vector<FMovementType> mPhaseMovements;
+	std::vector<std::unordered_multimap<ESkillTrigger, std::shared_ptr<class CSkillData>>> mPhaseSkills;
 
 	bool PostInitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target) override;
+	void OnDeath() override;
+
+	void ClearSkills();
+
+	void EnterNextPhase();
 };
 
