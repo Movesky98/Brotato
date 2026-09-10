@@ -152,8 +152,11 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="World\Component\SpawnSlashComponent.cpp" />
     <ClCompile Include="World\Boss.cpp" />
     <ClCompile Include="World\BossData.cpp" />
+    <ClCompile Include="World\Slash.cpp" />
+    <ClCompile Include="World\SpawnSlashSkillData.cpp" />
     <ClCompile Include="World\StatLine.cpp" />
     <ClCompile Include="World\StatTable.cpp" />
     <ClCompile Include="World\CharacterSelectScreen.cpp" />
@@ -213,8 +216,11 @@
     <ClCompile Include="World\WeaponData.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="World\Component\SpawnSlashComponent.h" />
     <ClInclude Include="World\Boss.h" />
     <ClInclude Include="World\BossData.h" />
+    <ClInclude Include="World\Slash.h" />
+    <ClInclude Include="World\SpawnSlashSkillData.h" />
     <ClInclude Include="World\StatLine.h" />
     <ClInclude Include="World\StatTable.h" />
     <ClInclude Include="World\CharacterSelectScreen.h" />

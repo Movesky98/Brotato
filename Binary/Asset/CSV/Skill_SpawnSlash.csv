@@ -1,0 +1,3 @@
+SKILL_ID,Count,Interval,Spread,MoveType
+SK_MovableSlash,8,0,50,1
+SK_StaticSlash,1,0,360,0

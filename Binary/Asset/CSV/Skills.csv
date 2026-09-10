@@ -4,3 +4,5 @@ SK_Spit,SpawnProjectile,Target,1
 SK_RandomProjectile,SpawnProjectile,None,0
 SK_BURST,SpawnProjectile,None,1
 SK_FollowOwner,SpawnProjectile,Owner,1
+SK_MovableSlash,SpawnSlash,Target,2
+SK_StaticSlash,SpawnSlash,Target,0.3

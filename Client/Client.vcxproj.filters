@@ -231,17 +231,26 @@
     <ClCompile Include="World\StatTable.cpp">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClCompile>
-    <ClCompile Include="World\StatLine.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="World\Boss.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="World\DataManager.cpp">
       <Filter>소스 파일\World\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="World\Slash.cpp">
+      <Filter>소스 파일\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Component\SpawnSlashComponent.cpp">
+      <Filter>소스 파일\Enemy\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="World\SpawnSlashSkillData.cpp">
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClCompile>
     <ClCompile Include="World\BossData.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Boss.cpp">
+      <Filter>소스 파일\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="World\StatLine.cpp">
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -416,17 +425,26 @@
     <ClInclude Include="World\GameTypes.h">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClInclude>
-    <ClInclude Include="World\StatLine.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="World\Boss.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="World\DataManager.h">
       <Filter>소스 파일\World\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="World\Slash.h">
+      <Filter>소스 파일\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Component\SpawnSlashComponent.h">
+      <Filter>소스 파일\Enemy\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="World\SpawnSlashSkillData.h">
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClInclude>
     <ClInclude Include="World\BossData.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Boss.h">
+      <Filter>소스 파일\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="World\StatLine.h">
+      <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

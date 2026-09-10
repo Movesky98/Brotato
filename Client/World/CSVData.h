@@ -164,9 +164,9 @@ struct FCSV_Skill
 
 struct FCSV_SpawnProjectileSkill : public FCSV_Skill
 {
-	int Count;
-	float Interval;
-	int Spread;
+	int Count;			// 발사 개수
+	float Interval;		// 발사 간격(초)
+	int Spread;			// 발사 각도 (얼마나 퍼질건지)
 
 	bool Init(const std::vector<std::wstring>& Data) override
 	{
@@ -206,6 +206,33 @@ struct FCSV_DashSkill : public FCSV_Skill
 
 	FCSV_DashSkill()
 		: Distance(100.f), Speed(300.f)
+	{
+	}
+};
+
+struct FCSV_SpawnSlashSkill : public FCSV_Skill
+{
+	int Count;				// 발사 개수
+	float Interval;			// 발사 간격(초)
+	int Spread;				// 발사 각도
+	int MoveType;			// 움직임 타입 (Stop = 0, Move = 1)
+
+	bool Init(const std::vector<std::wstring>& Data) override
+	{
+		if (Data.size() != 5)
+			return false;
+
+		SkillID = Data[0];
+		Count = std::stoi(Data[1]);
+		Interval = std::stof(Data[2]);
+		Spread = std::stoi(Data[3]);
+		MoveType = std::stoi(Data[4]);
+
+		return true;
+	}
+
+	FCSV_SpawnSlashSkill()
+		: Count(1), Interval(0.f), Spread(0), MoveType(-1)
 	{
 	}
 };

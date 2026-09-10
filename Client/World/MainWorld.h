@@ -45,6 +45,8 @@ protected:
 
 	std::shared_ptr<class CScreenManager> mScreenManager;
 
+	void AddAnimations();
+
 public:
 	template<typename T>
 	void SetOnWaveEndedFunction(T* Object, void(T::* Func)())

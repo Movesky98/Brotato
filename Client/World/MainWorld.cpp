@@ -42,6 +42,7 @@
 // 테스트용
 #include <thread>
 #include <chrono>
+#include "Slash.h"
 
 using namespace std::chrono_literals;
 
@@ -60,6 +61,7 @@ bool CMainWorld::Init()
 	
 	srand((unsigned int)time(0));
 
+	AddAnimations();
 	InitializeInputSettings();
 
 	mRemainingWaveTime = mMaxWaveTime;
@@ -112,6 +114,36 @@ void CMainWorld::Update(float DeltaTime)
 			mRemainingWaveTime = 0.f;
 			WaveEnd();
 		}
+	}
+}
+
+void CMainWorld::AddAnimations()
+{
+	auto AnimManager = CAssetManager::GetInst()->GetSubManager<CAnimationManager>(EAssetType::Animation2D);
+	if (!AnimManager) return;
+
+	/*************************** Slash Animation *****************************/
+	AnimManager->CreateAnimation("SlashFrame");
+	
+	auto Anim = AnimManager->FindAnimation("SlashFrame").lock();
+	if (Anim)
+	{
+		Anim->SetAnimationTextureType(EAnimation2DTextureType::Frame);
+
+		std::vector<std::wstring> Paths;
+		for (int i = 1; i <= 6; i++)
+		{
+			Paths.push_back(TEXT("Custom/Projectile/Slash_") + std::to_wstring(i) + TEXT(".png"));
+		}
+
+		std::vector<const TCHAR*> Frames;
+		for (const auto& Path : Paths)
+		{
+			Frames.push_back(Path.c_str());
+		}
+
+		Anim->SetTexture("SlashFrame", Frames);
+		Anim->AddFrame(7, FVector2(0.f, 0.f), FVector2(1.f, 1.f));
 	}
 }
 
@@ -461,7 +493,7 @@ void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class C
 		Enemy->InitializeProperties(Data, Player, IsWaveSpawn);
 		Enemy->SetWorldPos(SpawnPos);
 		Enemy->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
-
+		
 		AliveEnemyCount++;
 	}
 }
@@ -478,7 +510,7 @@ void CMainWorld::SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CP
 		Boss->InitializeProperties(Data, Player, IsWaveSpawn);
 		Boss->SetWorldPos(SpawnPos);
 		Boss->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
-
+		
 		AliveEnemyCount++;
 	}
 }
@@ -507,6 +539,13 @@ void CMainWorld::WaveStart()
 	for (int i = 0; i < 1/*MaxAliveEnemy*/; i++)
 	{
 		CreateSpawnPoint(ESpawnType::Boss);
+	}
+
+	auto Slash = CreateActor<CSlash>("Slash").lock();
+	if (Slash)
+	{
+		Slash->SetWorldPos(100.f, 100.f);
+		Slash->InitializeProperties(FVector3(1.f, 1.f, 0.f), 5.f, ESlashMoveMode::Move);
 	}
 }
 
