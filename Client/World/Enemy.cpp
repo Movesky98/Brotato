@@ -104,13 +104,17 @@ void CEnemy::Update(float DeltaTime)
 		return;
 	}
 
+	UseSkill(ESkillTrigger::Always);
+
+	if (CurrentRangeState == ERangeState::InRange)
+		UseSkill(ESkillTrigger::InPerceptionRange);
+
 	if (!mCanMove) return;
 	if (PlayHitEffect(DeltaTime)) return;
 
 	UpdateBehavior();
 	PlayMoveAnimation();
 
-	UseSkill(ESkillTrigger::Always);
 }
 
 void CEnemy::Destroy()
