@@ -28,6 +28,7 @@ enum class ESkillComponent
 	Dash,
 	SpawnProjectile,
 	SpawnSlash,
+	SpawnEnemy,
 	MAX
 };
 

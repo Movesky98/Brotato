@@ -243,6 +243,9 @@
     <ClCompile Include="World\SpawnSlashSkillData.cpp">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClCompile>
+    <ClCompile Include="World\SpawnEnemySkillData.cpp">
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClCompile>
     <ClCompile Include="World\BossData.cpp">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClCompile>
@@ -251,6 +254,9 @@
     </ClCompile>
     <ClCompile Include="World\StatLine.cpp">
       <Filter>소스 파일\UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Component\SpawnEnemyComponent.cpp">
+      <Filter>소스 파일\Enemy\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -437,6 +443,9 @@
     <ClInclude Include="World\SpawnSlashSkillData.h">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClInclude>
+    <ClInclude Include="World\SpawnEnemySkillData.h">
+      <Filter>소스 파일\World\DataAsset</Filter>
+    </ClInclude>
     <ClInclude Include="World\BossData.h">
       <Filter>소스 파일\World\DataAsset</Filter>
     </ClInclude>
@@ -445,6 +454,9 @@
     </ClInclude>
     <ClInclude Include="World\StatLine.h">
       <Filter>소스 파일\UI\Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Component\SpawnEnemyComponent.h">
+      <Filter>소스 파일\Enemy\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

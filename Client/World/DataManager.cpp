@@ -8,6 +8,7 @@
 #include "DashSkillData.h"
 #include "SpawnProjectileSkillData.h"
 #include "SpawnSlashSkillData.h"
+#include "SpawnEnemySkillData.h"
 
 #include "ShopData.h"
 #include "ItemData.h"
@@ -368,6 +369,25 @@ std::shared_ptr<CSkillData> CDataManager::ExtractSkillDetails(const FCSV_Skill& 
 				SkillPtr->Interval = Data.Interval;
 				SkillPtr->Spread = Data.Spread;
 				SkillPtr->MoveType = Data.MoveType;
+				break;
+			}
+		}
+	}
+		break;
+	case ESkillComponent::SpawnEnemy:
+	{
+		auto SpawnEnemyDataList = CSVReader::ReadData<FCSV_SpawnEnemySkill>(TEXT("CSV/Skill_SpawnEnemy.csv"));
+		for (const auto& Data : SpawnEnemyDataList)
+		{
+			if (Data.SkillID == ID)
+			{
+				TempPtr = std::make_shared<CSpawnEnemySkillData>();
+
+				auto SkillPtr = std::dynamic_pointer_cast<CSpawnEnemySkillData>(TempPtr);
+
+				SkillPtr->Count = Data.Count;
+				SkillPtr->Interval = Data.Interval;
+				SkillPtr->EnemyID = Data.EnemyID;
 				break;
 			}
 		}

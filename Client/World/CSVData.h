@@ -237,6 +237,31 @@ struct FCSV_SpawnSlashSkill : public FCSV_Skill
 	}
 };
 
+struct FCSV_SpawnEnemySkill : public FCSV_Skill
+{
+	int Count;				// 소환 마리 수
+	float Interval;			// 소환 간격(초)
+	int EnemyID;			// 소환할 적 ID
+
+	bool Init(const std::vector<std::wstring>& Data) override
+	{
+		if (Data.size() != 4)
+			return false;
+
+		SkillID = Data[0];
+		Count = std::stoi(Data[1]);
+		Interval = std::stof(Data[2]);
+		EnemyID = std::stoi(Data[3]);
+
+		return true;
+	}
+
+	FCSV_SpawnEnemySkill()
+		: Count(1), Interval(0.f), EnemyID(0)
+	{
+	}
+};
+
 //**********************************************************************
 //                                Item
 //**********************************************************************

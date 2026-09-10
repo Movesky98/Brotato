@@ -8,6 +8,7 @@
 #include "Component/DashSkillComponent.h"
 #include "Component/SpawnProjectileComponent.h"
 #include "Component/SpawnSlashComponent.h"
+#include "Component/SpawnEnemyComponent.h"
 
 #include "World/MeshComponent.h"
 #include "World/CharacterMovementComponent.h"
@@ -306,6 +307,9 @@ std::weak_ptr<class CSkillComponent> CEnemy::CreateSkillComponent(const ESkillCo
 		break;
 	case ESkillComponent::SpawnSlash:
 		TempComp = CreateComponent<CSpawnSlashComponent>("SpawnSlashComponent");
+		break;
+	case ESkillComponent::SpawnEnemy:
+		TempComp = CreateComponent<CSpawnEnemyComponent>("SpawnEnemyComponent");
 		break;
 	default:
 		break;

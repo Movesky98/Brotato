@@ -3,4 +3,4 @@ ID,Name,HP,Speed,Damage,MovementType
 1001,Spitter,8,200,1,FleeFromTarget|ChaseTarget
 1002,Bruiser,20,300,2,ChaseTarget|Random
 1003,Fly,15,350,1,Random
-1004,Chase,1,380,1,ChaseTarget
+1004,Chaser,1,380,1,ChaseTarget

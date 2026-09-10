@@ -156,7 +156,9 @@
     <ClCompile Include="World\Boss.cpp" />
     <ClCompile Include="World\BossData.cpp" />
     <ClCompile Include="World\Slash.cpp" />
+    <ClCompile Include="World\Component\SpawnEnemyComponent.cpp" />
     <ClCompile Include="World\SpawnSlashSkillData.cpp" />
+    <ClCompile Include="World\SpawnEnemySkillData.cpp" />
     <ClCompile Include="World\StatLine.cpp" />
     <ClCompile Include="World\StatTable.cpp" />
     <ClCompile Include="World\CharacterSelectScreen.cpp" />
@@ -220,7 +222,9 @@
     <ClInclude Include="World\Boss.h" />
     <ClInclude Include="World\BossData.h" />
     <ClInclude Include="World\Slash.h" />
+    <ClInclude Include="World\Component\SpawnEnemyComponent.h" />
     <ClInclude Include="World\SpawnSlashSkillData.h" />
+    <ClInclude Include="World\SpawnEnemySkillData.h" />
     <ClInclude Include="World\StatLine.h" />
     <ClInclude Include="World\StatTable.h" />
     <ClInclude Include="World\CharacterSelectScreen.h" />

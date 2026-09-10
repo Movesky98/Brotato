@@ -42,6 +42,7 @@ namespace {
 		{L"Dash", ESkillComponent::Dash},
 		{L"SpawnProjectile", ESkillComponent::SpawnProjectile},
 		{L"SpawnSlash", ESkillComponent::SpawnSlash},
+		{L"SpawnEnemy", ESkillComponent::SpawnEnemy}
 	};
 
 	struct FSkillTargetEntry
