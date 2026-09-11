@@ -81,31 +81,6 @@ void CEnemy::Update(float DeltaTime)
 	else
 		Attack();
 
-	if (mIsDissolve)
-	{
-		auto MeshComp = mMeshComp.lock();
-		auto BoxCollision = mBoxCollision.lock();
-		mDissolveProgress += mDissolveSpeed * DeltaTime;
-
-		if (mDissolveProgress >= 1.f)
-		{
-			if (MeshComp)
-				MeshComp->SetDissolveEnable(0, false);
-
-			mIsDissolve = false;
-			mDissolveProgress = 1.f;
-
-			// Destroy();
-		}
-
-		if (MeshComp)
-		{
-			MeshComp->SetDissolveProgress(0, mDissolveProgress);
-		}
-
-		return;
-	}
-
 	UseSkill(ESkillTrigger::Always);
 
 	if (CurrentRangeState == ERangeState::InRange)

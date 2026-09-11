@@ -74,11 +74,6 @@ protected:
 	float mHitTime = 0.f;
 	float mHitDuration = 0.3f;
 
-	//Dissolve 효과 변수
-	bool mIsDissolve = false;
-	float mDissolveProgress = 0.f;
-	float mDissolveSpeed = 0.3f;
-
 	bool mCanScaleSize = true;
 	float mMaxScaleHeight = 60.f;
 	float mMinScaleHeight = 40.f;

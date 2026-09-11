@@ -156,38 +156,7 @@ void CPlayer::Update(float DeltaTime)
 {
 	CActor::Update(DeltaTime);
 
-	mUVScrollTime += DeltaTime;
-
 	auto MeshComp = mMeshComp.lock();
-
-	if (MeshComp)
-	{
-		MeshComp->SetUVScrollTime(0, mUVScrollTime);
-	}
-
-	if (mIsDissolve)
-	{
-		mDissolveProgress += mDissolveSpeed * DeltaTime;
-
-		if (mDissolveProgress >= 1.f)
-		{
-			mDissolveProgress = 1.f;
-
-			if (MeshComp)
-				MeshComp->SetDissolveEnable(0, false);
-
-			mIsDissolve = false;
-			mDissolveProgress = 1.f;
-
-			// Destroy();
-
-		}
-
-		if (MeshComp)
-		{
-			MeshComp->SetDissolveProgress(0, mDissolveProgress);
-		}
-	}
 
 	if (mIsHit)
 	{
@@ -242,18 +211,6 @@ float CPlayer::TakeDamage(float fDamage, const std::string& Instigator, const st
 
 void CPlayer::OnDeath()
 {
-	if (mIsDissolve) return;
-
-	mIsDissolve = true;
-	mDissolveProgress = 0.f;
-
-	auto Mesh = mMeshComp.lock();
-
-	if (Mesh)
-	{
-		Mesh->SetDissolveEnable(0, true);
-	}
-
 	auto BoxCollision = mBox.lock();
 	if (BoxCollision)
 	{
@@ -319,20 +276,6 @@ void CPlayer::MoveLeft()
 	{
 		MoveComp->SetMoveDir(-GetAxis(EAxis::X));
 	}
-}
-
-void CPlayer::Dissolve()
-{
-	mIsDissolve = true;
-	mDissolveProgress = 0.f;
-
-	auto Mesh = mMeshComp.lock();
-
-	if (Mesh)
-	{
-		Mesh->SetDissolveEnable(0, true);
-	}
-
 }
 
 void CPlayer::Hit()

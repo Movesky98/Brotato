@@ -39,14 +39,6 @@ protected:
 
 	std::vector<std::weak_ptr<class CWeapon>> Weapons;
 
-	//UV 스크롤링용 변수
-	float mUVScrollTime = 0.f;
-
-	//Dissolve 효과 변수
-	bool mIsDissolve = false;
-	float mDissolveProgress = 0.f;
-	float mDissolveSpeed = 0.3f;
-
 	//Hit
 	bool mIsHit = false;
 	float mHitTime = 0.f;
@@ -71,8 +63,6 @@ public:
 	void MoveBackward();
 	void MoveRight();
 	void MoveLeft();
-
-	void Dissolve();
 
 	void Hit();
 
