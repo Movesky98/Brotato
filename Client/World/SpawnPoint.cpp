@@ -37,7 +37,8 @@ bool CSpawnPoint::Init()
         MeshComponent->SetMesh("TexRect");
         MeshComponent->SetShader("Material");
         MeshComponent->AddTexture(0, "SpawnPoint_X", TEXT("Custom/Spawn/entity_birth.png"));
-        MeshComponent->SetBaseColor(0, FVector4::Red);
+        // 원작은 빨강의 G, B에 0.22를 더해 쓴다. 회색 텍스처와 곱해져 검붉은 색이 된다.
+        MeshComponent->SetBaseColor(0, FVector4(1.f, 0.22f, 0.22f, 1.f));
         MeshComponent->SetBlendState(0, "AlphaBlend");
         MeshComponent->SetRelativeScale(56.f, 56.f);
     }

@@ -12,6 +12,7 @@
 
 CEnemyBullet::CEnemyBullet()
 {
+
 }
 
 CEnemyBullet::CEnemyBullet(const CEnemyBullet& src)
@@ -41,10 +42,10 @@ bool CEnemyBullet::Init()
     {
         MeshComp->SetMesh("TexRect");
         MeshComp->SetShader("Material");
-        MeshComp->AddTexture(0, "EnemyBullet", TEXT("Custom/Projectile/Projectile0000.png"));
+        MeshComp->AddTexture(0, "EnemyBullet", TEXT("Custom/Projectile/Projectile0000_Red.png"));
         MeshComp->SetRelativeScale(50.f, 50.f);
         MeshComp->SetBlendState(0, "AlphaBlend");
-        MeshComp->SetBaseColor(0, FVector4::Red);
+        MeshComp->SetBaseColor(0, FVector4::White);
     }
 
     auto Collision = mCollision.lock();

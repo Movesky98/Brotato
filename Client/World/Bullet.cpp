@@ -131,7 +131,7 @@ bool CBullet::Init()
 		Mesh->AddTexture(0, "Bullet", TEXT("Custom/Projectile/Projectile0001.png"));
 		Mesh->SetRelativeScale(80.f, 80.f);
 		Mesh->SetBlendState(0, "AlphaBlend");
-		Mesh->SetBaseColor(0, FVector4(1.f, 1.f, 0.f, 1.f));
+		Mesh->SetBaseColor(0, FVector4(1.f, 1.f, 1.f, 1.f));
 	}
 
 	auto Box = mBox.lock();

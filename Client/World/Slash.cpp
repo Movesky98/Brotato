@@ -41,7 +41,7 @@ bool CSlash::Init()
         MeshComponent->SetRelativeScale(240.f, 60.f);
         MeshComponent->AddTexture(0, "Slash", TEXT("Custom/Projectile/Slash_0.png"));
         MeshComponent->SetBlendState(0, "AlphaBlend");
-        MeshComponent->SetBaseColor(0, FVector4::Red);
+        MeshComponent->SetBaseColor(0, FVector4::White);
     }
 
     auto BodyCollision = mBodyCollision.lock();
