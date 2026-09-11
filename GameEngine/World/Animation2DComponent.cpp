@@ -236,6 +236,29 @@ void CAnimation2DComponent::ChangeAnimation(const std::string& Name)
 	RefreshTexture();
 }
 
+void CAnimation2DComponent::PlayAnimation(const std::string& Name)
+{
+	//반복이 아닌 애니메이션은 한번 끝나면 mEnd가 서서 다시 재생되지 않는다.
+	//같은 애니메이션을 처음부터 다시 실행시키기 위한 함수.
+
+	auto iter = mAnimationMap.find(Name);
+
+	if (iter == mAnimationMap.end())
+	{
+		return;
+	}
+
+	//mEnd를 내리고 프레임, 누적시간, 노티파이 호출여부를 초기화한다.
+	iter->second->PlayAnimation();
+
+	//현재 재생중인 애니메이션을 되감은 경우
+	//메쉬의 텍스처가 다른것으로 교체되어있을 수 있으므로 다시 물려준다.
+	if (mCurrentAnimation == iter->second)
+	{
+		RefreshTexture();
+	}
+}
+
 void CAnimation2DComponent::SetPlayTime(const std::string& Name, float PlayTime)
 {
 	auto iter = mAnimationMap.find(Name);

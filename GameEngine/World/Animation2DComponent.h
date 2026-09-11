@@ -46,6 +46,7 @@ public:
 	void AddAnimation(const std::weak_ptr<class CAnimation2D>& Anim, float PlayTime = 1.f, float PlayRate = 1.f, bool Loop = false, bool Reverse = false, bool Symmetry = false);
 	void AddAnimation(const std::string& Name, float PlayTime = 1.f, float PlayRate = 1.f, bool Loop = false, bool Reverse = false, bool Symmetry = false);
 	void ChangeAnimation(const std::string& Name);
+	void PlayAnimation(const std::string& Name);
 	void SetPlayTime(const std::string& Name, float PlayTime);
 	void SetPlayRate(const std::string& Name, float PlayRate);
 	void SetLoop(const std::string& Name, bool Loop);
