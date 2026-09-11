@@ -88,6 +88,13 @@ protected:
 
 	void PlayMoveAnimation(float DeltaTime);
 
+	/* Animation - Death */
+	float mDeathDuration = 0.25f;
+	float mDeathRotation = 0.f;
+	float mDeathScaleRatio = 1.f;
+
+	void PlayDeathAnimation(float DeltaTime);
+
 	/* Attack */
 	bool mCanAttack = false;
 	bool mIsTargetInRange = false;

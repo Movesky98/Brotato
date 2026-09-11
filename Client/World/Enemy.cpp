@@ -69,6 +69,12 @@ void CEnemy::Update(float DeltaTime)
 {
 	CActor::Update(DeltaTime);
 
+	if (mIsDead)
+	{
+		PlayDeathAnimation(DeltaTime);
+		return;
+	}
+
 	if (!mCanAttack)
 	{
 		mAttackElapsedTime += DeltaTime;
@@ -387,10 +393,12 @@ void CEnemy::OnDeath()
 {
 	UseSkill(ESkillTrigger::OnDeath);
 
-	if(mNotifyDeathFunc)
-		mNotifyDeathFunc(GetWorldPos(), mIsWaveSpawn);
-
-	Destroy();
+	mIsDead = true;
+	auto BoxCollision = mBoxCollision.lock();
+	if (BoxCollision)
+	{
+		BoxCollision->SetEnable(false);
+	}
 }
 
 void CEnemy::PlayMoveAnimation(float DeltaTime)
@@ -421,6 +429,27 @@ void CEnemy::PlayMoveAnimation(float DeltaTime)
 
 		MeshComp->SetWorldScale(mCurrentScale);
 		BoxCollision->SetBoxSize(mCurrentScale);
+	}
+}
+
+void CEnemy::PlayDeathAnimation(float DeltaTime)
+{
+	mDeathRotation += DeltaTime * 720.f / mDeathDuration;
+	mDeathScaleRatio -= DeltaTime / mDeathDuration;
+
+	if (mDeathScaleRatio <= 0.f)
+	{
+		if (mNotifyDeathFunc)
+			mNotifyDeathFunc(GetWorldPos(), mIsWaveSpawn);
+
+		Destroy();
+	}
+
+	auto MeshComp = mMeshComp.lock();
+	if (MeshComp)
+	{
+		MeshComp->SetRelativeRotationZ(mDeathRotation);
+		MeshComp->SetWorldScale(mCurrentScale * mDeathScaleRatio);
 	}
 }
 
