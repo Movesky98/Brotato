@@ -90,8 +90,7 @@ void CEnemy::Update(float DeltaTime)
 	if (PlayHitEffect(DeltaTime)) return;
 
 	UpdateBehavior();
-	PlayMoveAnimation();
-
+	PlayMoveAnimation(DeltaTime);
 }
 
 void CEnemy::Destroy()
@@ -220,11 +219,12 @@ bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data,
 	InitializeMeshComponent(Data->Name, Path, Texture.SizeX, Texture.SizeY);
 	InitializeBoxCollision(Texture.SizeX, Texture.SizeY);
 
-	mCurrentScaleWidth = Texture.SizeX;
-	mCurrentScaleHeight = Texture.SizeY;
-	// 기준 크기보다 커지지 않고, 눌린 만큼 옆으로 퍼지게 한다.
-	mMaxScaleHeight = mCurrentScaleHeight;
-	mMinScaleHeight = mCurrentScaleHeight * 0.85f;
+	mCurrentScale.x = Texture.SizeX;
+	mCurrentScale.y = Texture.SizeY;
+
+	mMaxScale = mCurrentScale;
+	mMinScale.x = mCurrentScale.x;
+	mMinScale.y = mCurrentScale.y * 0.85f;
 
 	mIsWaveSpawn = IsWaveSpawn;
 
@@ -393,32 +393,34 @@ void CEnemy::OnDeath()
 	Destroy();
 }
 
-void CEnemy::PlayMoveAnimation()
+void CEnemy::PlayMoveAnimation(float DeltaTime)
 {
 	if (!mCanScaleSize) return;
 
-	auto MoveComp = mMoveComp.lock();
 	auto MeshComp = mMeshComp.lock();
 	auto BoxCollision = mBoxCollision.lock();
 
-	if (MeshComp && BoxCollision && MoveComp)
+	if (MeshComp && BoxCollision)
 	{
-		if (mCurrentScaleHeight >= mMaxScaleHeight)
+		int ScaleSign = mIsGrowing ? 1 : -1;
+		mScaleProgress += ScaleSign * DeltaTime / mScalePeriod;
+
+		if (mScaleProgress > 1.f)
 		{
-			mToggleScale = false;
+			mScaleProgress = 1.f;
+			mIsGrowing = false;
 		}
-		else if (mCurrentScaleHeight <= mMinScaleHeight)
+
+		if (mScaleProgress < 0.f)
 		{
-			mToggleScale = true;
+			mScaleProgress = 0.f;
+			mIsGrowing = true;
 		}
 
-		mCurrentScaleHeight += (mToggleScale ? 0.005f : -0.005f) * MoveComp->GetMoveSpeed();
+		mCurrentScale.y = mMinScale.y + mScaleProgress * (mMaxScale.y - mMinScale.y);
 
-		// 세로로 눌린 비율만큼 가로를 늘려 부피를 유지한다.
-		const float ScaleWidth = mCurrentScaleWidth * (mMaxScaleHeight / mCurrentScaleHeight);
-
-		MeshComp->SetWorldScale(ScaleWidth, mCurrentScaleHeight);
-		BoxCollision->SetBoxSize(ScaleWidth, mCurrentScaleHeight);
+		MeshComp->SetWorldScale(mCurrentScale);
+		BoxCollision->SetBoxSize(mCurrentScale);
 	}
 }
 

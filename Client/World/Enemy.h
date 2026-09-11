@@ -70,25 +70,33 @@ public:
 	}
 
 protected:
+	/* Hit */
 	bool mIsHit = false;
 	float mHitTime = 0.f;
 	float mHitDuration = 0.3f;
 
+	/* Animation - Move */
 	bool mCanScaleSize = true;
-	float mMaxScaleHeight = 60.f;
-	float mMinScaleHeight = 40.f;
-	float mCurrentScaleHeight = 40.f;
-	float mCurrentScaleWidth = 40.f;
-	bool mToggleScale = true;;
+	bool mIsGrowing = true;
+	
+	FVector2 mMaxScale = FVector2::Zero;
+	FVector2 mMinScale = FVector2::Zero;
+	FVector2 mCurrentScale = FVector2::Zero;
+	
+	float mScalePeriod = 0.25f;
+	float mScaleProgress = 0.f;
 
-	bool mIsTargetInRange = false;
+	void PlayMoveAnimation(float DeltaTime);
 
+	/* Attack */
 	bool mCanAttack = false;
+	bool mIsTargetInRange = false;
 	float mAttackElapsedTime = 0.f;
 	float mAttackDelay = 1.f;
 
 	bool mIsKnockBack = true;
 
+	/* AI State */
 	std::weak_ptr<CActor> mTarget;
 
 	std::vector<EEnemyMovement> MovementsByRange;
@@ -114,7 +122,6 @@ protected:
 	void OnPerceptionRangeEndOverlap(std::weak_ptr<class CCollider> Collider);
 	virtual void OnDeath();
 
-	void PlayMoveAnimation();
 	bool PlayHitEffect(float DeltaTime);
 	void UpdateBehavior();
 	void ChaseTarget();
