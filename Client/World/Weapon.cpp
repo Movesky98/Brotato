@@ -71,6 +71,8 @@ void CWeapon::Update(float DeltaTime)
 		// 때 되면 총 쏘거나 때리고		- void Attack(Target)
 
 		std::weak_ptr<CEnemy> Target = GetClosestTarget();
+		if (Target.expired()) return;
+
 		LookAtTarget(Target);
 
 		if (mCanAttack) 
