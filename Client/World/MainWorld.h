@@ -149,6 +149,9 @@ public:
 	
 	/* UI */
 protected:
+
+	bool mPause = false;
+
 	void TogglePauseMenu();
 };
 

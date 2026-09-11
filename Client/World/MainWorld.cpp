@@ -94,9 +94,37 @@ bool CMainWorld::Init()
 
 void CMainWorld::Update(float DeltaTime)
 {
-	CWorld::Update(DeltaTime);
+	mInput->Update(DeltaTime);
 
-	if( mStage == EGameplayStage::GameOver) return;
+	if (mPause) return;
+
+	auto iter = mActorList.begin();
+	auto iterEnd = mActorList.end();
+
+	for (; iter != iterEnd;)
+	{
+		if (!iter->second->IsAlive())
+		{
+			iter = mActorList.erase(iter);
+			iterEnd = mActorList.end();
+			continue;
+		}
+		else if (!iter->second->IsEnable())
+		{
+			++iter;
+			continue;
+		}
+
+		iter->second->Update(DeltaTime);
+		++iter;
+	}
+
+	//유효한 카메라들만 남기도록 업데이트
+	mCameraManager->Update(DeltaTime);
+
+	mUIManager->Update(DeltaTime);
+
+	if (mStage == EGameplayStage::GameOver) return;
 	if (mStage != EGameplayStage::Wave) return;
 
 	mElapsedTime += DeltaTime;
@@ -667,9 +695,11 @@ void CMainWorld::TogglePauseMenu()
 	if (CurScreenType == EScreenType::PauseMenu)
 	{
 		mScreenManager->HideScreen();
+		mPause = false;
 	}
 	else
 	{
 		mScreenManager->ShowScreen(EScreenType::PauseMenu);
+		mPause = true;
 	}
 }
