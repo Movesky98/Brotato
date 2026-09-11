@@ -80,6 +80,12 @@ bool CPlayer::Init()
 		BodyMeshComp->SetRelativeScale(53.f, 53.f);
 
 		BodyMeshComp->SetChromaKeyEnable(0, true);
+
+		mCurrentScale.x = 53.f;
+		mCurrentScale.y = 53.f;
+
+		mMaxScale = mCurrentScale;
+		mMinScale = mCurrentScale * 0.85f;
 	}
 
 	auto LegMeshComp = mLegMeshComp.lock();
@@ -155,6 +161,8 @@ bool CPlayer::Init()
 void CPlayer::Update(float DeltaTime)
 {
 	CActor::Update(DeltaTime);
+
+	PlayMoveAnimation(DeltaTime);
 
 	auto MeshComp = mBodyMeshComp.lock();
 
@@ -235,6 +243,39 @@ void CPlayer::OnPickupRangeBeginOverlap(const FVector3& HitPoint, const FVector3
 		std::function<void(int)> BindFunc = std::bind(&CInventoryComponent::AddMaterial, InvComp, std::placeholders::_1);
 
 		CollectableActor->Collect(GetThisPtr<CActor>(), BindFunc);
+	}
+}
+
+void CPlayer::PlayMoveAnimation(float DeltaTime)
+{
+	if (!mCanScaleSize) return;
+
+	auto MoveComp = mMoveComp.lock();
+	auto MeshComp = mBodyMeshComp.lock();
+	auto BoxCollision = mBoxCollision.lock();
+
+	if (MeshComp && BoxCollision && MoveComp)
+	{
+		int ScaleSign = mIsGrowing ? 1 : -1;
+		mScaleProgress += ScaleSign * DeltaTime / mScalePeriod;
+
+		if (mScaleProgress > 1.f)
+		{
+			mScaleProgress = 1.f;
+			mIsGrowing = false;
+		}
+
+		if (mScaleProgress < 0.f)
+		{
+			mScaleProgress = 0.f;
+			mIsGrowing = true;
+		}
+
+		mCurrentScale.x = mMinScale.x + (1.f - mScaleProgress) * (mMaxScale.x - mMinScale.x);
+		mCurrentScale.y = mMinScale.y + mScaleProgress * (mMaxScale.y - mMinScale.y);
+
+		MeshComp->SetWorldScale(mCurrentScale);
+		BoxCollision->SetBoxSize(mCurrentScale);
 	}
 }
 

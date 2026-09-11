@@ -55,8 +55,20 @@ public:
 protected:
 	float mDamage = 1.f;
 
+	/* MoveAnimation */
+	bool mCanScaleSize = true;
+	bool mIsGrowing = true;
+
+	FVector2 mMaxScale = FVector2::Zero;
+	FVector2 mMinScale = FVector2::Zero;
+	FVector2 mCurrentScale = FVector2::Zero;
+
+	float mScalePeriod = 0.25f;
+	float mScaleProgress = 0.f;
+
 	void OnDeath();
 	void OnPickupRangeBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider);
+	void PlayMoveAnimation(float DeltaTime);
 
 public:
 	void MoveForward();
