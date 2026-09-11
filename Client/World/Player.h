@@ -58,12 +58,6 @@ public:
 		return mCamera;
 	}
 
-	float GetSpeed();
-	float GetCurrentSpeed();
-
-	void SetSpeed(float Speed);
-	void SetCurrentSpeed(float Speed);
-
 	virtual void SetHP(float HP);
 
 protected:

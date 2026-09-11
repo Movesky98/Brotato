@@ -43,50 +43,6 @@ CPlayer::~CPlayer()
 {
 }
 
-float CPlayer::GetSpeed()
-{
-	auto MoveComp = mMoveComp.lock();
-
-	if (MoveComp)
-	{
-		return MoveComp->GetMoveSpeed();
-	}
-
-	return 0.0f;
-}
-
-float CPlayer::GetCurrentSpeed()
-{
-	auto MoveComp = mMoveComp.lock();
-
-	if (MoveComp)
-	{
-		return MoveComp->GetCurrentSpeed();
-	}
-
-	return 0.0f;
-}
-
-void CPlayer::SetSpeed(float Speed)
-{
-	auto MoveComp = mMoveComp.lock();
-
-	if (MoveComp)
-	{
-		MoveComp->SetSpeed(Speed);
-	}
-}
-
-void CPlayer::SetCurrentSpeed(float Speed)
-{
-	auto MoveComp = mMoveComp.lock();
-
-	if (MoveComp)
-	{
-		MoveComp->SetCurrentSpeed(Speed);
-	}
-}
-
 void CPlayer::SetHP(float HP)
 {
 	mHP = HP;
