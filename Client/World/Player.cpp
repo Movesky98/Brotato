@@ -59,27 +59,27 @@ bool CPlayer::Init()
 
 	mActorTag = "Player";
 
-	mMeshComp = CreateComponent<CMeshComponent>("Root");
+	mBodyMeshComp = CreateComponent<CMeshComponent>("Root");
 	mLegMeshComp = CreateComponent<CMeshComponent>("Leg");
 	mCamera = CreateComponent<CArenaCameraComponent>("Camera");
-	mBox = CreateComponent<CColliderBox2D>("Box");
+	mBoxCollision = CreateComponent<CColliderBox2D>("Box");
 	mPickupRange = CreateComponent<CColliderSphere2D>("PickupRange");
 
 	mMoveComp = CreateComponent<CCharacterMovementComponent>("MoveComp");
 	mInventoryComponent = CreateComponent<CInventoryComponent>("InventoryComp");
 
-	auto Mesh = mMeshComp.lock();
+	auto BodyMeshComp = mBodyMeshComp.lock();
 
-	if (Mesh)
+	if (BodyMeshComp)
 	{
-		Mesh->SetMesh("TexRect");
-		Mesh->SetShader("Material");
-		Mesh->AddTexture(0, "Player", TEXT("Custom/engineer.png"));
-		Mesh->AddTexture(0, "DissolveTexture", TEXT("dissolve_smoke.png"), "Texture", 1);
-		Mesh->SetBlendState(0, "AlphaBlend");
-		Mesh->SetRelativeScale(53.f, 53.f);
+		BodyMeshComp->SetMesh("TexRect");
+		BodyMeshComp->SetShader("Material");
+		BodyMeshComp->AddTexture(0, "Player", TEXT("Custom/engineer.png"));
+		BodyMeshComp->AddTexture(0, "DissolveTexture", TEXT("dissolve_smoke.png"), "Texture", 1);
+		BodyMeshComp->SetBlendState(0, "AlphaBlend");
+		BodyMeshComp->SetRelativeScale(53.f, 53.f);
 
-		Mesh->SetChromaKeyEnable(0, true);
+		BodyMeshComp->SetChromaKeyEnable(0, true);
 	}
 
 	auto LegMeshComp = mLegMeshComp.lock();
@@ -102,7 +102,7 @@ bool CPlayer::Init()
 		Camera->SetInheritRot(false);
 	}
 
-	auto Box = mBox.lock();
+	auto Box = mBoxCollision.lock();
 
 	if (Box)
 	{
@@ -156,7 +156,7 @@ void CPlayer::Update(float DeltaTime)
 {
 	CActor::Update(DeltaTime);
 
-	auto MeshComp = mMeshComp.lock();
+	auto MeshComp = mBodyMeshComp.lock();
 
 	if (mIsHit)
 	{
@@ -199,7 +199,7 @@ float CPlayer::TakeDamage(float fDamage, const std::string& Instigator, const st
 	mIsHit = true;
 	mHitTime = mHitDuration;
 
-	auto Mesh = mMeshComp.lock();
+	auto Mesh = mBodyMeshComp.lock();
 
 	if (Mesh)
 	{
@@ -211,7 +211,7 @@ float CPlayer::TakeDamage(float fDamage, const std::string& Instigator, const st
 
 void CPlayer::OnDeath()
 {
-	auto BoxCollision = mBox.lock();
+	auto BoxCollision = mBoxCollision.lock();
 	if (BoxCollision)
 	{
 		BoxCollision->SetEnable(false);
@@ -283,7 +283,7 @@ void CPlayer::Hit()
 	mIsHit = true;
 	mHitTime = mHitDuration;
 
-	auto Mesh = mMeshComp.lock();
+	auto Mesh = mBodyMeshComp.lock();
 
 	if (Mesh)
 	{
@@ -380,7 +380,7 @@ void CPlayer::SetPlayerDesc(std::weak_ptr<CCharacterData> InData)
 	auto Data = InData.lock();
 	if (!Data) return;
 
-	auto MeshComp = mMeshComp.lock();
+	auto MeshComp = mBodyMeshComp.lock();
 	if (MeshComp)
 	{
 		MeshComp->AddTexture(0, Data->Name, Data->TextureInfo.Path.c_str());

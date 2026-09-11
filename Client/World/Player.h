@@ -27,10 +27,10 @@ protected:
 	}
 
 protected:
-	std::weak_ptr<class CMeshComponent> mMeshComp;
+	std::weak_ptr<class CMeshComponent> mBodyMeshComp;
 	std::weak_ptr<class CMeshComponent> mLegMeshComp;
 	std::weak_ptr<class CCameraComponent> mCamera;
-	std::weak_ptr<class CColliderBox2D> mBox;
+	std::weak_ptr<class CColliderBox2D> mBoxCollision;
 	std::weak_ptr<class CColliderSphere2D> mPickupRange;
 
 	std::weak_ptr<class CCharacterMovementComponent> mMoveComp;
