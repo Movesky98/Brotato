@@ -43,6 +43,9 @@ protected:
 	std::weak_ptr<class CColliderBox2D> mBoxCollision;
 	std::weak_ptr<class CColliderSphere2D> mPerceptionRange;
 	std::weak_ptr<class CCharacterMovementComponent> mMoveComp;
+	std::weak_ptr<class CMeshComponent> mHitMeshComp;
+	std::weak_ptr<class CAnimation2DComponent> mAnimationComp;
+
 	std::unordered_multimap<ESkillTrigger, std::weak_ptr<class CSkillComponent>> TriggerSkillMaps;
 
 	void SetSkills(const std::unordered_multimap<ESkillTrigger, std::shared_ptr<CSkillData>>& SkillData);

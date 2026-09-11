@@ -11,9 +11,10 @@
 #include "Component/SpawnEnemyComponent.h"
 
 #include "World/MeshComponent.h"
-#include "World/CharacterMovementComponent.h"
 #include "World/ColliderBox2D.h"
 #include "World/ColliderSphere2D.h"
+#include "World/Animation2DComponent.h"
+#include "World/CharacterMovementComponent.h"
 
 #include "LogManager.h"
 
@@ -48,11 +49,22 @@ bool CEnemy::Init()
 	mBoxCollision = CreateComponent<CColliderBox2D>("BoxCollision");
 	mPerceptionRange = CreateComponent<CColliderSphere2D>("PerceptionRange");
 	mMoveComp = CreateComponent<CCharacterMovementComponent>("CharacterMoveComp");
+	mHitMeshComp = CreateComponent<CMeshComponent>("HitMeshComp");
+	mAnimationComp = CreateComponent<CAnimation2DComponent>("AnimationComp");
 
 	if (mMoveComp.expired()) return false;
 	if (mBoxCollision.expired()) return false;
 	if (mPerceptionRange.expired()) return false;
 	if (mMoveComp.expired()) return false;
+	if (mHitMeshComp.expired()) return false;
+	if (mAnimationComp.expired()) return false;
+
+	auto AnimationComp = mAnimationComp.lock();
+	if (AnimationComp)
+	{
+		AnimationComp->SetUpdateComponent(mHitMeshComp);
+		AnimationComp->AddAnimation("HitFrame", 0.1f, 1.f, false);
+	}
 
 	if (auto World = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock()))
 	{
@@ -113,11 +125,16 @@ float CEnemy::TakeDamage(float fDamage, const std::string& Instigator, const std
 	mHitTime = mHitDuration;
 
 	auto Mesh = mMeshComp.lock();
-
 	if (Mesh)
 	{
 		Mesh->SetHitEffectColor(0, FVector4(0.8f, 0.8f, 0.8f, 1.f));
 		Mesh->SetHitEffectEnable(0, true);
+	}
+
+	auto AnimationComp = mAnimationComp.lock();
+	if (AnimationComp)
+	{
+		AnimationComp->PlayAnimation("HitFrame");
 	}
 
 	UseSkill(ESkillTrigger::OnHit);
@@ -137,7 +154,18 @@ void CEnemy::InitializeMeshComponent(const std::string Name, const TCHAR* Path, 
 		MeshComp->AddTexture(0, Name, Path);
 		MeshComp->SetBlendState(0, "AlphaBlend");
 		MeshComp->SetRelativeScale(SizeX, SizeY);
-		MeshComp->SetBaseColor(0, FVector4(1.f, 1.f, 1.f, 1.f));
+		MeshComp->SetBaseColor(0, FVector4::White);
+	}
+
+	auto HitMeshComp = mHitMeshComp.lock();
+	if (HitMeshComp)
+	{
+		HitMeshComp->SetMesh("TexRect");
+		HitMeshComp->SetShader("Material");
+		HitMeshComp->AddTexture(0, "BaseHitImage", TEXT("Custom/Hit/Hit_0.png"));
+		HitMeshComp->SetBlendState(0, "AlphaBlend");
+		// HitMeshComp->SetRelativeScale(1, 1);
+		HitMeshComp->SetBaseColor(0, FVector4::White);
 	}
 }
 

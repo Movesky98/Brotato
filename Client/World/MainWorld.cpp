@@ -144,6 +144,32 @@ void CMainWorld::AddAnimations()
 		Anim->SetTexture("SlashFrame", Frames);
 		Anim->AddFrame(7, FVector2(0.f, 0.f), FVector2(1.f, 1.f));
 	}
+
+	/*************************** Hit Animation *****************************/
+	AnimManager->CreateAnimation("HitFrame");
+
+	Anim = AnimManager->FindAnimation("HitFrame").lock();
+	if (Anim)
+	{
+		Anim->SetAnimationTextureType(EAnimation2DTextureType::Frame);
+
+		std::vector<std::wstring> Paths;
+		for (int i = 1; i <= 3; i++)
+		{
+			Paths.push_back(TEXT("Custom/Hit/Hit_") + std::to_wstring(i) + TEXT(".png"));
+		}
+
+		Paths.push_back(TEXT("Custom/Hit/Hit_0.png"));
+
+		std::vector<const TCHAR*> Frames;
+		for (const auto& Path : Paths)
+		{
+			Frames.push_back(Path.c_str());
+		}
+
+		Anim->SetTexture("HitFrame", Frames);
+		Anim->AddFrame(4, FVector2(0.f, 0.f), FVector2(1.f, 1.f));
+	}
 }
 
 void CMainWorld::SpawnWalls()
