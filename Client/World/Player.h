@@ -72,11 +72,6 @@ public:
 	void MoveRight();
 	void MoveLeft();
 
-	void RotateLeft();
-	void RotateRight();
-
-	void Fire();
-
 	void Dissolve();
 
 	void Hit();

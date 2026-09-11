@@ -135,18 +135,6 @@ bool CPlayer::Init()
 		Input->SetBindFunction("MoveLeft", EInputType::Hold, this, &CPlayer::MoveLeft);
 		Input->AddBindKey("MoveRight", 'D');
 		Input->SetBindFunction("MoveRight", EInputType::Hold, this, &CPlayer::MoveRight);
-
-		//회전
-		Input->AddBindKey("RotateLeft", 'E');
-		Input->SetBindFunction("RotateLeft", EInputType::Hold, this, &CPlayer::RotateLeft);
-		Input->AddBindKey("RotateRight", 'Q');
-		Input->SetBindFunction("RotateRight", EInputType::Hold, this, &CPlayer::RotateRight);
-
-		Input->AddBindKey("Fire", VK_LBUTTON);
-		Input->SetBindFunction("Fire", EInputType::Hold, this, &CPlayer::Fire);
-
-		Input->AddBindKey("Hit", 'Y');
-		Input->SetBindFunction("Hit", EInputType::Press, this, &CPlayer::Hit);
 	}
 
 
@@ -330,38 +318,6 @@ void CPlayer::MoveLeft()
 	if (MoveComp)
 	{
 		MoveComp->SetMoveDir(-GetAxis(EAxis::X));
-	}
-}
-
-void CPlayer::RotateLeft()
-{
-	AddRelativeRotationZ(360.f * CTimeManager::GetDeltaTime());
-}
-
-void CPlayer::RotateRight()
-{
-	AddRelativeRotationZ(-360.f * CTimeManager::GetDeltaTime());
-}
-
-void CPlayer::Fire()
-{
-	auto World = mWorld.lock();
-
-	if (World)
-	{
-		auto Bullet = World->CreateActor<CBullet>("Bullet").lock();
-
-		auto Input = World->GetInput().lock();
-
-		if (Bullet && Input)
-		{
-			const FVector3 MousePos(Input->GetWorldMousePos().x, Input->GetWorldMousePos().y, 0.f);
-
-			FVector3 FireDirection = MousePos - GetWorldPos();
-			FireDirection.Normalize();
-			Bullet->SetWorldPos(FireDirection * 50.f + GetWorldPos());
-			Bullet->InitializeProjectile(FireDirection, 1000.f);
-		}
 	}
 }
 
