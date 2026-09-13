@@ -63,7 +63,7 @@ CStatLine* CStatLine::Clone()
     return new CStatLine(*this);
 }
 
-void CStatLine::Initlialize(const FStatLineDesc Desc)
+void CStatLine::Initialize(const FStatLineDesc Desc)
 {
     auto NameText = mNameText.lock();
     if (NameText)

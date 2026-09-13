@@ -28,7 +28,7 @@ protected:
     std::weak_ptr<class CTextBlock> mNameText;
 
 public:
-    void Initlialize(const FStatLineDesc Desc);
+    void Initialize(const FStatLineDesc Desc);
 
 };
 

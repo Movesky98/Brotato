@@ -143,7 +143,7 @@ void CCharacterFrame::CreateStatLines(std::vector<std::weak_ptr<class CStatLine>
             NewStatLine->SetPos(AreaPos.x, StartYPos + Count * RowH);
             NewStatLine->SetSize(AreaSize.x, RowH);
 
-            NewStatLine->Initlialize(Desc);
+            NewStatLine->Initialize(Desc);
 
             OutLines.push_back(NewStatLine);
         }
