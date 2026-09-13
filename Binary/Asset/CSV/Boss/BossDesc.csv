@@ -1,2 +1,2 @@
 ID,Name,HP,Speed,Damage,MovementType
-4000,Mother,750,250,1,ChaseTarget>FleeFromTarget|Random
+4000,Mother,375,250,1,ChaseTarget>FleeFromTarget|Random
