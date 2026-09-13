@@ -14,6 +14,7 @@ class CWeaponData;
 class CShopData;
 class CCharacterData;
 class CBossData;
+class CWaveData;
 
 class CDataManager
 {
@@ -30,6 +31,7 @@ protected:
 	std::unordered_map<int /* ID */, std::shared_ptr<CWeaponData>> mWeapons;
 	std::unordered_map<int /* ID */, std::shared_ptr<CCharacterData>> mCharacters;
 	std::unordered_map<int /* ID */, std::shared_ptr<CBossData>> mBosses;
+	std::unordered_map<int /* Wave */, std::shared_ptr<CWaveData>> mWaves;
 
 	void LoadEnemyCSV();
 	void LoadSkillCSV();
@@ -37,6 +39,7 @@ protected:
 	void LoadWeaponCSV();
 	void LoadCharacterCSV();
 	void LoadBossCSV();
+	void LoadWaveCSV();
 
 	void AddEnemyInfo(const FCSV_EnemyInfo& EnemyInfo);
 	void AddTextureInfo(const FCSV_Texture& TextureInfo);
@@ -64,4 +67,6 @@ public:
 	std::vector<std::shared_ptr<CDataAsset>> GetCharactersData() const;
 
 	std::shared_ptr<CShopData> GetRandomShopData() const;
+
+	std::shared_ptr<CWaveData> GetWaveData(const int Wave) const;
 };

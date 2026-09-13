@@ -91,12 +91,16 @@ protected:
 
 	/* Gameplay Logic */
 protected:
-	int MaxAliveEnemy = 60;				// 동시 생성 가능한 적 최대 수
-	int AliveEnemyCount = 0;			// 현재 살아있는 적 수
+	int BaseMaxAliveEnemy = 10;			// 1웨이브 동시 생성 가능한 적 최대 수 (웨이브마다 1.2배)
+	int MaxAliveEnemy = 10;				// 동시 생성 가능한 적 최대 수
+	int AliveEnemyCount = 0;			// 현재 살아있는 적 수 (스폰 대기 포함)
 
-	float mMaxWaveTime = 30.f;			// 최대 웨이브 시간 
+	std::shared_ptr<class CWaveData> mWaveData;	// 현재 웨이브 스폰 정보 (DataManager 소유)
+	int mSpawnIndex = 0;				// 다음에 스폰할 WaveData::Spawns 항목
+
+	float mMaxWaveTime = 20.f;			// 최대 웨이브 시간 
 	float mElapsedTime = 0.f;
-	float mRemainingWaveTime = 30.f;	// 현재 웨이브가 끝날 때까지 남아있는 시간
+	float mRemainingWaveTime = 20.f;	// 현재 웨이브가 끝날 때까지 남아있는 시간
 
 	int mCurrentWave = 0;
 	int mCurrentMaterial = 0;
@@ -108,9 +112,13 @@ protected:
 	void SpawnEntity(const FVector3 SpawnPos, FSpawnDesc Desc);
 
 	void SpawnPlayer();
-	void SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsWaveSpawn);
-	void SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsWaveSpawn);
-	void OnEnemyDeath(const FVector3& DeathPos, bool IsWaveSpawn);
+	void SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsCountedSpawn);
+	void SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsCountedSpawn);
+	void SpawnWaveEnemies();
+	void OnEnemyDeath(const FVector3& DeathPos, bool IsCountedSpawn);
+
+	// 동시 생성 제한 수에 포함되는 스폰인지. 웨이브에서 스폰된 일반 적만 포함한다.
+	bool IsCountedSpawn(ESpawnType Type, ESpawnSource Source) const;
 	void OnPlayerDeath();
 	void SpawnMaterial(const FVector3& SpawnPos);
 	
@@ -129,14 +137,12 @@ protected:
 		}
 	}
 
-
 	void WaveStart();
 	void WaveEnd();
 	void EnterShop();
 
 public:
-	void CreateSpawnPoint(ESpawnType Type);
-	void CreateSpawnPoint(ESpawnType Type, int ID);
+	void CreateSpawnPoint(ESpawnType Type, int ID, ESpawnSource Source);
 
 	const FArenaDesc GetArenaDesc() const { return mArenaDesc; }
 	FVector3 GetRandomSpawnPosition() const;

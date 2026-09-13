@@ -214,6 +214,7 @@
     <ClCompile Include="World\StatRow.cpp" />
     <ClCompile Include="World\TitleScreen.cpp" />
     <ClCompile Include="World\Wall.cpp" />
+    <ClCompile Include="World\WaveData.cpp" />
     <ClCompile Include="World\Weapon.cpp" />
     <ClCompile Include="World\WeaponData.cpp" />
   </ItemGroup>
@@ -282,6 +283,7 @@
     <ClInclude Include="World\StatRow.h" />
     <ClInclude Include="World\TitleScreen.h" />
     <ClInclude Include="World\Wall.h" />
+    <ClInclude Include="World\WaveData.h" />
     <ClInclude Include="World\Weapon.h" />
     <ClInclude Include="World\WeaponData.h" />
   </ItemGroup>

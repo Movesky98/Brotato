@@ -81,7 +81,7 @@ void CSpawnEnemyComponent::CreateEnemy()
 	auto MainWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());
 	if (!MainWorld) return;
 
-	MainWorld->CreateSpawnPoint(ESpawnType::Enemy, mEnemyID);
+	MainWorld->CreateSpawnPoint(ESpawnType::Enemy, mEnemyID, ESpawnSource::Summon);
 
 	mSpawnCount++;
 }

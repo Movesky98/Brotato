@@ -15,6 +15,7 @@
 #include "WeaponData.h"
 #include "CharacterData.h"
 #include "BossData.h"
+#include "WaveData.h"
 
 #include <random>
 
@@ -38,6 +39,7 @@ void CDataManager::InitializeCSVData()
 	LoadWeaponCSV();
 	LoadCharacterCSV();
 	LoadBossCSV();
+	LoadWaveCSV();
 }
 
 void CDataManager::LoadEnemyCSV()
@@ -269,6 +271,22 @@ void CDataManager::LoadBossCSV()
 				}
 			}
 		}
+	}
+}
+
+void CDataManager::LoadWaveCSV()
+{
+	auto WaveDataList = CSVReader::ReadData<FCSV_WaveDesc>(TEXT("CSV/WaveDesc.csv"));
+	for (const FCSV_WaveDesc& WaveDesc : WaveDataList)
+	{
+		int Wave = WaveDesc.Wave;
+		std::shared_ptr<CWaveData> NewWave = std::make_shared<CWaveData>();
+
+		NewWave->Wave = Wave;
+		NewWave->Spawns = WaveDesc.Spawns;
+		NewWave->Boss = WaveDesc.Boss;
+
+		mWaves.insert(std::make_pair(Wave, NewWave));
 	}
 }
 
@@ -564,7 +582,18 @@ std::shared_ptr<CShopData> CDataManager::GetRandomShopData() const
 	else
 	{
 		Rand = rand() % mWeapons.size();
-		
+
 		return GetWeaponData(Rand + Type);
 	}
+}
+
+std::shared_ptr<CWaveData> CDataManager::GetWaveData(const int Wave) const
+{
+	auto iter = mWaves.find(Wave);
+	if (iter != mWaves.end())
+	{
+		return iter->second;
+	}
+
+	return std::shared_ptr<CWaveData>();
 }

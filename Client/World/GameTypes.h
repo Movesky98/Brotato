@@ -75,3 +75,16 @@ struct FStat
 		}
 	}
 };
+
+// 한 웨이브에 등장할 적 한 종류와 그 수.
+// CSV에는 "EnemyID:Num|EnemyID:Num" 형태로 들어온다.
+struct FWaveSpawnDesc
+{
+	int EnemyID = 0;
+	int Count = 0;
+
+	FWaveSpawnDesc() = default;
+	FWaveSpawnDesc(int InEnemyID, int InCount)
+		: EnemyID(InEnemyID), Count(InCount)
+	{ }
+};

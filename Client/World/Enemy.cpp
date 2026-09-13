@@ -244,7 +244,7 @@ bool CEnemy::PostInitializeProperties(const std::shared_ptr<class CDataAsset>& D
 	return true;
 }
 
-bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target, bool IsWaveSpawn)
+bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target, bool IsCountedSpawn)
 {
 	const FTextureDesc& Texture = Data->TextureInfo;
 
@@ -260,7 +260,7 @@ bool CEnemy::InitializeProperties(const std::shared_ptr<class CDataAsset>& Data,
 	mMinScale.x = mCurrentScale.x;
 	mMinScale.y = mCurrentScale.y * 0.85f;
 
-	mIsWaveSpawn = IsWaveSpawn;
+	mIsCountedSpawn = IsCountedSpawn;
 
 	if (!PostInitializeProperties(Data, Target)) return false;
 
@@ -468,7 +468,7 @@ void CEnemy::PlayDeathAnimation(float DeltaTime)
 	if (mDeathScaleRatio <= 0.f)
 	{
 		if (mNotifyDeathFunc)
-			mNotifyDeathFunc(GetWorldPos(), mIsWaveSpawn);
+			mNotifyDeathFunc(GetWorldPos(), mIsCountedSpawn);
 
 		Destroy();
 	}

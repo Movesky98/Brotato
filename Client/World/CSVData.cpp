@@ -290,3 +290,39 @@ bool ConvertWideToWeaponType(const std::wstring& In, EWeaponType& Out)
 
 	return false;
 }
+
+bool ConvertWideToWaveSpawns(const std::wstring& In, std::vector<FWaveSpawnDesc>& Out)
+{
+	std::vector<std::wstring> Spawns;
+	std::wstringstream WSS(In);
+	std::wstring Token;
+
+	while (std::getline(WSS, Token, L'|'))
+	{
+		Spawns.push_back(Token);
+	}
+
+	for (const std::wstring& Spawn : Spawns)
+	{
+		wchar_t Delimiter = L':';
+		size_t Pos = Spawn.find(Delimiter);
+
+		// ID와 수가 ':'로 짝지어지지 않은 칸은 건너뛴다.
+		if (Pos == std::wstring::npos)
+		{
+			continue;
+		}
+
+		std::wstring EnemyIDWStr = Spawn.substr(0, Pos);
+		std::wstring CountWStr = Spawn.substr(Pos + 1);
+
+		if (EnemyIDWStr.empty() || CountWStr.empty())
+		{
+			continue;
+		}
+
+		Out.push_back(FWaveSpawnDesc(std::stoi(EnemyIDWStr), std::stoi(CountWStr)));
+	}
+
+	return true;
+}

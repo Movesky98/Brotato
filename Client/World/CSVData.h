@@ -25,6 +25,12 @@ bool ConvertWideToSecondaryStats(const std::wstring& In, FStat& Out);
 
 bool ConvertWideToWeaponType(const std::wstring& In, EWeaponType& Out);
 
+/// <summary>
+/// <para>웨이브 스폰 목록은 "EnemyID:Num|EnemyID:Num..." 형태로 들어옴.</para>
+/// <para>'|'로 토큰을 나눈 뒤 각 토큰을 ':' 기준으로 적 ID와 수로 분리해 Out에 저장함.</para>
+/// </summary>
+bool ConvertWideToWaveSpawns(const std::wstring& In, std::vector<FWaveSpawnDesc>& Out);
+
 //**********************************************************************
 //                                Texture
 //**********************************************************************
@@ -426,6 +432,38 @@ public:
 
 	FCSV_BossSkill()
 		: ID(0), Phase(-1), Trigger(ESkillTrigger::None)
+	{
+	}
+};
+
+//**********************************************************************
+//                                Wave
+//**********************************************************************
+
+struct FCSV_WaveDesc
+{
+public:
+	int Wave;
+	std::vector<FWaveSpawnDesc> Spawns;
+	int Boss;
+
+	bool Init(const std::vector<std::wstring>& Data)
+	{
+		if (Data.size() != 3)
+			return false;
+
+		Wave = std::stoi(Data[0]);
+
+		if (!ConvertWideToWaveSpawns(Data[1], Spawns))
+			return false;
+
+		Boss = std::stoi(Data[2]);
+
+		return true;
+	}
+
+	FCSV_WaveDesc()
+		: Wave(0), Boss(0)
 	{
 	}
 };

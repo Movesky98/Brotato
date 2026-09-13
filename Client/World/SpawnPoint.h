@@ -10,9 +10,17 @@ enum class ESpawnType
 	MAX
 };
 
+enum class ESpawnSource
+{
+	None = -1,
+	Wave,		// WaveData에 따른 스폰
+	Summon,		// 스킬에 의한 소환
+	MAX
+};
+
 struct FSpawnDesc
 {
-	bool IsWaveSpawn;
+	ESpawnSource Source;
 	ESpawnType Type;
 	std::weak_ptr<class CDataAsset> Data;
 };

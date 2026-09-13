@@ -53,7 +53,7 @@ protected:
 
 	void UseSkill(const ESkillTrigger Trigger);
 
-	std::function<void(const FVector3& /* DeathPosition */, bool /* IsWaveSpawn */)> mNotifyDeathFunc;
+	std::function<void(const FVector3& /* DeathPosition */, bool /* IsCountedSpawn */)> mNotifyDeathFunc;
 
 	void InitializeMeshComponent(const std::string Name, const TCHAR* Path, float SizeX, float SizeY);
 	void InitializeBoxCollision(float SizeX, float SizeY);
@@ -64,7 +64,7 @@ protected:
 	virtual bool PostInitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target);
 
 public:
-	virtual bool InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target, bool IsWaveSpawn = true);
+	virtual bool InitializeProperties(const std::shared_ptr<class CDataAsset>& Data, const std::weak_ptr<CActor> Target, bool IsCountedSpawn = true);
 
 	template<typename T>
 	void SetNotifyDeathFunc(T* Object, void (T::* Func)(const FVector3&, bool))
@@ -116,7 +116,7 @@ protected:
 	bool mIsRandomMove = false;
 	FVector3 RandomPos;
 
-	bool mIsWaveSpawn = true;
+	bool mIsCountedSpawn = true;		// 동시 생성 제한 수에 포함되는지
 	float mRange = 300.f;
 	float mSpeed = 10.f;
 	float mDamage = 10.f;

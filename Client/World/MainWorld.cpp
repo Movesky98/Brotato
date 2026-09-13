@@ -19,6 +19,7 @@
 #include "BossData.h"
 #include "CharacterData.h"
 #include "EnemyData.h"
+#include "WaveData.h"
 #include "BackgroundActor.h"
 
 #include "Component/InventoryComponent.h"
@@ -421,19 +422,40 @@ void CMainWorld::InitializeInputSettings()
 	}
 }
 
-void CMainWorld::OnEnemyDeath(const FVector3& DeathPos, bool IsWaveSpawn)
+void CMainWorld::OnEnemyDeath(const FVector3& DeathPos, bool IsCountedSpawn)
 {
 	if (mStage != EGameplayStage::Wave) return;
 
 	SpawnMaterial(DeathPos);
 
-	if (!IsWaveSpawn) return;
+	if (!IsCountedSpawn) return;
 	AliveEnemyCount--;
 
-	if (MaxAliveEnemy > AliveEnemyCount)
+	SpawnWaveEnemies();
+}
+
+void CMainWorld::SpawnWaveEnemies()
+{
+	if (!mWaveData) return;
+
+	const std::vector<FWaveSpawnDesc>& Spawns = mWaveData->Spawns;
+
+	// 현재 항목이 들어갈 자리가 없으면 뒤 항목도 기다린다.
+	while (MaxAliveEnemy - AliveEnemyCount >= Spawns[mSpawnIndex].Count)
 	{
-		CreateSpawnPoint(ESpawnType::Enemy);
+		const FWaveSpawnDesc& Spawn = Spawns[mSpawnIndex];
+		for (int i = 0; i < Spawn.Count; i++)
+		{
+			CreateSpawnPoint(ESpawnType::Enemy, Spawn.EnemyID, ESpawnSource::Wave);
+		}
+
+		mSpawnIndex = (mSpawnIndex + 1) % (int)Spawns.size();
 	}
+}
+
+bool CMainWorld::IsCountedSpawn(ESpawnType Type, ESpawnSource Source) const
+{
+	return Source == ESpawnSource::Wave && Type == ESpawnType::Enemy;
 }
 
 void CMainWorld::OnPlayerDeath()
@@ -445,37 +467,7 @@ void CMainWorld::OnPlayerDeath()
 	ClearObjects<CSpawnPoint>();
 }
 
-void CMainWorld::CreateSpawnPoint(ESpawnType Type)
-{
-	auto SpawnPoint = CreateActor<CSpawnPoint>("SpawnPoint").lock();
-	if (!SpawnPoint) return;
-
-	std::weak_ptr<CDataAsset> Data;
-	switch (Type)
-	{
-	case ESpawnType::Enemy:
-		Data = CDataManager::GetInst()->GetRandomEnemyData();
-		break;
-	case ESpawnType::Structure:
-		break;
-	case ESpawnType::Boss:
-		Data = CDataManager::GetInst()->GetRandomBossData();
-		break;
-	default:
-		break;
-	}
-
-	FSpawnDesc Desc;
-	Desc.Data = Data;
-	Desc.IsWaveSpawn = true;
-	Desc.Type = Type;
-
-	SpawnPoint->SetWorldPos(GetRandomSpawnPosition());
-	SpawnPoint->InitializeSpawnSettings(Desc);
-	SpawnPoint->SetOnSpawnEntityFunction(this, &CMainWorld::SpawnEntity);
-}
-
-void CMainWorld::CreateSpawnPoint(ESpawnType Type, int ID)
+void CMainWorld::CreateSpawnPoint(ESpawnType Type, int ID, ESpawnSource Source)
 {
 	auto SpawnPoint = CreateActor<CSpawnPoint>("SpawnPoint").lock();
 	if (!SpawnPoint) return;
@@ -497,12 +489,16 @@ void CMainWorld::CreateSpawnPoint(ESpawnType Type, int ID)
 
 	FSpawnDesc Desc;
 	Desc.Data = Data;
-	Desc.IsWaveSpawn = false;
+	Desc.Source = Source;
 	Desc.Type = Type;
 
 	SpawnPoint->SetWorldPos(GetRandomSpawnPosition());
 	SpawnPoint->InitializeSpawnSettings(Desc);
 	SpawnPoint->SetOnSpawnEntityFunction(this, &CMainWorld::SpawnEntity);
+
+	// 스폰 대기 중인 적도 제한 수에 포함한다.
+	if (IsCountedSpawn(Type, Source))
+		AliveEnemyCount++;
 }
 
 void CMainWorld::SpawnEntity(const FVector3 SpawnPos, FSpawnDesc Desc)
@@ -510,15 +506,17 @@ void CMainWorld::SpawnEntity(const FVector3 SpawnPos, FSpawnDesc Desc)
 	if (Desc.Data.expired()) return;
 	if (mStage != EGameplayStage::Wave) return;
 
+	bool IsCounted = IsCountedSpawn(Desc.Type, Desc.Source);
+
 	switch (Desc.Type)
 	{
 	case ESpawnType::Enemy:
-		SpawnEnemy(SpawnPos, mPlayer, Desc.Data.lock(), Desc.IsWaveSpawn);
+		SpawnEnemy(SpawnPos, mPlayer, Desc.Data.lock(), IsCounted);
 		break;
 	case ESpawnType::Structure:
 		break;
 	case ESpawnType::Boss:
-		SpawnBoss(SpawnPos, mPlayer, Desc.Data.lock(), Desc.IsWaveSpawn);
+		SpawnBoss(SpawnPos, mPlayer, Desc.Data.lock(), IsCounted);
 		break;
 	default:
 		break;
@@ -534,7 +532,7 @@ void CMainWorld::SpawnPlayer()
 	}
 }
 
-void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsWaveSpawn)
+void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsCountedSpawn)
 {
 	if (!Data || wPlayer.expired()) return;
 
@@ -543,15 +541,13 @@ void CMainWorld::SpawnEnemy(const FVector3 SpawnPos, const std::weak_ptr<class C
 
 	if (Player && Enemy)
 	{
-		Enemy->InitializeProperties(Data, Player, IsWaveSpawn);
+		Enemy->InitializeProperties(Data, Player, IsCountedSpawn);
 		Enemy->SetWorldPos(SpawnPos);
 		Enemy->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
-		
-		AliveEnemyCount++;
 	}
 }
 
-void CMainWorld::SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsWaveSpawn)
+void CMainWorld::SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CPlayer>& wPlayer, const std::shared_ptr<class CDataAsset> Data, bool IsCountedSpawn)
 {
 	if (!Data || wPlayer.expired()) return;
 
@@ -560,11 +556,9 @@ void CMainWorld::SpawnBoss(const FVector3 SpawnPos, const std::weak_ptr<class CP
 
 	if (Player && Boss)
 	{
-		Boss->InitializeProperties(Data, Player, IsWaveSpawn);
+		Boss->InitializeProperties(Data, Player, IsCountedSpawn);
 		Boss->SetWorldPos(SpawnPos);
 		Boss->SetNotifyDeathFunc(this, &CMainWorld::OnEnemyDeath);
-		
-		AliveEnemyCount++;
 	}
 }
 
@@ -589,17 +583,31 @@ void CMainWorld::WaveStart()
 
 	SpawnPlayer();
 
-	for (int i = 0; i < 1/*MaxAliveEnemy*/; i++)
+	// 누적하면 소수점이 잘려 쌓이므로 기준 값에서 매번 계산한다.
+	MaxAliveEnemy = (int)(BaseMaxAliveEnemy * std::pow(1.2f, (float)(mCurrentWave - 1)));
+
+	mWaveData = CDataManager::GetInst()->GetWaveData(mCurrentWave);
+	mSpawnIndex = 0;
+
+	if (!mWaveData) return;
+
+	// 보스는 웨이브 시작 시 한 번만 스폰하고 제한 수에서 제외된다.
+	if (mWaveData->Boss != 0)
 	{
-		CreateSpawnPoint(ESpawnType::Boss);
+		CreateSpawnPoint(ESpawnType::Boss, mWaveData->Boss, ESpawnSource::Wave);
 	}
+
+	SpawnWaveEnemies();
 }
 
 void CMainWorld::WaveEnd()
 {
 	// 플레이어 사망 여부에 따라 Shop으로 갈지 GameOver로 갈지 여기서 결정하면 될 듯.
 	// 그리고 웨이브 끝나면 살아있던 Enemy 다 죽어야 함
-	mStage = EGameplayStage::Shop;
+
+	// 다음 웨이브 데이터가 없으면 마지막 웨이브였으므로 상점 대신 게임 오버.
+	bool IsLastWave = CDataManager::GetInst()->GetWaveData(mCurrentWave + 1) == nullptr;
+	mStage = IsLastWave ? EGameplayStage::GameOver : EGameplayStage::Shop;
 
 	// WaveEnd Delegate 함수 실행.
 	// 적, 스폰 포인트 객체는 여기에 오면 안됨.
@@ -635,6 +643,13 @@ void CMainWorld::WaveEnd()
 	
 	// 얻은 상자, 레벨 업 여부 확인 해야 함.
 	AliveEnemyCount = 0;
+
+	if (IsLastWave)
+	{
+		mScreenManager->ShowScreen(EScreenType::GameOverScreen);
+		return;
+	}
+
 	EnterShop();
 }
 
