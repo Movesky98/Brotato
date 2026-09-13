@@ -14,6 +14,12 @@ namespace
 		ESecondaryStats Value;
 	};
 
+	struct FWeaponStatEntry
+	{
+		const wchar_t* Name;
+		EWeaponStats Value;
+	};
+
 	const FPrimaryStatEntry PrimaryStatTable[] =
 	{
 		{ L"MaxHP", EPrimaryStats::MaxHP },
@@ -59,6 +65,17 @@ namespace
 		{ L"EnemySpeed", ESecondaryStats::EnemySpeed },
 	};
 
+	// 상점 카드 라벨로 쓰이므로 콜론까지 포함한다.
+	const FWeaponStatEntry WeaponStatTable[] =
+	{
+		{ L"Damage:", EWeaponStats::Damage },
+		{ L"Critical:", EWeaponStats::Critical },
+		{ L"Cooldown:", EWeaponStats::Cooldown },
+		{ L"Knockback:", EWeaponStats::Knockback },
+		{ L"Range:", EWeaponStats::Range },
+		{ L"Piercing:", EWeaponStats::Piercing },
+	};
+
 	const wchar_t* PrimaryIconPathTable[]
 	{
 		L"Custom/Stats/MaxHP.png",
@@ -96,6 +113,19 @@ const wchar_t* GetStatName(EPrimaryStats Stat)
 const wchar_t* GetStatName(ESecondaryStats Stat)
 {
 	for (const auto& Entry : SecondaryStatTable)
+	{
+		if (Entry.Value == Stat)
+		{
+			return Entry.Name;
+		}
+	}
+
+	return nullptr;
+}
+
+const wchar_t* GetStatName(EWeaponStats Stat)
+{
+	for (const auto& Entry : WeaponStatTable)
 	{
 		if (Entry.Value == Stat)
 		{

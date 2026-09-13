@@ -57,6 +57,19 @@ enum class ESecondaryStats
 	MAX
 };
 
+// 상점 카드에 표시할 무기 속성. 순서가 곧 표시 순서다.
+enum class EWeaponStats
+{
+	None = -1,
+	Damage,					// 대미지
+	Critical,				// 치명타 확률
+	Cooldown,				// 쿨다운
+	Knockback,				// 넉백
+	Range,					// 범위
+	Piercing,				// 관통
+	MAX
+};
+
 struct FStat
 {
 	int Primary[(int)EPrimaryStats::MAX] = { 0, };

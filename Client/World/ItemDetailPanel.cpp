@@ -1,8 +1,10 @@
 #include "ItemDetailPanel.h"
 
 #include "StatLine.h"
+#include "WeaponStatLine.h"
 #include "StatTable.h"
 #include "ItemData.h"
+#include "WeaponData.h"
 #include "ConvertString.h"
 
 #include "World/Image.h"
@@ -54,7 +56,7 @@ CItemDetailPanel* CItemDetailPanel::Clone()
     return new CItemDetailPanel(*this);
 }
 
-void CItemDetailPanel::CreateStatLines(const std::vector<FStatLineDesc>& LineDescs)
+void CItemDetailPanel::ClearStatLines()
 {
     // 있던거 다 지움
     for (auto& StatLineWeak : mStatLines)
@@ -67,7 +69,10 @@ void CItemDetailPanel::CreateStatLines(const std::vector<FStatLineDesc>& LineDes
     }
 
     mStatLines.clear();
+}
 
+void CItemDetailPanel::CreateStatLines(const std::vector<FStatLineDesc>& LineDescs)
+{
     // 원본 상점 카드 기준 배치 (패널 좌상단 기준)
     FVector2 AreaPos(9.f, 82.f);
     float RowW = 226.f;
@@ -98,6 +103,27 @@ void CItemDetailPanel::CreateStatLines(const std::vector<FStatLineDesc>& LineDes
     }
 }
 
+void CItemDetailPanel::CreateWeaponStatLines(const std::vector<FWeaponStatLineDesc>& LineDescs)
+{
+    // 원본 상점 카드 기준 배치 (패널 좌상단 기준). 줄 안쪽 배치는 CWeaponStatLine::Init에 있다.
+    FVector2 AreaPos(12.f, 82.f);
+    float RowW = 211.f;
+    float RowH = 18.f;
+
+    for (size_t i = 0; i < LineDescs.size(); i++)
+    {
+        std::shared_ptr<CWeaponStatLine> NewStatLine = CreateWidget<CWeaponStatLine>("WeaponStatLine", 0).lock();
+        if (!NewStatLine) continue;
+
+        NewStatLine->SetPos(AreaPos.x, AreaPos.y + i * RowH);
+        NewStatLine->SetSize(RowW, RowH);
+
+        NewStatLine->Initialize(LineDescs[i]);
+
+        mStatLines.push_back(NewStatLine);
+    }
+}
+
 void CItemDetailPanel::SetShopDataDesc(std::weak_ptr<class CShopData> Data)
 {
     auto ShopData = Data.lock();
@@ -115,14 +141,15 @@ void CItemDetailPanel::SetShopDataDesc(std::weak_ptr<class CShopData> Data)
         NameText->SetText(ToWString(ShopData->Name).c_str());
     }
 
-    std::vector<FStatLineDesc> LineDescs;
+    // 카드가 아이템과 무기를 오갈 수 있으므로 분기 전에 비운다.
+    ClearStatLines();
 
-    // 무기 스탯 줄은 이후 CWeaponStatLine으로 채운다. 지금은 줄 없이 비워둔다.
     if (ShopData->AssetType == EDataAssetType::Item)
     {
         auto ItemData = std::dynamic_pointer_cast<CItemData>(ShopData);
         if (ItemData)
         {
+            std::vector<FStatLineDesc> LineDescs;
             const FStat& Stats = ItemData->Stats;
 
             for (int i = 0; i < (int)EPrimaryStats::MAX; i++)
@@ -154,8 +181,43 @@ void CItemDetailPanel::SetShopDataDesc(std::weak_ptr<class CShopData> Data)
                     LineDescs.push_back(NewDesc);
                 }
             }
+
+            CreateStatLines(LineDescs);
         }
     }
+    else if (ShopData->AssetType == EDataAssetType::Weapon)
+    {
+        auto WeaponData = std::dynamic_pointer_cast<CWeaponData>(ShopData);
+        if (WeaponData)
+        {
+            // { 원본 값, 표시 문자열 }. EWeaponStats 순서와 같아야 한다.
+            const std::pair<float, std::wstring> Values[(int)EWeaponStats::MAX] =
+            {
+                { WeaponData->BaseDamage,           std::to_wstring((int)WeaponData->BaseDamage) },
+                { WeaponData->Critical,             ConvertFloatToWString(WeaponData->Critical) },
+                { WeaponData->Cooldown,             ConvertFloatToWString(WeaponData->Cooldown) },
+                { (float)WeaponData->Knockback,     std::to_wstring(WeaponData->Knockback) },
+                { WeaponData->Range,                std::to_wstring((int)WeaponData->Range) },
+                { (float)WeaponData->Piercing,      std::to_wstring(WeaponData->Piercing) },
+            };
 
-    CreateStatLines(LineDescs);
+            std::vector<FWeaponStatLineDesc> LineDescs;
+
+            for (int i = 0; i < (int)EWeaponStats::MAX; i++)
+            {
+                // 0이 아닐 경우에만 저장
+                if (Values[i].first != 0.f)
+                {
+                    FWeaponStatLineDesc NewDesc;
+
+                    NewDesc.Name = GetStatName((EWeaponStats)i);
+                    NewDesc.Value = Values[i].second;
+
+                    LineDescs.push_back(NewDesc);
+                }
+            }
+
+            CreateWeaponStatLines(LineDescs);
+        }
+    }
 }

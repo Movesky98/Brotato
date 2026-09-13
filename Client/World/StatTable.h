@@ -5,6 +5,7 @@
 
 const wchar_t* GetStatName(EPrimaryStats Stat);
 const wchar_t* GetStatName(ESecondaryStats Stat);
+const wchar_t* GetStatName(EWeaponStats Stat);
 
 const wchar_t* GetStatIcon(EPrimaryStats Stat);
 const wchar_t* GetStatIcon(ESecondaryStats Stat);

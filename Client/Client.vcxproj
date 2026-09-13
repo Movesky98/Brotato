@@ -217,6 +217,7 @@
     <ClCompile Include="World\WaveData.cpp" />
     <ClCompile Include="World\Weapon.cpp" />
     <ClCompile Include="World\WeaponData.cpp" />
+    <ClCompile Include="World\WeaponStatLine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="World\Component\SpawnSlashComponent.h" />
@@ -286,6 +287,7 @@
     <ClInclude Include="World\WaveData.h" />
     <ClInclude Include="World\Weapon.h" />
     <ClInclude Include="World\WeaponData.h" />
+    <ClInclude Include="World\WeaponStatLine.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc" />

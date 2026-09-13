@@ -258,6 +258,9 @@
     <ClCompile Include="World\StatLine.cpp">
       <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
+    <ClCompile Include="World\WeaponStatLine.cpp">
+      <Filter>소스 파일\UI\Widget</Filter>
+    </ClCompile>
     <ClCompile Include="World\Component\SpawnEnemyComponent.cpp">
       <Filter>소스 파일\Enemy\Component</Filter>
     </ClCompile>
@@ -459,6 +462,9 @@
       <Filter>소스 파일\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="World\StatLine.h">
+      <Filter>소스 파일\UI\Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="World\WeaponStatLine.h">
       <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
     <ClInclude Include="World\Component\SpawnEnemyComponent.h">
