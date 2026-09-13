@@ -55,7 +55,7 @@ public:
 protected:
 	float mDamage = 1.f;
 
-	/* MoveAnimation */
+	/* Animation - Move */
 	bool mCanScaleSize = true;
 	bool mIsGrowing = true;
 

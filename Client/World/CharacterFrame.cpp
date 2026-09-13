@@ -111,7 +111,7 @@ CCharacterFrame* CCharacterFrame::Clone()
 
 void CCharacterFrame::CreateStatLines(std::vector<std::weak_ptr<class CStatLine>>& OutLines, const std::vector<FStatLineDesc> LineDescs)
 {
-    // 다 지워야 함.
+    // 있던거 다 지움
     if (OutLines.size())
     {
         auto iter = OutLines.begin();
