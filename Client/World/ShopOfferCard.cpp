@@ -2,7 +2,7 @@
 
 #include "ShopMenu.h"
 #include "BuyButton.h"
-#include "ConvertString.h"
+#include "ShopData.h"
 #include "ItemDetailPanel.h"
 #include "InputPromptButton.h"
 
@@ -174,7 +174,7 @@ void CShopOfferCard::RequestPurchase()
     auto Parent = mParent.lock();
     if (auto ShopMenu = std::dynamic_pointer_cast<CShopMenu>(Parent))
     {
-        if (ShopMenu->TryPurchase(mCardDesc.ID, mCardDesc.IsWeapon, mCardDesc.BasePrice))
+        if (ShopMenu->TryPurchase(mData))
         {
             // Hide This.
             SetEnable(false);
@@ -196,27 +196,29 @@ void CShopOfferCard::SetSize(float x, float y)
     }
 }
 
-void CShopOfferCard::SetCardDesc(const FShopOfferCardDesc& CardDesc, bool bHideBanButton)
+void CShopOfferCard::SetCardDesc(std::weak_ptr<CShopData> Data, bool bHideBanButton)
 {
-    mCardDesc = CardDesc;
+    auto ShopData = Data.lock();
+    if (!ShopData) return;
+
+    mData = ShopData;
 
     auto ItemDetailPanel = mItemDetailPanel.lock();
     if (ItemDetailPanel)
     {
-        ItemDetailPanel->SetIconTexture(mCardDesc.Name + std::string("_Icon"), mCardDesc.IconPath);
-        ItemDetailPanel->SetNameText(ToWString(mCardDesc.Name).c_str());
+        ItemDetailPanel->SetShopDataDesc(ShopData);
     }
 
     auto BuyButton = mBuyButton.lock();
     if (BuyButton)
     {
-        BuyButton->SetPriceText(std::to_wstring(mCardDesc.BasePrice).c_str());
+        BuyButton->SetPriceText(std::to_wstring(ShopData->BasePrice).c_str());
     }
 
     auto BanButton = mBanButton.lock();
     if (BanButton)
     {
-        if (bHideBanButton || CardDesc.IsWeapon)
+        if (bHideBanButton || ShopData->AssetType == EDataAssetType::Weapon)
         {
             BanButton->SetEnable(false);
         }

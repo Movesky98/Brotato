@@ -1,5 +1,8 @@
 #pragma once
 #include "World/WidgetContainer.h"
+
+struct FStatLineDesc;
+
 class CItemDetailPanel :
     public CWidgetContainer
 {
@@ -18,9 +21,12 @@ protected:
 	std::weak_ptr<class CImage> mIcon;
 	std::weak_ptr<class CTextBlock> mNameText;
 
-	// 일단 이름과 아이콘만 출력하게 해보겠숨.
+	// 아이템(CStatLine)과 무기(CWeaponStatLine) 줄을 함께 담는다.
+	std::vector<std::weak_ptr<class CWidgetContainer>> mStatLines;
+
+	void CreateStatLines(const std::vector<FStatLineDesc>& LineDescs);
+
 public:
-	void SetIconTexture(std::string Name, const TCHAR* Path);
-	void SetNameText(const TCHAR* Name);
+	void SetShopDataDesc(std::weak_ptr<class CShopData> Data);
 };
 

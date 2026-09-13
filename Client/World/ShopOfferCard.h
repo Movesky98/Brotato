@@ -1,15 +1,6 @@
 #pragma once
 #include "World/WidgetContainer.h"
 
-struct FShopOfferCardDesc
-{
-	int				ID = 0;
-	bool			IsWeapon = false;
-	const TCHAR*	IconPath = L"";
-	std::string		Name = "";
-	int				BasePrice = 0;
-};
-
 class CShopOfferCard : public CWidgetContainer
 {
 public:
@@ -29,7 +20,7 @@ protected:
 	std::weak_ptr<class CInputPromptButton>		mLockButton;
 	std::weak_ptr<class CInputPromptButton>		mBanButton;
 
-	FShopOfferCardDesc mCardDesc;
+	std::weak_ptr<class CShopData>				mData;
 
 	std::function<void(std::weak_ptr<CShopOfferCard> /* this */)> mOnLockButtonClicked;
 	std::function<void(std::weak_ptr<CShopOfferCard> /* this */)> mOnBanButtonClicked;
@@ -46,10 +37,10 @@ protected:
 
 public:
 	virtual void SetSize(float x, float y);
-	void SetCardDesc(const FShopOfferCardDesc& CardDesc, bool bHideBanButton = false);
+	void SetCardDesc(std::weak_ptr<class CShopData> Data, bool bHideBanButton = false);
 
 	bool IsLocked() const { return mIsLocked; }
-	FShopOfferCardDesc GetCardDesc() const { return mCardDesc; }
+	std::weak_ptr<class CShopData> GetShopData() const { return mData; }
 
 	void SetEnableBanButton(bool IsEnable);
 

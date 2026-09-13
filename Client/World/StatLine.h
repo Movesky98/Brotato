@@ -30,5 +30,16 @@ protected:
 public:
     void Initialize(const FStatLineDesc Desc);
 
+    void SetIconPos(float x, float y);
+    void SetIconSize(float x, float y);
+
+    void SetValuePos(float x, float y);
+    void SetValueSize(float x, float y);
+    void SetValueFontSize(float Size);
+
+    void SetNamePos(float x, float y);
+    void SetNameSize(float x, float y);
+    void SetNameFontSize(float Size);
+
 };
 

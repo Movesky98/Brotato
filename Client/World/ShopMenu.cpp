@@ -196,7 +196,9 @@ void CShopMenu::OnBanButtonClicked(std::weak_ptr<CShopOfferCard> wOfferCard)
     auto OfferCard = wOfferCard.lock();
     if (OfferCard)
     {
-        mBanIDs.insert(OfferCard->GetCardDesc().ID);
+        if (auto ShopData = OfferCard->GetShopData().lock())
+            mBanIDs.insert(ShopData->ID);
+
         OfferCard->SetEnable(false);
     }
 
@@ -216,7 +218,8 @@ void CShopMenu::OnBanButtonClicked(std::weak_ptr<CShopOfferCard> wOfferCard)
         auto OfferCard = mOfferCards[i].lock();
         if (!OfferCard) continue;
 
-        if (OfferCard && mBanIDs.contains(OfferCard->GetCardDesc().ID))
+        auto ShopData = OfferCard->GetShopData().lock();
+        if (ShopData && mBanIDs.contains(ShopData->ID))
         {
             OfferCard->SetEnable(false);
         }
@@ -286,20 +289,14 @@ void CShopMenu::CreateOfferCards()
 
         if (ShopData && OfferCard)
         {
-            int ID = OfferCard->GetCardDesc().ID;
-            if (OfferCard->IsLocked() && !mBanIDs.contains(ID)) continue;
-
-            FShopOfferCardDesc OfferCardDesc;
-            OfferCardDesc.ID = ShopData->ID;
-            OfferCardDesc.IsWeapon = ShopData->AssetType == EDataAssetType::Weapon;
-            OfferCardDesc.Name = ShopData->Name;
-            OfferCardDesc.IconPath = ShopData->TextureInfo.IconPath.c_str();
-            OfferCardDesc.BasePrice = ShopData->BasePrice;
+            // 처음 상점에 들어왔을 때는 카드에 데이터가 없다.
+            auto CardData = OfferCard->GetShopData().lock();
+            if (OfferCard->IsLocked() && CardData && !mBanIDs.contains(CardData->ID)) continue;
 
             bool HideBanButton = false;
             if (mBanIDs.size() >= 6) HideBanButton = true;
 
-            OfferCard->SetCardDesc(OfferCardDesc, HideBanButton);
+            OfferCard->SetCardDesc(ShopData, HideBanButton);
             OfferCard->SetEnable(true);
         }
     }
@@ -410,29 +407,34 @@ void CShopMenu::InitializeWithInventory(std::weak_ptr<class CInventoryComponent>
     }
 }
 
-bool CShopMenu::TryPurchase(const int ID, const bool IsWeapon, int Price)
+bool CShopMenu::TryPurchase(std::weak_ptr<CShopData> wShopData)
 {
+    auto ShopData = wShopData.lock();
+    if (!ShopData) return false;
+
     // 일단 재화 없음. 그냥 구매로 감.
     auto InvComp = mPlayerInvComp.lock();
     if (InvComp)
     {
+        int Price = ShopData->BasePrice;
         int Materials = InvComp->GetMaterials();
 
         if (Materials >= Price)
         {
-            if (IsWeapon)
+            if (ShopData->AssetType == EDataAssetType::Weapon)
             {
                 if (InvComp->GetWeaponData().size() < 6)
                 {
-                    auto Data = CDataManager::GetInst()->GetWeaponData(ID);
-                    InvComp->AddWeapon(Data);
+                    InvComp->AddWeapon(ShopData);
                 }
                 else return false;
             }
             else
             {
-                auto Data = CDataManager::GetInst()->GetItemData(ID);
-                InvComp->AddItem(Data);
+                auto ItemData = std::dynamic_pointer_cast<CItemData>(ShopData);
+                if (!ItemData) return false;
+
+                InvComp->AddItem(ItemData);
             }
 
             InvComp->AddMaterial(-Price);

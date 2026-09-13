@@ -97,3 +97,51 @@ void CStatLine::Initialize(const FStatLineDesc Desc)
         Icon->SetTexture(ToString(Desc.Name), Desc.IconPath);
     }
 }
+
+void CStatLine::SetIconPos(float x, float y)
+{
+    if (auto Icon = mIconImage.lock())
+        Icon->SetPos(x, y);
+}
+
+void CStatLine::SetIconSize(float x, float y)
+{
+    if (auto Icon = mIconImage.lock())
+        Icon->SetSize(x, y);
+}
+
+void CStatLine::SetValuePos(float x, float y)
+{
+    if (auto ValueText = mValueText.lock())
+        ValueText->SetPos(x, y);
+}
+
+void CStatLine::SetValueSize(float x, float y)
+{
+    if (auto ValueText = mValueText.lock())
+        ValueText->SetSize(x, y);
+}
+
+void CStatLine::SetValueFontSize(float Size)
+{
+    if (auto ValueText = mValueText.lock())
+        ValueText->SetFontSize(Size);
+}
+
+void CStatLine::SetNamePos(float x, float y)
+{
+    if (auto NameText = mNameText.lock())
+        NameText->SetPos(x, y);
+}
+
+void CStatLine::SetNameSize(float x, float y)
+{
+    if (auto NameText = mNameText.lock())
+        NameText->SetSize(x, y);
+}
+
+void CStatLine::SetNameFontSize(float Size)
+{
+    if (auto NameText = mNameText.lock())
+        NameText->SetFontSize(Size);
+}

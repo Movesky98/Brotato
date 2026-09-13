@@ -66,6 +66,6 @@ public:
 	virtual void TearDown();
 
 	void InitializeWithInventory(std::weak_ptr<class CInventoryComponent> InvCompWeak);
-	bool TryPurchase(const int ID, const bool IsWeapon, int Price);
+	bool TryPurchase(std::weak_ptr<class CShopData> wShopData);
 };
 
