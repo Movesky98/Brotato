@@ -1,6 +1,6 @@
 ID,Path,SizeX,SizeY,IconPath,IconSizeX,IconSizeY
 1000,Custom/Enemy/Baby_Alien.png,48.7,57.3,Custom/Enemy/Baby_Alien_Icon.png,0,0
 1001,Custom/Enemy/Spitter.png,66.7,66.7,Custom/Enemy/Spitter_Icon.png,0,0
-1002,Custom/Enemy/Bruiser.png,150,150,Custom/Enemy/Bruiser_Icon.png,0,0
+1002,Custom/Enemy/Bruiser.png,80.7,98,Custom/Enemy/Bruiser_Icon.png,0,0
 1003,Custom/Enemy/Fly.png,66.7,100,Custom/Enemy/Fly_Icon.png,0,0
 1004,Custom/Enemy/Chaser.png,66.7,66.7,Custom/Enemy/Chaser_Icon.png,0,0
