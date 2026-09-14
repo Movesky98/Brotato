@@ -27,8 +27,25 @@ bool CItemDetailPanel::Init()
 {
     if (!CWidgetContainer::Init()) return false;
 
+    // 내용물(ZOrder 0)보다 뒤에 그려지도록 음수로 둔다.
+    mBackgroundImage = CreateWidget<CImage>("BackgroundImage", -2);
+    mBackgroundFrame = CreateWidget<CImage>("BackgroundFrame", -1);
     mIcon = CreateWidget<CImage>("IconImage", 0);
     mNameText = CreateWidget<CTextBlock>("NameTextBlock", 0);
+
+    auto BackgroundImage = mBackgroundImage.lock();
+    if (BackgroundImage)
+    {
+        BackgroundImage->SetPos(0.f, 0.f);
+        BackgroundImage->SetTint(0.f, 0.f, 0.f, 1.f);
+    }
+
+    auto BackgroundFrame = mBackgroundFrame.lock();
+    if (BackgroundFrame)
+    {
+        BackgroundFrame->SetPos(0.f, 0.f);
+        BackgroundFrame->SetTint(0.f, 0.f, 0.f, 1.f);
+    }
 
     auto Icon = mIcon.lock();
     if (Icon)
@@ -121,6 +138,35 @@ void CItemDetailPanel::CreateWeaponStatLines(const std::vector<FWeaponStatLineDe
         NewStatLine->Initialize(LineDescs[i]);
 
         mStatLines.push_back(NewStatLine);
+    }
+}
+
+void CItemDetailPanel::SetBackgroundImage(const std::string& Name, const TCHAR* Path, const FVector2& Size)
+{
+    auto BackgroundImage = mBackgroundImage.lock();
+    if (BackgroundImage)
+    {
+        BackgroundImage->SetTexture(Name, Path);
+        BackgroundImage->SetSize(Size.x, Size.y);
+    }
+}
+
+void CItemDetailPanel::SetBackgroundFrame(const std::string& Name, const TCHAR* Path, const FVector2& Size)
+{
+    auto BackgroundFrame = mBackgroundFrame.lock();
+    if (BackgroundFrame)
+    {
+        BackgroundFrame->SetTexture(Name, Path);
+        BackgroundFrame->SetSize(Size.x, Size.y);
+    }
+}
+
+void CItemDetailPanel::SetFrameTint(const FVector4& Tint)
+{
+    auto BackgroundFrame = mBackgroundFrame.lock();
+    if (BackgroundFrame)
+    {
+        BackgroundFrame->SetTint(Tint);
     }
 }
 

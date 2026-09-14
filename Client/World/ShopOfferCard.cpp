@@ -25,8 +25,6 @@ bool CShopOfferCard::Init()
 {
     if (!CWidgetContainer::Init()) return false;
 
-    mBackgroundImage = CreateWidget<CImage>("BackgroundImage");
-    mBackgroundFrame = CreateWidget<CImage>("BackgroundFrame");
     mItemDetailPanel = CreateWidget<CItemDetailPanel>("ItemDetailPanel");
     mBuyButton = CreateWidget<CBuyButton>("BuyButton");
     mLockButton = CreateWidget<CInputPromptButton>("LockButton");
@@ -37,19 +35,6 @@ bool CShopOfferCard::Init()
     {
         ItemDetailPanel->SetPos(0.f, 0.f);
         ItemDetailPanel->SetSize(235.f, 264.f);
-    }
-
-    auto BackgroundImage = mBackgroundImage.lock();
-    auto BackgroundFrame = mBackgroundFrame.lock();
-    if (BackgroundImage && BackgroundFrame)
-    {
-        BackgroundImage->SetPos(0.f, 0.f);
-        BackgroundImage->SetTexture("OfferCard_BackgroundImage", TEXT("Custom/Shop/RoundBox_Card.png"));
-        BackgroundImage->SetTint(0.f, 0.f, 0.f, 1.f);
-
-        BackgroundFrame->SetPos(0.f, 0.f);
-        BackgroundFrame->SetTexture("OfferCard_BackgroundFrame", TEXT("Custom/Shop/RoundBox_CardFrame.png"));
-        BackgroundFrame->SetTint(0.f, 0.f, 0.f, 1.f);
     }
 
     auto BuyButton = mBuyButton.lock();
@@ -109,19 +94,19 @@ CShopOfferCard* CShopOfferCard::Clone()
 void CShopOfferCard::OnLockButtonClicked()
 {
     mIsLocked = !mIsLocked;
-    auto BackgroundFrame = mBackgroundFrame.lock();
+    auto ItemDetailPanel = mItemDetailPanel.lock();
     auto LockButton = mLockButton.lock();
-    if (BackgroundFrame && LockButton)
+    if (ItemDetailPanel && LockButton)
     {
         if (mIsLocked)
         {
-            BackgroundFrame->SetTint(FVector4::White);
+            ItemDetailPanel->SetFrameTint(FVector4::White);
             LockButton->SetLabelTextColor(FVector4::Black);
             LockButton->SetButtonTint(FVector4::White);
         }
         else
         {
-            BackgroundFrame->SetTint(FVector4::Black);
+            ItemDetailPanel->SetFrameTint(FVector4::Black);
             LockButton->SetLabelTextColor(FVector4::White);
             LockButton->SetButtonTint(FVector4(0.25f, 0.25f, 0.25f, 1.f));
         }
@@ -187,12 +172,12 @@ void CShopOfferCard::SetSize(float x, float y)
     mSize.x = x;
     mSize.y = y;
 
-    auto BackgroundImage = mBackgroundImage.lock();
-    auto BackgroundFrame = mBackgroundFrame.lock();
-    if (BackgroundImage && BackgroundFrame)
+    auto ItemDetailPanel = mItemDetailPanel.lock();
+    if (ItemDetailPanel)
     {
-        BackgroundImage->SetSize(mSize.x, 320.f);
-        BackgroundFrame->SetSize(mSize.x, 320.f);
+        // 박스는 구매 버튼까지 감싸므로 패널(264)보다 길다.
+        ItemDetailPanel->SetBackgroundImage("OfferCard_BackgroundImage", TEXT("Custom/Shop/RoundBox_Card.png"), FVector2(mSize.x, 320.f));
+        ItemDetailPanel->SetBackgroundFrame("OfferCard_BackgroundFrame", TEXT("Custom/Shop/RoundBox_CardFrame.png"), FVector2(mSize.x, 320.f));
     }
 }
 

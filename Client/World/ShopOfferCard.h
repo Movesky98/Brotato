@@ -13,8 +13,6 @@ public:
 	virtual CShopOfferCard* Clone();
 
 protected:
-	std::weak_ptr<class CImage>					mBackgroundImage;
-	std::weak_ptr<class CImage>					mBackgroundFrame;
 	std::weak_ptr<class CItemDetailPanel>		mItemDetailPanel;
 	std::weak_ptr<class CBuyButton>				mBuyButton;
 	std::weak_ptr<class CInputPromptButton>		mLockButton;
