@@ -349,6 +349,16 @@ void CTileMapRender::Render()
 
 			Texture->SetShader(1, EShaderBufferType::Pixel, 0);
 
+			// 타일 UV가 아틀라스 셀 경계에 정확히 걸쳐 있어서, Linear 샘플러로 뽑으면
+			// 카메라가 서브픽셀 위치일 때 타일 가장자리 픽셀이 옆 셀의 텍셀과 섞여 격자선으로 보인다.
+			// 타일은 텍셀과 픽셀이 1:1로 대응하므로 Point 샘플러를 쓴다.
+			auto ShaderMgr = CAssetManager::GetInst()->GetSubManager<CShaderManager>(EAssetType::Shader);
+
+			if (ShaderMgr)
+			{
+				ShaderMgr->SetSampler("Point", 0);
+			}
+
 			auto State = mTileAlphaBlend.lock();
 
 			if (State)
@@ -413,6 +423,12 @@ void CTileMapRender::Render()
 			if (State)
 			{
 				State->ResetState();
+			}
+
+			// 이후 패스가 영향을 받지 않도록 기본 샘플러로 되돌린다.
+			if (ShaderMgr)
+			{
+				ShaderMgr->SetSampler("Linear", 0);
 			}
 
 		}
