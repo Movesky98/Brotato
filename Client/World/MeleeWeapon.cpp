@@ -274,7 +274,7 @@ void CMeleeWeapon::SetTexture(const std::string& Name, const std::wstring& Textu
         BoxCollision->SetBoxSize(BoxSize);
         BoxCollision->SetCollisionProfile("DetectEnemy");
         BoxCollision->SetEnable(false);
-        BoxCollision->SetDebugDraw(true);
+        BoxCollision->SetDebugDraw(false);
         BoxCollision->SetBeginOverlapFunc(this, &CMeleeWeapon::OnHitCollisionBeginOverlap);
     }
 }

@@ -176,7 +176,7 @@ void CEnemy::InitializeBoxCollision(float SizeX, float SizeY)
 	{
 		BoxCollision->SetInheritScale(true);
 		BoxCollision->SetBoxSize(SizeX, SizeY);
-		BoxCollision->SetDebugDraw(true);
+		BoxCollision->SetDebugDraw(false);
 		BoxCollision->SetCollisionProfile("Enemy");
 		BoxCollision->SetBeginOverlapFunc(this, &CEnemy::OnCollisionBeginOverlap);
 		BoxCollision->SetEndOverlapFunc(this, &CEnemy::OnCollisionEndOverlap);
@@ -273,7 +273,7 @@ void CEnemy::SetSkills(const std::unordered_multimap<ESkillTrigger, std::shared_
 
 	if (SkillData.contains(ESkillTrigger::InPerceptionRange) || SkillData.contains(ESkillTrigger::Always))
 	{
-		InitializePerceptionRange(mRange, true);
+		InitializePerceptionRange(mRange, false);
 	}
 
 	// SkillComponent 생성

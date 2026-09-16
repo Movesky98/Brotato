@@ -52,7 +52,7 @@ bool CSlash::Init()
         BodyCollision->SetRelativeScale(206.7f, 23.3f);
         BodyCollision->SetRelativePos(-5.3f, 0.f, 0.f);
         BodyCollision->SetBoxSize(206.7f, 23.3f);
-        BodyCollision->SetDebugDraw(true);
+        BodyCollision->SetDebugDraw(false);
         BodyCollision->SetCollisionProfile("EnemyProjectile");
         BodyCollision->SetBeginOverlapFunc(this, &CSlash::OnBeginOverlap);
     }
@@ -66,7 +66,7 @@ bool CSlash::Init()
         HeadCollision->SetRelativeRotationZ(45.f);
         HeadCollision->SetRelativePos(107.3f, 0.f, 0.f);
         HeadCollision->SetBoxSize(12.3f, 12.3f);
-        HeadCollision->SetDebugDraw(true);
+        HeadCollision->SetDebugDraw(false);
         HeadCollision->SetCollisionProfile("EnemyProjectile");
         HeadCollision->SetBeginOverlapFunc(this, &CSlash::OnBeginOverlap);
     }

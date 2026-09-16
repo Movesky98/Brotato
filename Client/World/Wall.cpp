@@ -30,7 +30,7 @@ bool CWall::Init()
     if (BoxCollision)
     {
         BoxCollision->SetInheritScale(false);
-        BoxCollision->SetDebugDraw(true);
+        BoxCollision->SetDebugDraw(false);
         BoxCollision->SetCollisionProfile("BlockAll");
     }
 

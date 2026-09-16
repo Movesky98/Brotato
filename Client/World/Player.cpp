@@ -114,7 +114,7 @@ bool CPlayer::Init()
 	{
 		Box->SetInheritScale(false);
 		Box->SetBoxSize(40.f, 40.f);
-		Box->SetDebugDraw(true);
+		Box->SetDebugDraw(false);
 		Box->SetCollisionProfile("Player");
 	}
 
@@ -124,7 +124,7 @@ bool CPlayer::Init()
 	{
 		PickupRange->SetInheritScale(false);
 		PickupRange->SetRadius(120.f);
-		PickupRange->SetDebugDraw(true);
+		PickupRange->SetDebugDraw(false);
 		PickupRange->SetCollisionProfile("PickupRange");
 		PickupRange->SetBeginOverlapFunc(this, &CPlayer::OnPickupRangeBeginOverlap);
 	}
