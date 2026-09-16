@@ -42,7 +42,7 @@ bool CShopOfferCard::Init()
     {
         BuyButton->SetPos(51.f, 267.f);
         BuyButton->SetSize(133.f, 46.f);
-        BuyButton->SetClickedButtonFunction(EWidgetEventState::Clicked, this, &CShopOfferCard::RequestPurchase);
+        BuyButton->SetClickedFunction(this, &CShopOfferCard::RequestPurchase);
     }
 
     auto LockButton = mLockButton.lock();
