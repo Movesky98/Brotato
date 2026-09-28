@@ -148,6 +148,7 @@ public:
 
 	bool CanMove() const { return mCanMove; }
 	void SetCanMove(bool CanMove) { mCanMove = CanMove; }
+	void SetIsKnockBack(bool IsKnockBack) { mIsKnockBack = IsKnockBack; }
 	bool CanScaleSize() const { return mCanScaleSize; }
 	void SetCanScaleSize(bool CanScaleSize) { mCanScaleSize = CanScaleSize; }
 	FVector4 GetHitEffectColor() const { return FVector4(0.8f, 0.8f, 0.8f, 1.f); }

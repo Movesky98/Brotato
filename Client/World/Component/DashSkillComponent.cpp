@@ -74,6 +74,7 @@ void CDashSkillComponent::Update(float DeltaTime)
                 // 대시는 끝났지만 줄어들기가 끝날 때까지 스킬은 유지
                 MoveComp->SetSpeed(MoveComp->GetCurrentSpeed());
                 EnemyOwner->SetCanMove(true);
+                EnemyOwner->SetIsKnockBack(true);
 
                 if (!mIsInProgressExpansion)
                     SkillEnd();
@@ -113,6 +114,7 @@ bool CDashSkillComponent::SkillProgress()
     // 부풀리는 동안 이동 정지 (MoveDir은 초기화하지 않으면 이전 방향으로 계속 이동함)
     EnemyOwner->SetCanMove(false);
     EnemyOwner->SetCanScaleSize(false);
+    EnemyOwner->SetIsKnockBack(false);
     MoveComp->SetMoveDir(FVector3::Zero);
     MoveComp->SetSpeed(mSpeed);
 
@@ -139,6 +141,7 @@ void CDashSkillComponent::SkillEnd()
         }
 
         EnemyOwner->SetCanMove(true);
+        EnemyOwner->SetIsKnockBack(true);
     }
 
     mDeltaDistance = 0.f;

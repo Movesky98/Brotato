@@ -104,8 +104,8 @@ void CEnemy::Update(float DeltaTime)
 	if (CurrentRangeState == ERangeState::InRange)
 		UseSkill(ESkillTrigger::InPerceptionRange);
 
-	if (!mCanMove) return;
 	if (PlayHitEffect(DeltaTime)) return;
+	if (!mCanMove) return;
 
 	UpdateBehavior();
 	PlayMoveAnimation(DeltaTime);
@@ -493,7 +493,7 @@ bool CEnemy::PlayHitEffect(float DeltaTime)
 			mIsHit = false;
 			mHitTime = 0.f;
 			if (MeshComp) MeshComp->SetHitEffectEnable(0, false);
-			if (MoveComp) MoveComp->SetSpeed(MoveComp->GetCurrentSpeed());
+			if (MoveComp && mIsKnockBack) MoveComp->SetSpeed(MoveComp->GetCurrentSpeed());
 		}
 		else
 		{
@@ -507,7 +507,7 @@ bool CEnemy::PlayHitEffect(float DeltaTime)
 			// Knockback
 			// 속도를 조금씩 깎아야 함. 언제까지 -> 0까지
 			// HitTime에 맞추는 게 좋을 듯.
-			if (MoveComp)
+			if (MoveComp && mIsKnockBack)
 			{
 				float KnockBackIntensity = mHitTime / mHitDuration;
 				float Speed = MoveComp->GetMoveSpeed() - KnockBackIntensity * MoveComp->GetCurrentSpeed();
