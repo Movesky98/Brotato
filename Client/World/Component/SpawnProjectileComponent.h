@@ -26,6 +26,9 @@ protected:
 	EExpansionMode mExpansionMode = EExpansionMode::None;
 	bool mIsInProgressExpansion = false;
 	FVector2 mDefaultScale2D = FVector2::Zero;
+	float mExpansionScale = 1.2f;		// 최대 크기 배율 (원래 크기 기준)
+	float mInflateTime = 0.8f;			// 원래 크기 -> 최대 크기까지 걸리는 시간
+	float mDeflateTime = 0.2f;			// 최대 크기 -> 원래 크기까지 걸리는 시간
 	FVector4 mExpansionEffectColor = FVector4::Red;
 	// FVector2 mScaleSpeed2D = FVector2::Zero;
 

@@ -148,18 +148,18 @@ void CSpawnProjectileComponent::ScaleOwnerExpansion(const EExpansionMode Mode, f
 		break;
 	case EExpansionMode::Inflate:
 	{
-		CurrentScale2D += mDefaultScale2D * DeltaTime;
+		CurrentScale2D += mDefaultScale2D * (mExpansionScale - 1.f) * (DeltaTime / mInflateTime);
 
-		if (CurrentScale2D.x >= mDefaultScale2D.x * 2 || CurrentScale2D.y >= mDefaultScale2D.y * 2)
+		if (CurrentScale2D.x >= mDefaultScale2D.x * mExpansionScale || CurrentScale2D.y >= mDefaultScale2D.y * mExpansionScale)
 		{
-			CurrentScale2D = mDefaultScale2D * 2;
+			CurrentScale2D = mDefaultScale2D * mExpansionScale;
 			mSkillUse = true;
 			mExpansionMode = EExpansionMode::Deflate;
 		}
 	}
 		break;
 	case EExpansionMode::Deflate:
-		CurrentScale2D -= mDefaultScale2D * DeltaTime;
+		CurrentScale2D -= mDefaultScale2D * (mExpansionScale - 1.f) * (DeltaTime / mDeflateTime);
 
 		if (CurrentScale2D.x <= mDefaultScale2D.x || CurrentScale2D.y <= mDefaultScale2D.y)
 		{
