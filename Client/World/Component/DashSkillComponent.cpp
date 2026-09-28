@@ -4,6 +4,7 @@
 #include "../Enemy.h"
 
 #include "World/MovementComponent.h"
+#include "World/MeshComponent.h"
 
 CDashSkillComponent::CDashSkillComponent()
 {
@@ -31,12 +32,27 @@ bool CDashSkillComponent::Init()
     mSkillCoolTime = 1.f;
     mSkillEnable = true;
 
+    auto Owner = GetOwner().lock();
+    if (Owner)
+    {
+        auto MeshComp = Owner->GetComponent<CMeshComponent>().lock();
+        if (MeshComp)
+        {
+            mDefaultScale2D = FVector2(MeshComp->GetRelativeScale().x, MeshComp->GetRelativeScale().y);
+        }
+    }
+
     return true;
 }
 
 void CDashSkillComponent::Update(float DeltaTime)
 {
     CSkillComponent::Update(DeltaTime);
+
+    if (!mSkillStart) return;
+
+    if (mIsInProgressExpansion)
+        ScaleOwnerExpansion(mExpansionMode, DeltaTime);
 
     if (mSkillUse)
     {
@@ -55,7 +71,12 @@ void CDashSkillComponent::Update(float DeltaTime)
             }
             else
             {
-                SkillEnd();
+                // 대시는 끝났지만 줄어들기가 끝날 때까지 스킬은 유지
+                MoveComp->SetSpeed(MoveComp->GetCurrentSpeed());
+                EnemyOwner->SetCanMove(true);
+
+                if (!mIsInProgressExpansion)
+                    SkillEnd();
             }
         }
     }
@@ -73,26 +94,30 @@ void CDashSkillComponent::Destroy()
 
 bool CDashSkillComponent::SkillProgress()
 {
-    if (!CSkillComponent::SkillProgress()) return false;
+    if (!CSkillComponent::SkillProgress() || mSkillStart) return false;
 
-    // Target 설정하고
-    // 목표 지점으로 대시 -> Update에서
-    // 이러면 Update에서 이동 부분과 문제될 수도 있음.
+    // 부풀리기 -> 대시 + 줄어들기
+    // 대시 방향은 스킬 시작 시점에 정한다.
 
-    mSkillUse = true;
     auto EnemyOwner = std::dynamic_pointer_cast<CEnemy>(GetOwner().lock());
-    if (EnemyOwner)
-    {
-        auto MoveComp = EnemyOwner->GetComponent<CMovementComponent>().lock();
-        auto Target = EnemyOwner->GetTarget().lock();
-        if (Target && MoveComp)
-        {
-            mTarget = Target;
-            EnemyOwner->SetCanMove(false);
-            MoveComp->SetSpeed(mSpeed);
-            mDashDirection = Target->GetWorldPos() - EnemyOwner->GetWorldPos();
-        }
-    }
+    if (!EnemyOwner) return false;
+
+    auto MoveComp = EnemyOwner->GetComponent<CMovementComponent>().lock();
+    auto Target = EnemyOwner->GetTarget().lock();
+    if (!Target || !MoveComp) return false;
+
+    mSkillStart = true;
+    mTarget = Target;
+    mDashDirection = Target->GetWorldPos() - EnemyOwner->GetWorldPos();
+
+    // 부풀리는 동안 이동 정지 (MoveDir은 초기화하지 않으면 이전 방향으로 계속 이동함)
+    EnemyOwner->SetCanMove(false);
+    EnemyOwner->SetCanScaleSize(false);
+    MoveComp->SetMoveDir(FVector3::Zero);
+    MoveComp->SetSpeed(mSpeed);
+
+    mIsInProgressExpansion = true;
+    mExpansionMode = EExpansionMode::Inflate;
 
     return true;
 }
@@ -117,6 +142,53 @@ void CDashSkillComponent::SkillEnd()
     }
 
     mDeltaDistance = 0.f;
+    mTarget.reset();
+    mIsInProgressExpansion = false;
+}
+
+void CDashSkillComponent::ScaleOwnerExpansion(const EExpansionMode Mode, float DeltaTime)
+{
+    auto EnemyOwner = std::dynamic_pointer_cast<CEnemy>(mOwner.lock());
+    if (!EnemyOwner) return;
+
+    auto MeshComp = EnemyOwner->GetComponent<CMeshComponent>().lock();
+    if (!MeshComp) return;
+
+    FVector2 CurrentScale2D(MeshComp->GetRelativeScale().x, MeshComp->GetRelativeScale().y);
+
+    switch (Mode)
+    {
+    case EExpansionMode::None:
+        CurrentScale2D = mDefaultScale2D;
+        mIsInProgressExpansion = false;
+        EnemyOwner->SetCanScaleSize(true);
+
+        break;
+    case EExpansionMode::Inflate:
+    {
+        CurrentScale2D += mDefaultScale2D * (mExpansionScale - 1.f) * (DeltaTime / mInflateTime);
+
+        if (CurrentScale2D.x >= mDefaultScale2D.x * mExpansionScale || CurrentScale2D.y >= mDefaultScale2D.y * mExpansionScale)
+        {
+            CurrentScale2D = mDefaultScale2D * mExpansionScale;
+            mSkillUse = true;
+            mExpansionMode = EExpansionMode::Deflate;
+        }
+    }
+        break;
+    case EExpansionMode::Deflate:
+        CurrentScale2D -= mDefaultScale2D * (mExpansionScale - 1.f) * (DeltaTime / mDeflateTime);
+
+        if (CurrentScale2D.x <= mDefaultScale2D.x || CurrentScale2D.y <= mDefaultScale2D.y)
+        {
+            mExpansionMode = EExpansionMode::None;
+        }
+        break;
+    default:
+        break;
+    }
+
+    MeshComp->SetRelativeScale(CurrentScale2D);
 }
 
 void CDashSkillComponent::InitializeProperties(const std::shared_ptr<const CSkillData>& SkillData)
