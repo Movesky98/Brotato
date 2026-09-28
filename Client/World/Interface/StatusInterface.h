@@ -16,7 +16,6 @@ protected:
 
 	void SetHPMax(float HPMax)
 	{
-		mHP = HPMax;
 		mHPMax = HPMax;
 	}
 

@@ -11,6 +11,7 @@
 #include "TimeManager.h"
 
 #include "MainWorld.h"
+#include "GameTypes.h"
 #include "Weapon.h"
 #include "Bullet.h"
 #include "RangedWeapon.h"
@@ -246,6 +247,12 @@ void CPlayer::OnPickupRangeBeginOverlap(const FVector3& HitPoint, const FVector3
 	}
 }
 
+void CPlayer::OnUpdatedStats(FStat Stat)
+{
+	SetHPMax(Stat.Primary[(int)EPrimaryStats::MaxHP]);
+	SetHP(mHPMax);
+}
+
 void CPlayer::PlayMoveAnimation(float DeltaTime)
 {
 	if (!mCanScaleSize) return;
@@ -430,6 +437,7 @@ void CPlayer::SetPlayerDesc(std::weak_ptr<CCharacterData> InData)
 	auto InvComp = GetInventoryComponent().lock();
 	if (InvComp)
 	{
+		InvComp->SetOnStatUpdatedFunction(this, &CPlayer::OnUpdatedStats);
 		InvComp->AddStat(Data->Stats);
 		InvComp->AddWeapon(Data->StartWeapon);
 	}
@@ -445,7 +453,7 @@ void CPlayer::ActiveForWave()
 	if (InvComp)
 	{
 		SetHPMax(InvComp->GetStatValue(EPrimaryStats::MaxHP));
-		SetHP(GetMaxHP());
+		SetHP(mHPMax);
 	}
 
 	SpawnWeapons();

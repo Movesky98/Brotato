@@ -3,6 +3,7 @@
 #include "World/Actor.h"
 #include "Interface/StatusInterface.h"
 
+struct FStat;
 class CInventoryComponent;
 
 class CPlayer :
@@ -68,6 +69,7 @@ protected:
 
 	void OnDeath();
 	void OnPickupRangeBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider);
+	void OnUpdatedStats(FStat Stat);
 	void PlayMoveAnimation(float DeltaTime);
 
 public:
