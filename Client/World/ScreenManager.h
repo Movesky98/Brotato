@@ -32,7 +32,7 @@ protected:
 	EScreenType mPrevScreenType = EScreenType::None;
 
 public:
-	void ShowScreen(EScreenType InType);
+	bool ShowScreen(EScreenType InType);
 	void HideScreen();
 	EScreenType GetCurrentScreenType() const { return mCurScreenType; }
 	std::weak_ptr<CPlayerWidgetContainer> GetScreen(EScreenType Type) const { return mScreenMap.find(Type)->second; }

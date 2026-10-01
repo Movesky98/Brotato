@@ -714,7 +714,7 @@ void CMainWorld::TogglePauseMenu()
 	}
 	else
 	{
-		mScreenManager->ShowScreen(EScreenType::PauseMenu);
-		mPause = true;
+		if (mScreenManager->ShowScreen(EScreenType::PauseMenu))
+			mPause = true;
 	}
 }

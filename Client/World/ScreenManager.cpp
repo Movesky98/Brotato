@@ -67,9 +67,9 @@ bool CScreenManager::Init(std::weak_ptr<class CUIManager> InUIManager, std::weak
 	return true;
 }
 
-void CScreenManager::ShowScreen(EScreenType InType)
+bool CScreenManager::ShowScreen(EScreenType InType)
 {
-	if (mCurScreenType == EScreenType::GameOverScreen) return;
+	if (mCurScreenType == EScreenType::GameOverScreen) return false;
 
 	for (const auto& [Type, ScreenWeak] : mScreenMap)
 	{
@@ -91,6 +91,8 @@ void CScreenManager::ShowScreen(EScreenType InType)
 
 		mCurScreenType = Type;
 	}
+
+	return true;
 }
 
 void CScreenManager::HideScreen()
