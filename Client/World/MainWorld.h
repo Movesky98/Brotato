@@ -98,9 +98,9 @@ protected:
 	std::shared_ptr<class CWaveData> mWaveData;	// 현재 웨이브 스폰 정보 (DataManager 소유)
 	int mSpawnIndex = 0;				// 다음에 스폰할 WaveData::Spawns 항목
 
-	float mMaxWaveTime = 20.f;			// 최대 웨이브 시간 
+	float mMaxWaveTime = 8.f;			// 최대 웨이브 시간
 	float mElapsedTime = 0.f;
-	float mRemainingWaveTime = 20.f;	// 현재 웨이브가 끝날 때까지 남아있는 시간
+	float mRemainingWaveTime = 8.f;	// 현재 웨이브가 끝날 때까지 남아있는 시간
 
 	int mCurrentWave = 0;
 	int mCurrentMaterial = 0;
