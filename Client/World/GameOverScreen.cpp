@@ -12,6 +12,7 @@
 #include "World/WorldManager.h"
 #include "StartWorld.h"
 #include "MainWorld.h"
+#include "CharacterData.h"
 
 CGameOverScreen::CGameOverScreen()
 {
@@ -208,7 +209,14 @@ void CGameOverScreen::CreateResultPanel()
 
 void CGameOverScreen::ToMainWorld()
 {
-	CWorldManager::GetInst()->CreateWorld<CMainWorld>(true);
+	auto CurrentWorld = std::dynamic_pointer_cast<CMainWorld>(mWorld.lock());
+	if (!CurrentWorld) return;
+
+	auto NextWorld = CWorldManager::GetInst()->CreateWorld<CMainWorld>(true).lock();
+	if (NextWorld)
+	{
+		NextWorld->InitializeWorldSetting(CurrentWorld->GetPlayerData());
+	}
 }
 
 void CGameOverScreen::ToStartWorld()

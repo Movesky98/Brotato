@@ -152,6 +152,7 @@ public:
 	EGameplayStage GetStage() const { return mStage; }
 
 	void InitializeWorldSetting(std::weak_ptr<CDataAsset> Data);
+	std::weak_ptr<class CCharacterData> GetPlayerData() const { return mPlayerData; }
 	
 	/* UI */
 protected:
