@@ -79,7 +79,7 @@ bool CShopMenu::Init()
     {
         RerollButton->SetPos(752.f, 28.f);
         RerollButton->SetSize(219.f, 44.f);
-        RerollButton->SetLabelText(TEXT("초기화 -10"));
+        RerollButton->SetLabelText(TEXT("초기화"));
         RerollButton->SetButtonTint(FVector4(0.25f, 0.25f, 0.25f, 1.f));
         
         RerollButton->SetKeyIconPos(15.f, 8.f);
