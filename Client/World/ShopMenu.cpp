@@ -202,17 +202,6 @@ void CShopMenu::OnBanButtonClicked(std::weak_ptr<CShopOfferCard> wOfferCard)
         OfferCard->SetEnable(false);
     }
 
-    if (mBanIDs.size() >= 6)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            auto OfferCard = mOfferCards[i].lock();
-            if (OfferCard) OfferCard->SetEnableBanButton(false);
-        }
-
-        return;
-    }
-
     for (int i = 0; i < 4; i++)
     {
         auto OfferCard = mOfferCards[i].lock();
@@ -221,7 +210,17 @@ void CShopMenu::OnBanButtonClicked(std::weak_ptr<CShopOfferCard> wOfferCard)
         auto ShopData = OfferCard->GetShopData().lock();
         if (ShopData && mBanIDs.contains(ShopData->ID))
         {
+            OfferCard->Unlock();
             OfferCard->SetEnable(false);
+        }
+    }
+
+    if (mBanIDs.size() >= 6)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            auto OfferCard = mOfferCards[i].lock();
+            if (OfferCard) OfferCard->SetEnableBanButton(false);
         }
     }
 }
