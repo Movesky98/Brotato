@@ -150,8 +150,24 @@ void CShopOfferCard::OnLockButtonUnHovered()
 
 void CShopOfferCard::OnBanButtonClicked()
 {
+    Unlock();
+
     if(mOnBanButtonClicked)
         mOnBanButtonClicked(GetThisPtr<CShopOfferCard>());
+}
+
+void CShopOfferCard::Unlock()
+{
+    if (!mIsLocked) return;
+
+    OnLockButtonClicked();
+
+    // 잠긴 동안 켜둔 자물쇠 아이콘은 UnHovered에서 꺼지지 않으므로 직접 끈다.
+    auto LockButton = mLockButton.lock();
+    if (LockButton)
+    {
+        LockButton->SetTrailingIconEnable(false);
+    }
 }
 
 void CShopOfferCard::RequestPurchase()

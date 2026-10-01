@@ -38,6 +38,7 @@ public:
 	void SetCardDesc(std::weak_ptr<class CShopData> Data, bool bHideBanButton = false);
 
 	bool IsLocked() const { return mIsLocked; }
+	void Unlock();
 	std::weak_ptr<class CShopData> GetShopData() const { return mData; }
 
 	void SetEnableBanButton(bool IsEnable);
