@@ -5,6 +5,7 @@
 #include "Boss.h"
 #include "Player.h"
 #include "MaterialItem.h"
+#include "Projectile.h"
 
 #include "DataManager.h"
 #include "ScreenManager.h"
@@ -464,6 +465,7 @@ void CMainWorld::OnPlayerDeath()
 
 	ClearObjects<CEnemy>();
 	ClearObjects<CSpawnPoint>();
+	ClearObjects<CProjectile>();
 }
 
 void CMainWorld::CreateSpawnPoint(ESpawnType Type, int ID, ESpawnSource Source)
@@ -631,6 +633,7 @@ void CMainWorld::WaveEnd()
 	// 생존해있는 적들 삭제
 	ClearObjects<CEnemy>();
 	ClearObjects<CSpawnPoint>();
+	ClearObjects<CProjectile>();
 
 	auto Player = mPlayer.lock();
 	if (Player)
