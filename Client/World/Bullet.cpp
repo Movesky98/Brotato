@@ -15,12 +15,12 @@ CBullet::CBullet()
 }
 
 CBullet::CBullet(const CBullet& src)
-	:CActor(src)
+	:CProjectile(src)
 {
 }
 
 CBullet::CBullet(CBullet&& src) noexcept
-	:CActor(std::move(src))
+	:CProjectile(std::move(src))
 {
 }
 
@@ -112,7 +112,7 @@ void CBullet::OnTimerEnd()
 
 bool CBullet::Init()
 {
-	CActor::Init();
+	CProjectile::Init();
 
 	mActorTag = "Player";
 
@@ -178,7 +178,7 @@ bool CBullet::Init()
 
 void CBullet::Update(float DeltaTime)
 {
-	CActor::Update(DeltaTime);
+	CProjectile::Update(DeltaTime);
 
 }
 
@@ -191,7 +191,7 @@ void CBullet::Destroy()
 		World->ClearTimer(mTimerHandle);
 	}
 
-	CActor::Destroy();
+	CProjectile::Destroy();
 }
 
 void CBullet::OnBeginOverlap(const FVector3& HitPoint, const FVector3& Normal, std::weak_ptr<class CCollider> Collider)

@@ -155,6 +155,7 @@
     <ClCompile Include="World\Component\SpawnSlashComponent.cpp" />
     <ClCompile Include="World\Boss.cpp" />
     <ClCompile Include="World\BossData.cpp" />
+    <ClCompile Include="World\Projectile.cpp" />
     <ClCompile Include="World\Slash.cpp" />
     <ClCompile Include="World\Component\SpawnEnemyComponent.cpp" />
     <ClCompile Include="World\SpawnSlashSkillData.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="World\Component\SpawnSlashComponent.h" />
     <ClInclude Include="World\Boss.h" />
     <ClInclude Include="World\BossData.h" />
+    <ClInclude Include="World\Projectile.h" />
     <ClInclude Include="World\Slash.h" />
     <ClInclude Include="World\Component\SpawnEnemyComponent.h" />
     <ClInclude Include="World\SpawnSlashSkillData.h" />

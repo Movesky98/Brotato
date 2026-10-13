@@ -16,12 +16,12 @@ CEnemyBullet::CEnemyBullet()
 }
 
 CEnemyBullet::CEnemyBullet(const CEnemyBullet& src)
-    : CActor(src)
+    : CProjectile(src)
 {
 }
 
 CEnemyBullet::CEnemyBullet(CEnemyBullet&& src) noexcept
-    : CActor(std::move(src))
+    : CProjectile(std::move(src))
 {
 }
 
@@ -31,7 +31,7 @@ CEnemyBullet::~CEnemyBullet()
 
 bool CEnemyBullet::Init()
 {
-    if (!CActor::Init()) return false;
+    if (!CProjectile::Init()) return false;
 
     mMeshComp = CreateComponent<CMeshComponent>("Root");
     mCollision = CreateComponent<CColliderSphere2D>("Collision");
@@ -79,7 +79,7 @@ bool CEnemyBullet::Init()
 
 void CEnemyBullet::Update(float DeltaTime)
 {
-    CActor::Update(DeltaTime);
+    CProjectile::Update(DeltaTime);
 
 }
 
@@ -92,7 +92,7 @@ void CEnemyBullet::Destroy()
         World->ClearTimer(mTimerHandle);
     }
 
-    CActor::Destroy();
+    CProjectile::Destroy();
 }
 
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "World/Actor.h"
+#include "Projectile.h"
 #include "TimeManager.h"
 
 class CEnemyBullet :
-    public CActor
+    public CProjectile
 {
 public:
 	CEnemyBullet();

@@ -1,5 +1,5 @@
 #pragma once
-#include "World/Actor.h"
+#include "Projectile.h"
 
 enum class ESlashMoveMode
 {
@@ -9,7 +9,7 @@ enum class ESlashMoveMode
 	MAX
 };
 
-class CSlash : public CActor
+class CSlash : public CProjectile
 {
 public:
 	CSlash();

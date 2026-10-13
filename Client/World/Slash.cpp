@@ -10,12 +10,12 @@ CSlash::CSlash()
 }
 
 CSlash::CSlash(const CSlash& src)
-    : CActor(src)
+    : CProjectile(src)
 {
 }
 
 CSlash::CSlash(CSlash&& src) noexcept
-    : CActor(std::move(src))
+    : CProjectile(std::move(src))
 {
 }
 
@@ -25,7 +25,7 @@ CSlash::~CSlash()
 
 bool CSlash::Init()
 {
-    if (!CActor::Init()) return false;
+    if (!CProjectile::Init()) return false;
 
     mMeshComponent = CreateComponent<CMeshComponent>("MeshComponent");
     mBodyCollision = CreateComponent<CColliderBox2D>("BodyCollision");
@@ -93,7 +93,7 @@ bool CSlash::Init()
 
 void CSlash::Update(float DeltaTime)
 {
-    CActor::Update(DeltaTime);
+    CProjectile::Update(DeltaTime);
 
     if (mIsPlayAnimation) return;
 
@@ -107,7 +107,7 @@ void CSlash::Update(float DeltaTime)
 void CSlash::Destroy()
 {
 
-    CActor::Destroy();
+    CProjectile::Destroy();
 }
 
 void CSlash::PlayAnimation()
