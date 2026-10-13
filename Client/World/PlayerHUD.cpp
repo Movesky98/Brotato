@@ -156,12 +156,22 @@ void CPlayerHUD::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
     if (InvComp && Player)
     {
         Player->SetUpdateHPFunction(this, &CPlayerHUD::SetLifeText);
-        InvComp ->SetOnAddedMaterialFunction(this, &CPlayerHUD::SetMaterialText);
+        InvComp->SetOnAddedMaterialFunction(this, &CPlayerHUD::SetMaterialText);
+        InvComp->SetOnUpdatedXPFunction(this, &CPlayerHUD::OnUpdatedXP);
+        InvComp->SetOnUpdatedLevelFunction(this, &CPlayerHUD::SetXPText);
     }
 }
 
 void CPlayerHUD::UnsubscribeDelegates()
 {
+
+}
+
+void CPlayerHUD::OnUpdatedXP(int CurrentXP, int RequiredXP)
+{
+    float Percent = (float)CurrentXP / (float)RequiredXP;
+
+    SetXPBarPercent(Percent);
 }
 
 void CPlayerHUD::SetLifeBarPercent(const float Percent)
@@ -170,6 +180,15 @@ void CPlayerHUD::SetLifeBarPercent(const float Percent)
     if (LifeBar)
     {
         LifeBar->SetPercent(Percent);
+    }
+}
+
+void CPlayerHUD::SetXPBarPercent(const float Percent)
+{
+    auto XPBar = mXPBar.lock();
+    if (XPBar)
+    {
+        XPBar->SetPercent(Percent);
     }
 }
 

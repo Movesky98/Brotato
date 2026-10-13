@@ -28,7 +28,9 @@ protected:
 
 	std::weak_ptr<class CTextBlock> mMaterialText;
 
+	void OnUpdatedXP(int CurrentXP, int RequiredXP);
 	void SetLifeBarPercent(const float Percent);
+	void SetXPBarPercent(const float Percent);
 	
 public:
 	void SetWaveText(int Wave);

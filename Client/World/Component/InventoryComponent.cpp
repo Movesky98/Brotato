@@ -69,6 +69,28 @@ void CInventoryComponent::CallOnStatUpdatedFunction()
     }
 }
 
+void CInventoryComponent::CallOnUpdatedLevelFunction()
+{
+    for (auto It : mOnUpdatedLevelFuncs)
+    {
+        if (It)
+        {
+            It(mLevel);
+        }
+    }
+}
+
+void CInventoryComponent::CallOnUpdatedXPFunction()
+{
+    for (auto It : mOnUpdatedXPFuncs)
+    {
+        if (It)
+        {
+            It(mCurrentXP, mRequiredXP);
+        }
+    }
+}
+
 std::vector<std::weak_ptr<CDataAsset>> CInventoryComponent::GetWeaponData() const
 {
     std::vector<std::weak_ptr<CDataAsset>> AssetArr;
@@ -126,9 +148,46 @@ void CInventoryComponent::AddStat(const FStat Stat)
     CallOnStatUpdatedFunction();
 }
 
+void CInventoryComponent::AddStat(const EPrimaryStats Stat, int Value)
+{
+    mStat.Primary[(int)Stat] += Value;
+
+    CallOnStatUpdatedFunction();
+}
+
+void CInventoryComponent::AddStat(const ESecondaryStats Stat, int Value)
+{
+    mStat.Secondary[(int)Stat] += Value;
+
+    CallOnStatUpdatedFunction();
+}
+
 void CInventoryComponent::AddMaterial(int Amount)
 {
     mMaterial += Amount;
 
+    if(Amount > 0)
+    {
+        mCurrentXP += Amount;
+        if (mCurrentXP >= mRequiredXP)
+        {
+            mCurrentXP = mCurrentXP - mRequiredXP;
+            LevelUp();
+        }
+
+        CallOnUpdatedXPFunction();
+    }
+
     CallOnAddedMaterialFunction();
+}
+
+void CInventoryComponent::LevelUp()
+{
+    mLevel++;
+
+    mRequiredXP *= 1.2f;
+
+    AddStat(EPrimaryStats::MaxHP, 1);
+
+    CallOnUpdatedLevelFunction();
 }

@@ -29,6 +29,7 @@ bool CStatPanel::Init()
     mBackgroundImage = CreateWidget<CImage>("BackgroundImage", 0);
     mPrimaryButton = CreateButton("Primary", TEXT("Primary"), FVector2(9.f, 56.f));
     mSecondaryButton = CreateButton("Secondary", TEXT("Secondary"), FVector2(125.f, 56.f));
+    mLevelRow = CreateWidget<CStatRow>("LevelRow");
    
     auto StatText = CreateWidget<CTextBlock>("StatTextBlock", 0).lock();
     if (StatText)
@@ -59,6 +60,15 @@ bool CStatPanel::Init()
     if (auto SecondaryButton = mSecondaryButton.lock())
     {
         SecondaryButton->SetWidgetEventFunc(EWidgetEventState::Clicked, this, &CStatPanel::ShowSecondaryStat);
+    }
+
+    if (auto LevelRow = mLevelRow.lock())
+    {
+        LevelRow->SetPos(12.f, 95.f);
+        LevelRow->SetSize(232.f, 22.5f);
+        LevelRow->SetIconTexture("LevelIcon", TEXT("Custom/Stats/CurrentLevel.png"));
+        LevelRow->SetNameText(TEXT("Current Level"));
+        LevelRow->SetValueText(1, false);
     }
 
     CreateStatRows(mPrimaryStatRows, true);
@@ -150,6 +160,12 @@ void CStatPanel::ShowPrimaryStat()
             StatRow->SetEnable(false);
         }
     }
+
+    auto LevelRow = mLevelRow.lock();
+    if (LevelRow)
+    {
+        LevelRow->SetEnable(true);
+    }
 }
 
 
@@ -174,6 +190,12 @@ void CStatPanel::ShowSecondaryStat()
             StatRow->SetEnable(false);
         }
     }
+
+    auto LevelRow = mLevelRow.lock();
+    if (LevelRow)
+    {
+        LevelRow->SetEnable(false);
+    }
 }
 
 void CStatPanel::UpdateStats(const FStat Stat)
@@ -194,6 +216,15 @@ void CStatPanel::UpdateStats(const FStat Stat)
         {
             StatRow->SetValueText(Stat.Secondary[i]);
         }
+    }
+}
+
+void CStatPanel::UpdateLevel(int Level)
+{
+    auto LevelRow = mLevelRow.lock();
+    if (LevelRow)
+    {
+        LevelRow->SetValueText(Level, false);
     }
 }
 

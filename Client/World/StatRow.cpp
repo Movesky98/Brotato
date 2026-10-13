@@ -113,12 +113,14 @@ void CStatRow::SetNameText(const TCHAR* Text)
     }
 }
 
-void CStatRow::SetValueText(int Value)
+void CStatRow::SetValueText(int Value, bool UseColor)
 {
     auto ValueText = mValueText.lock();
     if (ValueText)
     {
         ValueText->SetText(std::to_wstring(Value).c_str());
+
+        if (!UseColor) return;
 
         if (Value > 0)     SetColor(FVector4::Green);
         if (Value == 0)    SetColor(FVector4::White);

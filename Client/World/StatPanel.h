@@ -21,6 +21,7 @@ public:
 	virtual CStatPanel* Clone();
 
 protected:
+	std::weak_ptr<class CStatRow> mLevelRow;
 	std::vector<std::weak_ptr<class CStatRow>> mPrimaryStatRows;
 	std::vector<std::weak_ptr<class CStatRow>> mSecondaryStatRows;
 
@@ -40,5 +41,6 @@ protected:
 
 public:
 	void UpdateStats(const FStat Stat);
+	void UpdateLevel(int Level);
 };
 

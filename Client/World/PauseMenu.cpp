@@ -107,6 +107,7 @@ void CPauseMenu::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
     if (StatPanel)
     {
         InvComp->SetOnStatUpdatedFunction(StatPanel.get(), &CStatPanel::UpdateStats);
+        InvComp->SetOnUpdatedLevelFunction(StatPanel.get(), &CStatPanel::UpdateLevel);
     }
 }
 

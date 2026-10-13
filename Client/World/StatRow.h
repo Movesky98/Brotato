@@ -29,6 +29,6 @@ public:
     void SetIconTexture(const std::string Name, const TCHAR* Path);
     void SetImage(const TCHAR* Path);
     void SetNameText(const TCHAR* Text);
-    void SetValueText(int Value);
+    void SetValueText(int Value, bool UseColor = true);
 };
 
