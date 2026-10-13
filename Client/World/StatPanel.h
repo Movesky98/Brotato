@@ -25,7 +25,6 @@ protected:
 	std::vector<std::weak_ptr<class CStatRow>> mPrimaryStatRows;
 	std::vector<std::weak_ptr<class CStatRow>> mSecondaryStatRows;
 
-	void InitializeStats();
 	void CreateStatRows(std::vector<std::weak_ptr<class CStatRow>>& OutRows, bool IsPrimary);
 	
 	std::weak_ptr<CImage> mBackgroundImage;

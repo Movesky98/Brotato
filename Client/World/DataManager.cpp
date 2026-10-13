@@ -334,7 +334,6 @@ void CDataManager::AddEnemySkill(const FCSV_EnemySkill& EnemySkill)
 	if (iter == mEnemies.end()) return;
 
 	std::shared_ptr<CEnemyData>& CurrentEnemy = iter->second;
-	// CurrentEnemy->SkillData.ID = ID;
 
 	// 저장된 적 정보에 Skill Data를 저장함.
 	for (const auto& SkillID : EnemySkill.SkillIDs)

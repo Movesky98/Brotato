@@ -30,6 +30,8 @@ CPlayerWidgetContainer* CPlayerWidgetContainer::Clone()
 
 void CPlayerWidgetContainer::SubscribeDelegates(std::weak_ptr<class CPlayer> InPlayer)
 {
+
+
 }
 
 void CPlayerWidgetContainer::UnsubscribeDelegates()

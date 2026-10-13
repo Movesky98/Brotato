@@ -40,7 +40,5 @@ public:
 	void SetXPText(int XPLevel);
 
 	void SetMaterialText(int Material);
-
-	void InitializeWithInventory(std::weak_ptr<class CInventoryComponent> InvCompWeak);
 };
 

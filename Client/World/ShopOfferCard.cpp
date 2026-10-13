@@ -112,7 +112,6 @@ void CShopOfferCard::OnLockButtonClicked()
         }
     }
 
-
     if(mOnLockButtonClicked)
         mOnLockButtonClicked(GetThisPtr<CShopOfferCard>());
 }

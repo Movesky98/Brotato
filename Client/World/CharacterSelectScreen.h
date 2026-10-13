@@ -1,5 +1,7 @@
 #pragma once
+
 #include "World/WidgetContainer.h"
+
 class CCharacterSelectScreen :
     public CWidgetContainer
 {

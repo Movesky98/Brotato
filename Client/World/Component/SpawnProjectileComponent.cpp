@@ -164,7 +164,6 @@ void CSpawnProjectileComponent::ScaleOwnerExpansion(const EExpansionMode Mode, f
 		if (CurrentScale2D.x <= mDefaultScale2D.x || CurrentScale2D.y <= mDefaultScale2D.y)
 		{
 			mExpansionMode = EExpansionMode::None;
-
 		}
 		break;
 	default:

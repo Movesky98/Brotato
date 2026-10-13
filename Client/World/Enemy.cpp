@@ -536,6 +536,7 @@ void CEnemy::UpdateBehavior()
 
 		if (Target && CurrentMovementType != EEnemyMovement::Random)
 		{
+			// 랜덤 이동이 아닐 경우 -> Chase or Flee
 			Direction = Target->GetWorldPos() - GetWorldPos();
 
 			if (MovementsByRange[(int)CurrentRangeState] == EEnemyMovement::FleeFromTarget)
@@ -555,6 +556,7 @@ void CEnemy::UpdateBehavior()
 				MovePos.x = GetWorldPos().x + Direction.x * 200.f;
 				MovePos.y = GetWorldPos().y + Direction.y * 200.f;
 
+				// 선정된 랜덤 위치가 아레나를 넘어가지 않도록
 				if (std::abs(MovePos.x) > mLimitPos.x)
 					Direction.x *= -1;
 				if (std::abs(MovePos.y) > mLimitPos.y)
@@ -565,6 +567,7 @@ void CEnemy::UpdateBehavior()
 			}
 			else
 			{
+				// 랜덤 위치로 이동
 				FVector3 Distance = RandomPos - GetWorldPos();
 				Direction = Distance;
 

@@ -138,7 +138,6 @@ bool CPlayerHUD::Init()
         MaterialText->SetTextColor(FVector4::White);
     }
 
-
     return true;
 }
 
@@ -246,16 +245,5 @@ void CPlayerHUD::SetMaterialText(int Material)
     if (MaterialText)
     {
         MaterialText->SetText(std::to_wstring(Material).c_str());
-    }
-}
-
-void CPlayerHUD::InitializeWithInventory(std::weak_ptr<class CInventoryComponent> InvCompWeak)
-{
-    auto InvComp = InvCompWeak.lock();
-    if (InvComp)
-    {
-        InvComp->SetOnAddedMaterialFunction(this, &CPlayerHUD::SetMaterialText);
-
-       
     }
 }
