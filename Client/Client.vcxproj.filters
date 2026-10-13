@@ -81,26 +81,14 @@
     <ClCompile Include="World\Component\SkillComponent.cpp">
       <Filter>소스 파일\Skill</Filter>
     </ClCompile>
-    <ClCompile Include="World\Component\StatusComponent.cpp">
-      <Filter>소스 파일\Player\Status</Filter>
-    </ClCompile>
     <ClCompile Include="World\Interface\StatusInterface.cpp">
       <Filter>소스 파일\Player\Interface</Filter>
     </ClCompile>
     <ClCompile Include="World\GlobalCollision.cpp">
       <Filter>소스 파일\World</Filter>
     </ClCompile>
-    <ClCompile Include="World\MainUI.cpp">
-      <Filter>소스 파일\UI</Filter>
-    </ClCompile>
     <ClCompile Include="World\StartWorld.cpp">
       <Filter>소스 파일\World</Filter>
-    </ClCompile>
-    <ClCompile Include="World\EditorWidget.cpp">
-      <Filter>소스 파일\Player\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="World\StartWidget.cpp">
-      <Filter>소스 파일\Player\UI</Filter>
     </ClCompile>
     <ClCompile Include="World\Component\DashSkillComponent.cpp">
       <Filter>소스 파일\Enemy\Component</Filter>
@@ -167,9 +155,6 @@
     </ClCompile>
     <ClCompile Include="World\Component\ArenaCameraComponent.cpp">
       <Filter>소스 파일\Player\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="World\BackgroundActor.cpp">
-      <Filter>소스 파일\Actor</Filter>
     </ClCompile>
     <ClCompile Include="World\ItemDetailPanel.cpp">
       <Filter>소스 파일\UI\Widget</Filter>
@@ -281,26 +266,14 @@
     <ClInclude Include="World\Component\SkillComponent.h">
       <Filter>소스 파일\Skill</Filter>
     </ClInclude>
-    <ClInclude Include="World\Component\StatusComponent.h">
-      <Filter>소스 파일\Player\Status</Filter>
-    </ClInclude>
     <ClInclude Include="World\Interface\StatusInterface.h">
       <Filter>소스 파일\Player\Interface</Filter>
     </ClInclude>
     <ClInclude Include="World\GlobalCollision.h">
       <Filter>소스 파일\World</Filter>
     </ClInclude>
-    <ClInclude Include="World\MainUI.h">
-      <Filter>소스 파일\UI</Filter>
-    </ClInclude>
     <ClInclude Include="World\StartWorld.h">
       <Filter>소스 파일\World</Filter>
-    </ClInclude>
-    <ClInclude Include="World\EditorWidget.h">
-      <Filter>소스 파일\Player\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="World\StartWidget.h">
-      <Filter>소스 파일\Player\UI</Filter>
     </ClInclude>
     <ClInclude Include="World\Component\SpawnProjectileComponent.h">
       <Filter>소스 파일\Enemy\Component</Filter>
@@ -370,9 +343,6 @@
     </ClInclude>
     <ClInclude Include="World\Component\ArenaCameraComponent.h">
       <Filter>소스 파일\Player\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="World\BackgroundActor.h">
-      <Filter>소스 파일\Actor</Filter>
     </ClInclude>
     <ClInclude Include="World\ShopOfferCard.h">
       <Filter>소스 파일\UI\Widget</Filter>

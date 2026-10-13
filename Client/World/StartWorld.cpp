@@ -1,7 +1,6 @@
 #include "StartWorld.h"
 #include "MainWorld.h"
 
-#include "StartWidget.h"
 #include "TitleScreen.h"
 #include "CharacterSelectScreen.h"
 

@@ -20,7 +20,6 @@
 #include "CharacterData.h"
 #include "EnemyData.h"
 #include "WaveData.h"
-#include "BackgroundActor.h"
 
 #include "Component/InventoryComponent.h"
 
