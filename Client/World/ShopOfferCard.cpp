@@ -177,8 +177,13 @@ void CShopOfferCard::RequestPurchase()
     {
         if (ShopMenu->TryPurchase(mData))
         {
-            // Hide This.
+            // 숨겨유
             SetEnable(false);
+
+            if (mIsLocked)
+            {
+                OnLockButtonClicked();
+            }
         }
     }
 }
