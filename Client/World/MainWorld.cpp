@@ -15,6 +15,7 @@
 #include "PlayerHUD.h"
 #include "GameOverScreen.h"
 #include "ItemSlot.h"
+#include "RewardMenu.h"
 
 #include "DataAsset.h"
 #include "BossData.h"
@@ -71,6 +72,12 @@ bool CMainWorld::Init()
 	{
 		mPlayer = Player;
 		Player->SetDeathFunction(this, &CMainWorld::OnPlayerDeath);
+	
+		auto InvComp = Player->GetInventoryComponent().lock();
+		if (InvComp)
+		{
+			InvComp->SetOnUpdatedLevelFunction(this, &CMainWorld::OnUpdatedLevel);
+		}
 	}
 
 	mScreenManager = std::make_shared<CScreenManager>();
@@ -84,6 +91,12 @@ bool CMainWorld::Init()
 		if (ShopMenu)
 		{
 			ShopMenu->SetOnClickedNextWaveFunction(this, &CMainWorld::WaveStart);
+		}
+
+		auto RewardMenu = mScreenManager->GetRewardMenu().lock();
+		if (RewardMenu)
+		{
+			RewardMenu->SetOnLevelUpEndedFunction(this, &CMainWorld::OnLevelUpEnded);
 		}
 	}
 	
@@ -573,9 +586,55 @@ void CMainWorld::SpawnMaterial(const FVector3& SpawnPos)
 	}
 }
 
+void CMainWorld::OnAllMaterialCollected()
+{
+	if (mStage != EGameplayStage::WaveEnd) return;
+
+	// 레벨 업 여부 확인 해야 함.
+	if (mLevelCount > 0)
+	{
+		mScreenManager->ShowRewardMenu(mLevelCount);
+	}
+	else EnterShop();
+}
+
+void CMainWorld::UnregisteredMaterial(std::weak_ptr<class CMaterialItem> UnregisteredMaterial)
+{
+	auto iter = mMaterials.begin();
+	auto iterEnd = mMaterials.end();
+
+	for (;iter != iterEnd;)
+	{
+		if (!iter->owner_before(UnregisteredMaterial) && !UnregisteredMaterial.owner_before(*iter))
+		{
+			mMaterials.erase(iter);
+
+			if (mMaterials.empty())
+			{
+				OnAllMaterialCollected();
+			}
+
+			return;
+		}
+
+		iter++;
+	}
+}
+
+void CMainWorld::OnUpdatedLevel(int Level)
+{
+	mLevelCount++;
+}
+
+void CMainWorld::OnLevelUpEnded()
+{
+	EnterShop();
+}
+
 void CMainWorld::WaveStart()
 {
 	mStage = EGameplayStage::Wave;
+	mLevelCount = 0;
 	mCurrentWave++;
 	mRemainingWaveTime = mMaxWaveTime;
 
@@ -608,7 +667,10 @@ void CMainWorld::WaveEnd()
 
 	// 다음 웨이브 데이터가 없으면 마지막 웨이브였으므로 상점 대신 게임 오버.
 	bool IsLastWave = CDataManager::GetInst()->GetWaveData(mCurrentWave + 1) == nullptr;
-	mStage = IsLastWave ? EGameplayStage::GameOver : EGameplayStage::Shop;
+	mStage = IsLastWave ? EGameplayStage::GameOver : EGameplayStage::WaveEnd;
+
+	// 웨이브 끝날 시점에 Material 수집.
+	FindObjectList<CMaterialItem>(mMaterials);
 
 	// WaveEnd Delegate 함수 실행.
 	// 적, 스폰 포인트 객체는 여기에 오면 안됨.
@@ -641,9 +703,6 @@ void CMainWorld::WaveEnd()
 		Player->DeactiveForWave();
 	}
 
-	// 플레이어가 죽었으면 GG
-	
-	// 얻은 상자, 레벨 업 여부 확인 해야 함.
 	AliveEnemyCount = 0;
 
 	if (IsLastWave)
@@ -652,16 +711,20 @@ void CMainWorld::WaveEnd()
 		return;
 	}
 
-	EnterShop();
+	if (mMaterials.size() == 0)
+	{
+		OnAllMaterialCollected();
+	}
 }
 
 void CMainWorld::EnterShop()
 {
-	// Show Shop UI
+	mStage = EGameplayStage::Shop;
+
 	mScreenManager->ShowScreen(EScreenType::ShopMenu);
 
-	// Hide PlayerHUD
 	mScreenManager->HidePlayerHUD();
+	mScreenManager->HideRewardMenu();
 }
 
 FVector3 CMainWorld::GetRandomSpawnPosition() const

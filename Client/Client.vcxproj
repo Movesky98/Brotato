@@ -180,6 +180,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="World\ItemDetailPanel.cpp" />
     <ClCompile Include="World\ShopMenu.cpp" />
+    <ClCompile Include="World\RewardMenu.cpp" />
+    <ClCompile Include="World\LevelUpPanel.cpp" />
+    <ClCompile Include="World\ItemFoundPanel.cpp" />
     <ClCompile Include="World\SpawnPoint.cpp" />
     <ClCompile Include="World\StatPanel.cpp" />
     <ClCompile Include="World\SlotContainer.cpp" />
@@ -243,6 +246,9 @@
     <ClInclude Include="World\Component\ArenaCameraComponent.h" />
     <ClInclude Include="World\ItemDetailPanel.h" />
     <ClInclude Include="World\ShopMenu.h" />
+    <ClInclude Include="World\RewardMenu.h" />
+    <ClInclude Include="World\LevelUpPanel.h" />
+    <ClInclude Include="World\ItemFoundPanel.h" />
     <ClInclude Include="World\GameTypes.h" />
     <ClInclude Include="World\SpawnPoint.h" />
     <ClInclude Include="World\StatPanel.h" />

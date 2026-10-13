@@ -109,6 +109,8 @@ void CMaterialItem::Destroy()
     if (MainWorld)
     {
         MainWorld->RemoveOnWaveEndedFunction(this);
+        MainWorld->UnregisteredMaterial(GetThisPtr<CMaterialItem>());
+        // 여기서 등록한거 삭제하면 될 듯.
     }
 
     CActor::Destroy();
@@ -138,6 +140,8 @@ void CMaterialItem::OnCollsiionBeginOverlap(const FVector3& HitPoint, const FVec
     auto Player = ColliderComp->GetOwner().lock();
     if (Player && Player->GetActorTag() == "Player")
     {
+
+
         Destroy();
     }
 }

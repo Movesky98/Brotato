@@ -95,6 +95,46 @@ namespace
 		L"Custom/Stats/Luck.png",
 		L"Custom/Stats/Harvesting.png",
 	};
+
+	const wchar_t* PrimaryUpgradeNameTable[]
+	{
+		L"Heart",
+		L"Lungs",
+		L"Teeth",
+		L"Triceps",
+		L"Forearms",
+		L"Shoulders",
+		L"Brain",
+		L"Reflexes",
+		L"Fingers",
+		L"Skull",
+		L"Eyes",
+		L"Chest",
+		L"Back",
+		L"Legs",
+		L"Nose",
+		L"Hands",
+	};
+
+	const wchar_t* PrimaryUpgradeIconPathTable[]
+	{
+		L"Custom/Stats/MaxHP_Upgrade.png",
+		L"Custom/Stats/HPRegeneration_Upgrade.png",
+		L"Custom/Stats/LifeSteal_Upgrade.png",
+		L"Custom/Stats/Damage_Upgrade.png",
+		L"Custom/Stats/MeleeDamage_Upgrade.png",
+		L"Custom/Stats/RangedDamage_Upgrade.png",
+		L"Custom/Stats/ElementalDamage_Upgrade.png",
+		L"Custom/Stats/AttackSpeed_Upgrade.png",
+		L"Custom/Stats/CritChance_Upgrade.png",
+		L"Custom/Stats/Engineering_Upgrade.png",
+		L"Custom/Stats/Range_Upgrade.png",
+		L"Custom/Stats/Armor_Upgrade.png",
+		L"Custom/Stats/Dodge_Upgrade.png",
+		L"Custom/Stats/Speed_Upgrade.png",
+		L"Custom/Stats/Luck_Upgrade.png",
+		L"Custom/Stats/Harvesting_Upgrade.png",
+	};
 }
 
 const wchar_t* GetStatName(EPrimaryStats Stat)
@@ -139,6 +179,16 @@ const wchar_t* GetStatName(EWeaponStats Stat)
 const wchar_t* GetStatIcon(EPrimaryStats Stat)
 {
 	return PrimaryIconPathTable[(int)Stat];
+}
+
+const wchar_t* GetUpgradeName(EPrimaryStats Stat)
+{
+	return PrimaryUpgradeNameTable[(int)Stat];
+}
+
+const wchar_t* GetUpgradeIcon(EPrimaryStats Stat)
+{
+	return PrimaryUpgradeIconPathTable[(int)Stat];
 }
 
 const wchar_t* GetStatIcon(ESecondaryStats)

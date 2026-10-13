@@ -3,6 +3,7 @@
 
 struct FStatLineDesc;
 struct FWeaponStatLineDesc;
+enum class EPrimaryStats;
 
 class CItemDetailPanel :
     public CWidgetContainer
@@ -21,6 +22,7 @@ public:
 protected:
 	std::weak_ptr<class CImage> mBackgroundImage;
 	std::weak_ptr<class CImage> mBackgroundFrame;
+	std::weak_ptr<class CImage> mIconFrame;
 	std::weak_ptr<class CImage> mIcon;
 	std::weak_ptr<class CTextBlock> mNameText;
 
@@ -38,5 +40,6 @@ public:
 	void SetFrameTint(const FVector4& Tint);
 
 	void SetShopDataDesc(std::weak_ptr<class CShopData> Data);
+	void SetStatDesc(const EPrimaryStats& Stat, const int Value);
 };
 

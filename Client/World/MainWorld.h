@@ -7,6 +7,7 @@ enum class EGameplayStage
 {
 	None = -1,
 	Wave,
+	WaveEnd,
 	Shop,
 	GameOver,
 	MAX
@@ -120,7 +121,20 @@ protected:
 	// 동시 생성 제한 수에 포함되는 스폰인지. 웨이브에서 스폰된 일반 적만 포함한다.
 	bool IsCountedSpawn(ESpawnType Type, ESpawnSource Source) const;
 	void OnPlayerDeath();
+	
+	/* Material */
+protected:
+	std::list<std::weak_ptr<class CMaterialItem>> mMaterials;
 	void SpawnMaterial(const FVector3& SpawnPos);
+	void OnAllMaterialCollected();
+
+public:
+	void UnregisteredMaterial(std::weak_ptr<class CMaterialItem> UnregisteredMaterial);
+
+protected:
+
+	int mLevelCount = 0;
+	void OnUpdatedLevel(int Level);
 	
 	template<typename T> 
 	void ClearObjects()
@@ -156,9 +170,10 @@ public:
 	
 	/* UI */
 protected:
-
 	bool mPause = false;
-
 	void TogglePauseMenu();
+
+	// 레벨 업 패널에서 스탯 업그레이드 선택이 끝날 경우 호출되는 콜백 함수.
+	void OnLevelUpEnded();
 };
 

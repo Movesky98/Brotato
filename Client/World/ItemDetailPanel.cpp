@@ -17,6 +17,7 @@ CItemDetailPanel::CItemDetailPanel()
 CItemDetailPanel::CItemDetailPanel(const CItemDetailPanel& src)
     : CWidgetContainer(src)
 {
+
 }
 
 CItemDetailPanel::~CItemDetailPanel()
@@ -28,8 +29,9 @@ bool CItemDetailPanel::Init()
     if (!CWidgetContainer::Init()) return false;
 
     // 내용물(ZOrder 0)보다 뒤에 그려지도록 음수로 둔다.
-    mBackgroundImage = CreateWidget<CImage>("BackgroundImage", -2);
-    mBackgroundFrame = CreateWidget<CImage>("BackgroundFrame", -1);
+    mBackgroundImage = CreateWidget<CImage>("BackgroundImage", -3);
+    mBackgroundFrame = CreateWidget<CImage>("BackgroundFrame", -2);
+    mIconFrame = CreateWidget<CImage>("IconFrame", -1);
     mIcon = CreateWidget<CImage>("IconImage", 0);
     mNameText = CreateWidget<CTextBlock>("NameTextBlock", 0);
 
@@ -45,6 +47,15 @@ bool CItemDetailPanel::Init()
     {
         BackgroundFrame->SetPos(0.f, 0.f);
         BackgroundFrame->SetTint(0.f, 0.f, 0.f, 1.f);
+    }
+
+    auto IconFrame = mIconFrame.lock();
+    if (IconFrame)
+    {
+        IconFrame->SetPos(10.f, 12.f);
+        IconFrame->SetSize(64.f, 64.f);
+        IconFrame->SetTexture("ItemDetailPanel_IconFrame", TEXT("Custom/UI/RoundBox_IconFrame.png"));
+        IconFrame->SetTint(0.2f, 0.2f, 0.2f, 1.f);
     }
 
     auto Icon = mIcon.lock();
@@ -266,4 +277,35 @@ void CItemDetailPanel::SetShopDataDesc(std::weak_ptr<class CShopData> Data)
             CreateWeaponStatLines(LineDescs);
         }
     }
+}
+
+void CItemDetailPanel::SetStatDesc(const EPrimaryStats& Stat, const int Value)
+{
+    ClearStatLines();
+
+    auto Icon = mIcon.lock();
+    if (Icon)
+    {
+        std::string UpgradeName = ToString(GetUpgradeName(Stat));
+        const TCHAR* Path = GetUpgradeIcon(Stat);
+
+        Icon->SetTexture(UpgradeName, Path);
+    }
+
+    auto NameText = mNameText.lock();
+    if (NameText)
+    {
+        NameText->SetText(GetUpgradeName(Stat));
+    }
+
+    std::vector<FStatLineDesc> LineDescs;
+    FStatLineDesc StatLineDesc;
+
+    StatLineDesc.IconPath = GetStatIcon(Stat);
+    StatLineDesc.Name = GetStatName(Stat);
+    StatLineDesc.Value = Value;
+
+    LineDescs.push_back(StatLineDesc);
+
+    CreateStatLines(LineDescs);
 }

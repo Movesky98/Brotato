@@ -2,6 +2,7 @@
 
 #include "PlayerWidgetContainer.h"
 #include "PlayerHUD.h"
+#include "RewardMenu.h"
 #include "ShopMenu.h"
 #include "PauseMenu.h"
 #include "GameOverScreen.h"
@@ -29,13 +30,16 @@ bool CScreenManager::Init(std::weak_ptr<class CUIManager> InUIManager, std::weak
 
 	mUIManager = UIManager;
 	mPlayerHUD = UIManager->CreateWidgetContainer<CPlayerHUD>("PlayerHUD");
-	
+	mRewardMenu = UIManager->CreateWidgetContainer<CRewardMenu>("RewardMenu");
+
 	auto PlayerHUD = std::dynamic_pointer_cast<CPlayerWidgetContainer>(mPlayerHUD.lock());
+	auto RewardMenu = std::dynamic_pointer_cast<CPlayerWidgetContainer>(mRewardMenu.lock());
 	auto ShopMenu = UIManager->CreateWidgetContainer<CShopMenu>("ShopMenu").lock();
 	auto PauseMenu = UIManager->CreateWidgetContainer<CPauseMenu>("PauseMenu").lock();
 	auto GameOverScreen = UIManager->CreateWidgetContainer<CGameOverScreen>("GameOverScreen").lock();
 
 	if (!PlayerHUD) return false;
+	if (!RewardMenu) return false;
 	if (!ShopMenu) return false;
 	if (!PauseMenu) return false;
 	if (!GameOverScreen) return false;
@@ -52,6 +56,10 @@ bool CScreenManager::Init(std::weak_ptr<class CUIManager> InUIManager, std::weak
 	PlayerHUD->SubscribeDelegates(Player);
 	PlayerHUD->SetEnable(true);
 	PlayerHUD->SetPos(0.f, 0.f);
+
+	RewardMenu->SubscribeDelegates(Player);
+	RewardMenu->SetEnable(false);
+	RewardMenu->SetPos(0.f, 0.f);
 
 	for (const auto& [Type, ScreenWeak] : mScreenMap)
 	{
@@ -140,6 +148,25 @@ void CScreenManager::HidePlayerHUD()
 	if (PlayerHUD)
 	{
 		PlayerHUD->SetEnable(true);
+	}
+}
+
+void CScreenManager::ShowRewardMenu(int LevelCount)
+{
+	auto RewardMenu = mRewardMenu.lock();
+	if (RewardMenu)
+	{
+		RewardMenu->SetEnable(true);
+		RewardMenu->ShowLevelUpPanel(LevelCount);
+	}
+}
+
+void CScreenManager::HideRewardMenu()
+{
+	auto RewardMenu = mRewardMenu.lock();
+	if (RewardMenu)
+	{
+		RewardMenu->SetEnable(false);
 	}
 }
 
