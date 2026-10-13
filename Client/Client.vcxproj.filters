@@ -165,6 +165,15 @@
     <ClCompile Include="World\ShopMenu.cpp">
       <Filter>소스 파일\UI</Filter>
     </ClCompile>
+    <ClCompile Include="World\RewardMenu.cpp">
+      <Filter>소스 파일\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="World\LevelUpPanel.cpp">
+      <Filter>소스 파일\UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="World\ItemFoundPanel.cpp">
+      <Filter>소스 파일\UI\Widget</Filter>
+    </ClCompile>
     <ClCompile Include="World\BuyButton.cpp">
       <Filter>소스 파일\UI\Widget</Filter>
     </ClCompile>
@@ -248,6 +257,9 @@
     </ClCompile>
     <ClCompile Include="World\Component\SpawnEnemyComponent.cpp">
       <Filter>소스 파일\Enemy\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Projectile.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -353,6 +365,15 @@
     <ClInclude Include="World\ShopMenu.h">
       <Filter>소스 파일\UI</Filter>
     </ClInclude>
+    <ClInclude Include="World\RewardMenu.h">
+      <Filter>소스 파일\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="World\LevelUpPanel.h">
+      <Filter>소스 파일\UI\Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="World\ItemFoundPanel.h">
+      <Filter>소스 파일\UI\Widget</Filter>
+    </ClInclude>
     <ClInclude Include="World\BuyButton.h">
       <Filter>소스 파일\UI\Widget</Filter>
     </ClInclude>
@@ -439,6 +460,9 @@
     </ClInclude>
     <ClInclude Include="World\Component\SpawnEnemyComponent.h">
       <Filter>소스 파일\Enemy\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Projectile.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
