@@ -170,6 +170,8 @@ void CGameOverScreen::CreateResultPanel()
 
 	WeaponSlotContainer->SetPos(347.3f, 139.3f);
 	WeaponSlotContainer->SetSize(854.7f, 70.f);
+	WeaponSlotContainer->SetStackMode(ESlotStackMode::Separate);
+
 
 	auto WeaponText = CreateWidget<CTextBlock>("ItemSlotText").lock();
 	auto WeaponSeperator = CreateWidget<CImage>("WeaponSeperator").lock();
@@ -189,6 +191,7 @@ void CGameOverScreen::CreateResultPanel()
 
 	ItemSlotContainer->SetPos(347.3f, 289.3f);
 	ItemSlotContainer->SetSize(854.7f, 282.f);
+	ItemSlotContainer->SetStackMode(ESlotStackMode::Stack);
 
 	auto ItemText = CreateWidget<CTextBlock>("ItemSlotText").lock();
 	auto ItemSeperator = CreateWidget<CImage>("ItemSeperator").lock();

@@ -179,6 +179,7 @@ void CPauseMenu::CreateInventorySlotPanel()
     {
         ItemSlotContainer->SetPos(459.f, 228.f);
         ItemSlotContainer->SetSize(488.f, 347.f);
+        ItemSlotContainer->SetStackMode(ESlotStackMode::Stack);
     }
 
     auto WeaponTextBlock = mWeaponTextBlock.lock();
@@ -198,6 +199,7 @@ void CPauseMenu::CreateInventorySlotPanel()
     {
         WeaponSlotContainer->SetPos(459.f, 102.f);
         WeaponSlotContainer->SetSize(488.f, 64.f);
+        WeaponSlotContainer->SetStackMode(ESlotStackMode::Separate);
     }
 }
 
