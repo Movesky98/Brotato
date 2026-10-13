@@ -67,7 +67,7 @@ public:
 		
 		for (; iter != iterEnd;)
 		{
-			if (iter->first.owner_before(ObjectPtr) && ObjectPtr.owner_before(iter->first))
+			if (!iter->first.owner_before(ObjectPtr) && !ObjectPtr.owner_before(iter->first))
 			{
 				mOnWaveEndedFuncs.erase(iter);
 				return;
